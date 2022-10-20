@@ -4,6 +4,6 @@ public class TesteN4 {
         int b = 2;
         OperacoesAritmeticas op = new OperacoesAritmeticas();
         System.out.println("Soma: " + op.sum(a, b));
-        System.out.println("Divisão: " op.)
+        System.out.println("Divisão: " + op.div(a, b));
     }
 }
