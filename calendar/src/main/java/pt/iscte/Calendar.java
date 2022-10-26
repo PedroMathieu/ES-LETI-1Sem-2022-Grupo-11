@@ -63,10 +63,4 @@ public class Calendar {
             System.err.println("Couldn't read file " + calendarFile);
         }
     }
-
-    public void showAllEventsSummary() {
-        for (JSONObject j : eventList) {
-            System.out.println(j.get("summary"));
-        }
-    }
 }
