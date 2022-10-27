@@ -25,21 +25,14 @@ public class Calendar {
     String id = "";
     String calendarFile = "";
     String calendarOwner = "";
-    List<JSONObject> eventList = new LinkedList<>();
+    
+    List<Event> events = new LinkedList<>();
     JSONParser parser = new JSONParser();
 
     public Calendar(String id, String calendarFile) {
         this.id = id;
         this.calendarFile = calendarFile;
         parseJsonCalendar();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getCalendarFile() {
-        return calendarFile;
     }
 
     /**
@@ -49,6 +42,7 @@ public class Calendar {
      */
     private void parseJsonCalendar() {
         try (Reader reader = new FileReader(calendarFile)) {
+            List<JSONObject> eventListJson = new LinkedList<>();
 
             // Parse vcalendar JSON array
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -65,13 +59,47 @@ public class Calendar {
             JSONArray vEvents = (JSONArray) vCalendarObjects.get(0).get("vevent");
             Iterator<JSONObject> vEventsIterator = vEvents.iterator();
             
-            // Add all the events to a JSONObject arraylist for better data manipulation
+            // Add all the events to a JSONObject arraylist
             while (vEventsIterator.hasNext()) 
-                eventList.add((JSONObject) vEventsIterator.next());
+                eventListJson.add((JSONObject) vEventsIterator.next());
+
+            // Convert all events from JSON to Event
+            this.events = convertEventListFromJSON(eventListJson);
 
         } catch (Exception e) {
             System.err.println("Couldn't read file " + calendarFile);
+        }        
+    }
+
+    /**
+     * Converts all the events in JSON to Event objects
+     * Makes it easier for searching
+     * @param eventListJson list of events as JSON objects
+     * @return a List of all the events as Event objects
+     */
+    private List<Event> convertEventListFromJSON(List<JSONObject> eventListJson) {
+        List<Event> eventsToReturn = new LinkedList<>();
+
+        for (JSONObject j : eventListJson) {
+            eventsToReturn.add(new Event(
+                    calendarOwner, 
+                    (String) j.get("summary"), 
+                    (String) j.get("dtstart"),
+                    (String) j.get("dtend"))
+            );
         }
+        
+        return eventsToReturn;
+    }
+
+    /**
+     * Gets the list that contains all the events of the 
+     * respective calendar
+     * 
+     * @return a List of events as Event objects
+     */
+    public List<Event> getEvents() {
+        return events;
     }
 
     /**

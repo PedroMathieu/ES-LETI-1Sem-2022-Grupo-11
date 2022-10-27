@@ -51,5 +51,6 @@ public class App  {
 
     public static void main( String[] args ) {
         loadCalendars();
+        System.out.println(calendarObjects.get(0).getEvents().get(0));
     }
 }
