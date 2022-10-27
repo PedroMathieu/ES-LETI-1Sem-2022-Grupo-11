@@ -11,6 +11,16 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+/**
+ * The calendar class represents all the events of a specific calendar owner
+ * It parses all the data from the already converted JSON calendars in the 
+ * calendars folder. 
+ * To use more calendars simply download your calendar at fenix.iscte-iul.pt/
+ * and convert it to JSON in https://ical-to-json.herokuapp.com/
+ * This class will take care of the rest :)
+ * 
+ * @author Jose Soares
+ */
 public class Calendar {
     String id = "";
     String calendarFile = "";
@@ -63,4 +73,10 @@ public class Calendar {
             System.err.println("Couldn't read file " + calendarFile);
         }
     }
+
+    /**
+     * TODO: Get events between timestamp IN A DAY method
+     * The return statement must have: calendar owner, event name, tStart and tEnd. 
+     * We are checking for events in a SINGLE day, so we don't have to return the day
+     */
 }
