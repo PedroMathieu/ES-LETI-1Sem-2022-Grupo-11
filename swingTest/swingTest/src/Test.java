@@ -33,6 +33,7 @@ public class Test {
         });
 
         frame.add(button);
+        frame.add(button2);
         frame.add(textField);
 
         frame.setSize(700, 700);
