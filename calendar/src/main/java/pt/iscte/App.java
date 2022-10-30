@@ -20,7 +20,7 @@ public class App  {
     *           that will be worked on in the future
     */
     private static void loadCalendars () {
-        File folder = new File(System.getProperty("user.dir") + "/calendar/calendars");
+        File folder = new File(System.getProperty("user.dir") + "/calendars");
 
         for (File fileEntry : folder.listFiles())
             buildCalendars(fileEntry.getName().substring(0,1), fileEntry, 1);
@@ -49,8 +49,7 @@ public class App  {
         }
     }
 
-    public static void main( String[] args ) {
+    public static void main( String[] args) {
         loadCalendars();
-        System.out.println(calendarObjects.get(0).getEvents().get(0));
     }
 }

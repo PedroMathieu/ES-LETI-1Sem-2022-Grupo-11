@@ -11,6 +11,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import pt.iscte.Date.Day;
+
 /**
  * The calendar class represents all the events of a specific calendar owner
  * It parses all the data from the already converted JSON calendars in the 
@@ -103,8 +105,16 @@ public class Calendar {
     }
 
     /**
-     * TODO: Get events between timestamp IN A DAY method
-     * The return statement must have: calendar owner, event name, tStart and tEnd. 
-     * We are checking for events in a SINGLE day, so we don't have to return the day
+     * Gets all the events happening in a day. This will be 
+     * useful when drawing the calendar on the screen.
+     * 
+     * @param d targeted day
+     * @return list of events for the current calendar in that day
      */
+    public List<Event> getEventsInADay(Day d) {
+        List<Event> result = new ArrayList<>();
+        for (Event e : events)
+            if (e.getDayOfEvent().isTheSameDay(d)) result.add(e);
+        return result;
+    }
 }

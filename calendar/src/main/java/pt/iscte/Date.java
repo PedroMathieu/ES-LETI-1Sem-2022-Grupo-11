@@ -54,6 +54,14 @@ public class Date {
 			return day;
 		}
 
+        // TODO: This should be an @Override of equals().
+        // But for now, that's not working, will work on that later
+        public boolean isTheSameDay(Day d) {
+            if ((this.getYear() == d.getYear()) && (this.getMonth() == d.getMonth()) && (this.getDay() == d.getDay()))
+                return true;   
+            return false;
+        }
+
 		@Override
 		public String toString() {
 			return year + "/" + month + "/" + day;
@@ -83,7 +91,7 @@ public class Date {
         public Time(String time) {
             String[] timeSplit = time.split(":");
             if (timeSplit.length != 2) 
-                throw new IllegalArgumentException("Check if the day format is the correct to use the String constructor");
+                throw new IllegalArgumentException("Check if the time format is the correct to use the String constructor");
 
 			this.hour = Integer.parseInt(timeSplit[0]);
 			this.minutes = Integer.parseInt(timeSplit[1]);
@@ -117,12 +125,11 @@ public class Date {
 		}
 	}
 
-	
 	public Day getDay() {
 		return day;
 	}
 
-	public Time getHour() {
+	public Time getTime() {
 		return time;
 	}
 
