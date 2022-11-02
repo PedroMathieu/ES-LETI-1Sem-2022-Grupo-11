@@ -36,10 +36,16 @@ public class Date {
             
             if (daySplit.length != 3) 
                 throw new IllegalArgumentException("Check if the day format is the correct to use the String constructor");
+			int year = Integer.parseInt(daySplit[0]);
+			int month = Integer.parseInt(daySplit[1]);
+			int dayOfMonth = Integer.parseInt(daySplit[2]);
 
-			this.year = Integer.parseInt(daySplit[0]);
-			this.month = Integer.parseInt(daySplit[1]);
-			this.day = Integer.parseInt(daySplit[2]);
+			if (month < 1 || month > 12 || dayOfMonth < 1 || dayOfMonth > 31)
+				throw new ArithmeticException("Day or month out of range");
+
+			this.year = year;
+			this.month = month;
+			this.day = dayOfMonth;
 		}
 
 		public int getYear() {
@@ -90,11 +96,17 @@ public class Date {
          */
         public Time(String time) {
             String[] timeSplit = time.split(":");
-            if (timeSplit.length != 2) 
+            if (timeSplit.length != 2)
                 throw new IllegalArgumentException("Check if the time format is the correct to use the String constructor");
 
-			this.hour = Integer.parseInt(timeSplit[0]);
-			this.minutes = Integer.parseInt(timeSplit[1]);
+			int hour = Integer.parseInt(timeSplit[0]);
+			int minutes = Integer.parseInt(timeSplit[1]);
+
+			if (hour < 0 || hour > 23 || minutes < 0 || minutes > 59)
+				throw new ArithmeticException("Hours or minutes out of range");
+
+			this.hour = hour;
+			this.minutes = minutes;
         }
 
         public int getHour() {
