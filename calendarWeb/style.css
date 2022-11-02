@@ -9,13 +9,13 @@
     margin-top: -300px;
 }
 
-.days li{     
+.days button{     
     background-color:transparent;
     cursor:pointer;
     border-radius:24px;
 }
 
-.days li:hover{
+.days button:hover{
     background: #817d7d ;
     transition: 0.8s;
 }
@@ -64,6 +64,11 @@ body{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.table button{
+    width: calc(100%/7);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .semana{
     background-color: #c53131;
     border-radius: 8px;
@@ -72,7 +77,7 @@ body{
     padding: 4px;
 }
 
-.days li{ 
+.days button{ 
     margin-top: 20px;
 }
 
