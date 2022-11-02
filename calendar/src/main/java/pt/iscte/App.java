@@ -9,10 +9,8 @@ import java.util.Map;
 public class App  {
     // Map of calendars (maps calendar id and calendar file name)
     private static Map<String, String> calendars = new HashMap<String, String>();
-
     // List of calendar objects
     private static List<PersonalCalendar> personalCalendarObjects = new ArrayList<PersonalCalendar>();
-
 
     /**
     * Loads json calendar files from calendars directory
