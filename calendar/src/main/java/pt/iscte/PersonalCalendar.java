@@ -2,6 +2,7 @@ package pt.iscte;
 
 import java.io.FileReader;
 import java.io.Reader;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,8 +11,6 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import pt.iscte.Date.Day;
 
 /**
  * The calendar class represents all the events of a specific calendar owner
@@ -23,7 +22,7 @@ import pt.iscte.Date.Day;
  * 
  * @author Jose Soares
  */
-public class Calendar {
+public class PersonalCalendar {
     String id = "";
     String calendarFile = "";
     String calendarOwner = "";
@@ -31,7 +30,7 @@ public class Calendar {
     List<Event> events = new LinkedList<>();
     JSONParser parser = new JSONParser();
 
-    public Calendar(String id, String calendarFile) {
+    public PersonalCalendar(String id, String calendarFile) {
         this.id = id;
         this.calendarFile = calendarFile;
         parseJsonCalendar();
@@ -111,10 +110,10 @@ public class Calendar {
      * @param d targeted day
      * @return list of events for the current calendar in that day
      */
-    public List<Event> getEventsInADay(Day d) {
+    public List<Event> getEventsInADay(LocalDate d) {
         List<Event> result = new ArrayList<>();
         for (Event e : events)
-            if (e.getDayOfEvent().isTheSameDay(d)) result.add(e);
+            if (e.getDayOfEvent().equals(d)) result.add(e);
         return result;
     }
 }

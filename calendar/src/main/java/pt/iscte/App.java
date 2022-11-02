@@ -11,7 +11,7 @@ public class App  {
     private static Map<String, String> calendars = new HashMap<String, String>();
 
     // List of calendar objects
-    private static List<Calendar> calendarObjects = new ArrayList<Calendar>();
+    private static List<PersonalCalendar> personalCalendarObjects = new ArrayList<PersonalCalendar>();
 
 
     /**
@@ -45,7 +45,7 @@ public class App  {
             buildCalendars(fileEntry.getName().substring(0, ++endIndex), fileEntry, ++endIndex);
         } else {
             calendars.put(id, fileEntry.getAbsolutePath());
-            calendarObjects.add(new Calendar(id, fileEntry.getAbsolutePath()));
+            personalCalendarObjects.add(new PersonalCalendar(id, fileEntry.getAbsolutePath()));
         }
     }
 
