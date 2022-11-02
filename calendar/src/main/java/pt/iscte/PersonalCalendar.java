@@ -69,7 +69,7 @@ public class PersonalCalendar {
 
         } catch (Exception e) {
             System.err.println("Couldn't read file " + calendarFile);
-        }        
+        }
     }
 
     /**
