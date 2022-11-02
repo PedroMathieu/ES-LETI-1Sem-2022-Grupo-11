@@ -5,7 +5,9 @@
 }
 
 .dark-mode button{
-    margin-left: -500px;
+    position: absolute;
+    margin-left: 250px;
+    margin-top: 270px;
     cursor: pointer;
     border: none;
     background-color:white

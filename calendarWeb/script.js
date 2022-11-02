@@ -55,7 +55,7 @@ function darkMode() {
     document.getElementById("title").style.color="white"
     document.getElementById("dark-mode").style.color="white"
     document.getElementById("dark-mode").style.backgroundColor="black"
-  }  
+  }     
 
 renderCalendar();   
 
