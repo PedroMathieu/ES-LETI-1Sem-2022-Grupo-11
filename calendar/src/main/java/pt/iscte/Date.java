@@ -86,7 +86,7 @@ public class Date {
 
         /**
          * Time constructor using a string
-         * @param day format must be: hour:minutes
+         * @param time format must be: hour:minutes
          */
         public Time(String time) {
             String[] timeSplit = time.split(":");

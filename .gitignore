@@ -1,4 +1,6 @@
 calendar/.settings/*
 calendar/.project
 calendar/target/*
+calendar/.idea
+calendar/.settings
 .vscode/settings.json
