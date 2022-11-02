@@ -1,7 +1,6 @@
 const daysTag = document.querySelector(".days"),
     currentDate = document.querySelector(".current-date"),
     prevNextIcon = document.querySelectorAll(".arrows span");
-    showCalendar = document.querySelectorAll(".cancel span");
 // getting new date, current year and month
 let date = new Date(),
     currYear = date.getFullYear(),
@@ -44,10 +43,19 @@ function a() {
     $(".arrows span").addClass("hideme")
     $("h1").addClass("hideme")
 	$(".dia button").addClass("hideme")
-  $(".container").removeClass("hideme")
-}
+    $(".container").removeClass("hideme")
+    document.getElementById("voltar").style.visibility="visible"
+    document.getElementById("voltar").style.cursor="pointer"
+}   
 
-
+function darkMode() {
+    document.getElementById("pagina").style.backgroundColor="black"
+    document.getElementById("prev").style.color="white"
+    document.getElementById("next").style.color="white"
+    document.getElementById("title").style.color="white"
+    document.getElementById("dark-mode").style.color="white"
+    document.getElementById("dark-mode").style.backgroundColor="black"
+  }  
 
 renderCalendar();   
 

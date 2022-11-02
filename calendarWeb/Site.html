@@ -4,25 +4,32 @@
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
 
-    <h1 class="current-date"></h1>
+    <h1 id="title" class="current-date"></h1>
 
-
+    <div class="cancel">
+        <button id="voltar" onClick="window.location.reload();" class="material-symbols-outlined">cancel</button>
+    </div> 
 
     <div class="arrows">
         <span id="prev" class="material-symbols-rounded">chevron_left</span>
         <span id="next" class="material-symbols-rounded">chevron_right</span>
     </div>
-    <div class="cancel">
-        <button onClick="window.location.reload();" class="material-symbols-outlined">cancel</button>
-    </div>
+
     
 
 </head>
 
-<body>
+<body id="pagina">
+
+
+    <div class="dark-mode">
+        <button id="dark-mode" onclick="darkMode()" class="material-symbols-outlined">dark_mode</button>
+      </div>
+
 
     <div class="table">
         <ul class="semana">
@@ -46,7 +53,7 @@
 
                 </div>
                 <div class="cancel">
-                    <button onClick="window.location.reload();" class="material-symbols-outlined">cancel</button>
+                    <button  id="voltar" onClick="window.location.reload();" class="material-symbols-outlined">cancel</button>
                 </div>
             </div>
 

@@ -4,6 +4,13 @@
     box-sizing: border-box;
 }
 
+.dark-mode button{
+    margin-left: -500px;
+    cursor: pointer;
+    border: none;
+    background-color:white
+}
+
 .container {
     position: absolute;
     top: -50px;
@@ -50,13 +57,12 @@
     margin-bottom: -570px;
     margin-left: -750px;
     scale: 120%;
-    cursor: pointer;
 }
 
 .cancel button{
     border: none;
     border-radius: 20px;
-    cursor: pointer;
+    visibility:hidden;
 }
 
 .newUI{
