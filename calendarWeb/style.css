@@ -1,0 +1,91 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.current-date{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;    
+    margin-top: -300px;
+}
+
+.days li{     
+    background-color:transparent;
+    cursor:pointer;
+    border-radius:24px;
+}
+
+.days li:hover{
+    background: #817d7d ;
+    transition: 0.8s;
+}
+
+.days .inactive:hover{
+    color: black;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top:18%;
+}   
+
+.table{
+    margin-top: 260px;
+    position: fixed;
+    background: rgb(202, 184, 184); 
+    border-radius:10px;
+    width: 600px;
+    text-align: center;
+    padding-bottom: 18px;
+}
+
+.table ul{
+   display: flex;
+   list-style: none;
+   flex-wrap: wrap;
+}
+
+.table li{
+    width: calc(100%/7);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.semana{
+    background-color: #c53131;
+    border-radius: 8px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    padding: 4px;
+}
+
+.days li{ 
+    margin-top: 20px;
+}
+
+.current-date{
+    display: flex;
+}
+
+.inactive{
+    color: #817d7d;
+}
+
+.arrows{
+    position: absolute;
+    margin-top: -290px;
+}
+
+.arrows span{
+    text-align: center;
+    margin:0px 140px;
+    border-radius: 10px;
+    scale: 150%;
+}
+
+.arrows span:hover{
+    background-color: #817d7d;
+    transition: 0.8s;
+    cursor: pointer;
+}
