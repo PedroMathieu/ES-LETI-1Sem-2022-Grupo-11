@@ -1,7 +1,7 @@
 const daysTag = document.querySelector(".days"),
     currentDate = document.querySelector(".current-date"),
     prevNextIcon = document.querySelectorAll(".arrows span");
-    const buttons = document.getElementsByTagName("li");
+    showCalendar = document.querySelectorAll(".cancel span");
 // getting new date, current year and month
 let date = new Date(),
     currYear = date.getFullYear(),
@@ -24,7 +24,8 @@ const renderCalendar = () => {
         day++;
         let isToday = i === date.getDate() && currMonth === new Date().getMonth()
             && currYear === new Date().getFullYear() ? "active" : "";
-        liTag += `<button onclick="getclickname(this)" id="${day}"class="${isToday}">${i}</button>`;
+        liTag += `<button onclick="a(this)" id="${day}"class="${isToday}">${i}</button>`;
+        //liTag += `<button onclick="getID(this);a()" id="${day}"class="${isToday}">${i}</button>`;
     }
     for (let i = lastDayofMonth; i < 6; i++) { // creating li of next month first days
         liTag += `<button class="inactive">${i - lastDayofMonth + 1}</button>`
@@ -34,10 +35,19 @@ const renderCalendar = () => {
     daysTag.innerHTML = liTag;
 }
     
- function getclickname(obj)
+ function getID(obj)
  {
     alert(obj.id);
  }
+
+function a() {
+    $(".arrows span").addClass("hideme")
+    $("h1").addClass("hideme")
+	$(".dia button").addClass("hideme")
+  $(".container").removeClass("hideme")
+}
+
+
 
 renderCalendar();   
 
