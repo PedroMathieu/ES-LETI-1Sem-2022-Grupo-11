@@ -1,6 +1,7 @@
 const daysTag = document.querySelector(".days"),
     currentDate = document.querySelector(".current-date"),
     prevNextIcon = document.querySelectorAll(".arrows span");
+    let x = 0;
 // getting new date, current year and month
 let date = new Date(),
     currYear = date.getFullYear(),
@@ -55,7 +56,31 @@ function darkMode() {
     document.getElementById("title").style.color="white"
     document.getElementById("dark-mode").style.color="white"
     document.getElementById("dark-mode").style.backgroundColor="black"
-  }     
+    document.getElementById("voltar").style.color="white"
+    document.getElementById("voltar").style.backgroundColor="black"
+  } 
+
+  function lightMode() {
+    document.getElementById("pagina").style.backgroundColor="white"
+    document.getElementById("prev").style.color="black"
+    document.getElementById("next").style.color="black"
+    document.getElementById("title").style.color="black"
+    document.getElementById("dark-mode").style.color="black"
+    document.getElementById("dark-mode").style.backgroundColor="white"
+    document.getElementById("voltar").style.color="black"
+    document.getElementById("voltar").style.backgroundColor="white"
+  } 
+
+  function toggle(){
+    x++;
+    if(Math.abs(x % 2) == 1)
+{
+    document.getElementsByTagName('body')[0].classList.add(darkMode());
+  }
+  else if( x % 2 == 0){
+    document.getElementsByTagName('body')[0].classList.add(lightMode())
+  }
+}
 
 renderCalendar();   
 
