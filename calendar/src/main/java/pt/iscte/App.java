@@ -11,6 +11,7 @@ public class App  {
     private static Map<String, String> calendars = new HashMap<String, String>();
     // List of calendar objects
     private static List<PersonalCalendar> personalCalendarObjects = new ArrayList<PersonalCalendar>();
+    private static final Server server = new Server(personalCalendarObjects);
 
     /**
     * Loads json calendar files from calendars directory
