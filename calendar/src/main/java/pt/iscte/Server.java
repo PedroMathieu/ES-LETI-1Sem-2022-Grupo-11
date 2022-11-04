@@ -4,7 +4,9 @@ import spark.Request;
 import spark.Response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -16,9 +18,9 @@ import static spark.Spark.*;
  */
 public class Server {
     //TODO: can passing personal calendars be optimized?
-    private List<PersonalCalendar> personalCalendarObjects = new ArrayList<PersonalCalendar>();
+    private Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
 
-    public Server(List<PersonalCalendar> personalCalendars) {
+    public Server(Map<String, PersonalCalendar> personalCalendars) {
         this.personalCalendarObjects = personalCalendars;
         staticFiles.location("/calendarWeb");
         setupEndpoints();
@@ -32,7 +34,7 @@ public class Server {
         TODO: Get the calendar of a SPECIFIED user, by passing ID in params or any other way
         */
 
-        return personalCalendarObjects.get(0).getEvents();
+        return personalCalendarObjects.get("jphjs");
     }
 
     public void setupEndpoints() {
