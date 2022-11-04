@@ -34,6 +34,10 @@ public class App  {
         }
     }
 
+    public static Map<String, PersonalCalendar> getPersonalCalendarObjects() {
+        return personalCalendarObjects;
+    }
+
     public static void main(String[] args) {
         loadCalendars();
     }
