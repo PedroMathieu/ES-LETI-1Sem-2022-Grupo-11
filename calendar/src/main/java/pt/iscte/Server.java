@@ -1,5 +1,7 @@
 package pt.iscte;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import spark.Request;
 import spark.Response;
 
@@ -19,9 +21,11 @@ public class Server {
     private Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
 
     public Server(Map<String, PersonalCalendar> personalCalendars) {
+        port(4444);
         this.personalCalendarObjects = personalCalendars;
         staticFiles.location("/calendarWeb");
         setupEndpoints();
+        System.out.println("[SERVER] alive setup at: http://localhost:4444");
     }
 
     /**
@@ -63,6 +67,24 @@ public class Server {
     }
 
     /**
+     * Builds data in JSON to send it to the front end.
+     *
+     * @param rOwner calendar owner, to get its calendar
+     * @param dateRequested requested date to get events
+     * @return JSON object to send to front end
+     */
+    private Object buildEventsInJson(String rOwner, LocalDate dateRequested) {
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (Event e : personalCalendarObjects.get(rOwner).getEventsInADay(dateRequested))
+            jsonArray.add(e.convertEventToJson());
+
+        json.put("events", jsonArray);
+        return json;
+    }
+
+    /**
      * Route of getEventsByDay. Gets all the events from the calendar.
      * Given the owner of the calendar by giving the date
      *
@@ -70,7 +92,7 @@ public class Server {
      * @param res Spark response object
      * @return response to give
      */
-    public Object getEventsByDayRoute(Request req, Response res) {
+    private Object getEventsByDayRoute(Request req, Response res) {
         int rYear, rMonth, rDay;
         String rOwner = req.params("userId");
 
@@ -95,14 +117,14 @@ public class Server {
         System.out.println("[SERVER] getting events");
         LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
 
-        //TODO: return events in JSON or any other readable format
-        return personalCalendarObjects.get(rOwner).getEventsInADay(dateRequested);
+        res.type("application/json");
+        return buildEventsInJson(rOwner, dateRequested);
     }
 
     /**
      * Sets up all the routes to all endpoints.
      */
-    public void setupEndpoints() {
+    private void setupEndpoints() {
         System.out.println("[SERVER] setting up routes");
 
         get("/", (req, res) -> {

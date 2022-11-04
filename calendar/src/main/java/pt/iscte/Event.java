@@ -1,5 +1,8 @@
 package pt.iscte;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.time.LocalTime;
 import java.time.LocalDate;
 
@@ -134,6 +137,22 @@ public class Event {
      */
     public LocalTime getEventTimeEnd() {
         return eventTimeEnd;
+    }
+
+    /**
+     * Builds the JSON object of the current event
+     *
+     * @return json object of current event
+     */
+    public JSONObject convertEventToJson() {
+        JSONObject json = new JSONObject();
+        json.put("owner", eventOwner);
+        json.put("summary", eventSummary);
+        json.put("date_start", eventDateStart.toString());
+        json.put("time_start", eventTimeStart.toString());
+        json.put("date_end", eventDateEnd.toString());
+        json.put("time_end", eventTimeEnd.toString());
+        return json;
     }
 
     @Override
