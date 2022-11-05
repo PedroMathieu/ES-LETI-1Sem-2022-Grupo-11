@@ -6,7 +6,7 @@ import java.time.LocalDate;
 /**
  * Represents an event. It contains an owner, summary and start / end dates
  * 
- * @author Jose Soares
+ * @author Jose Soares, Joao Marques
  */
 public class Event {
     private final String eventOwner;
