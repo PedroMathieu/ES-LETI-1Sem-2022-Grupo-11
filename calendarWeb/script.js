@@ -43,44 +43,17 @@ const renderCalendar = () => {
 function a() {
     $(".arrows span").addClass("hideme")
     $("h1").addClass("hideme")
-	$(".dia button").addClass("hideme")
+	$(".days button").addClass("hideme")
+    $(".semana").addClass("hideme")
+    $(".table").addClass("hideme")
     $(".container").removeClass("hideme")
     document.getElementById("voltar").style.visibility="visible"
     document.getElementById("voltar").style.cursor="pointer"
 }   
-
-function darkMode() {
-    document.getElementById("pagina").style.backgroundColor="black"
-    document.getElementById("prev").style.color="white"
-    document.getElementById("next").style.color="white"
-    document.getElementById("title").style.color="white"
-    document.getElementById("dark-mode").style.color="white"
-    document.getElementById("dark-mode").style.backgroundColor="black"
-    document.getElementById("voltar").style.color="white"
-    document.getElementById("voltar").style.backgroundColor="black"
-  } 
-
-  function lightMode() {
-    document.getElementById("pagina").style.backgroundColor="white"
-    document.getElementById("prev").style.color="black"
-    document.getElementById("next").style.color="black"
-    document.getElementById("title").style.color="black"
-    document.getElementById("dark-mode").style.color="black"
-    document.getElementById("dark-mode").style.backgroundColor="white"
-    document.getElementById("voltar").style.color="black"
-    document.getElementById("voltar").style.backgroundColor="white"
-  } 
-
-  function toggle(){
-    x++;
-    if(Math.abs(x % 2) == 1)
-{
-    document.getElementsByTagName('body')[0].classList.add(darkMode());
-  }
-  else if( x % 2 == 0){
-    document.getElementsByTagName('body')[0].classList.add(lightMode())
-  }
-}
+        
+  document.getElementById("dark-mode").addEventListener("click", function() {
+    document.body.classList.toggle("dark-mode");
+  });
 
 renderCalendar();   
 

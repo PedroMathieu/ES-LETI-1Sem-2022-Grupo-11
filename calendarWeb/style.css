@@ -4,18 +4,10 @@
     box-sizing: border-box;
 }
 
-.dark-mode button{
-    position: absolute;
-    margin-left: 250px;
-    margin-top: 270px;
-    cursor: pointer;
-    border: none;
-    background-color:white
-}
-
 .container {
     position: absolute;
-    top: -50px;
+    top: -90px;
+    margin-left:-700px;
   }
   .hideme {
     opacity: 0;
@@ -54,10 +46,77 @@
     color: black;
 }
 
+.elements {
+    position: fixed;
+    background: rgb(255, 189, 127); 
+    border-radius:10px;
+    width: 109px;
+    height: 120px;
+    text-align: center;
+    margin-left: -1000px;
+    padding-bottom: 18px;
+}
+
+.dark-mode button{
+    position: absolute;
+    margin-left: -612px;
+    margin-top: -47px;
+    cursor: pointer;
+    border: medium;
+    border-width: 3px;
+    border-radius: 5px;
+    border-style: solid;
+    background-color:rgb(255, 189, 127); 
+}
+
+.dark-mode{
+    background-color: black;
+    color: white;
+}
+
+.add-event button{
+    position: absolute;
+    margin-left: -660px;
+    margin-top: -47px;
+    cursor: pointer;
+    border: medium;
+    border-width: 3px;
+    border-radius: 5px;
+    border-style: solid;
+    background-color:rgb(255, 189, 127); 
+}
+
+.time {
+    position: fixed;
+    background: rgb(0, 189, 127); 
+    border-radius:10px;
+    width: 109px;
+    height: 696px;
+    text-align: center;
+    padding-bottom: 18px;
+}
+
+.hour{
+    list-style: none;
+}
+
+.hour li{
+    background-color:transparent;
+    cursor:pointer;
+    border: none;
+    font-size: 18px;
+    font-family: 'Source Sans Pro', sans-serif;
+    margin-bottom: 19.5px;
+}
+
+.hour li:hover{
+    background-color: #3fc9eb;
+}
+
 .cancel{
     position: absolute;
-    margin-bottom: -570px;
-    margin-left: -750px;
+    margin-bottom: -820px;
+    margin-left: -780px;
     scale: 120%;
 }
 
@@ -68,23 +127,23 @@
     visibility:hidden;
 }
 
-.newUI{
-        margin-top: 48px;
-        position: fixed;
-        background: rgb(255, 189, 127); 
-        border-radius:10px;
-        width: 700px;
-        height: 350px;
-        text-align: center;
-        padding-bottom: 18px;
-}
-
 body{
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top:18%;
 }   
+
+.newUI{
+    margin-top: 100px;
+    position: fixed;
+    background: rgb(255, 189, 127); 
+    border-radius:10px;
+    width: 700px;
+    height: 696px;  
+    text-align: center;
+    padding-bottom: 18px;
+}
 
 .table{
     margin-top: 260px;
@@ -149,3 +208,4 @@ body{
     transition: 0.8s;
     cursor: pointer;
 }
+

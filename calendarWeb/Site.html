@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@700&display=swap" rel="stylesheet">
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
 
@@ -18,17 +21,21 @@
         <span id="prev" class="material-symbols-rounded">chevron_left</span>
         <span id="next" class="material-symbols-rounded">chevron_right</span>
     </div>
-
     
 
 </head>
 
 <body id="pagina">
 
+    <div class="elements">
+    </div> 
+        <div class="dark-mode">
+            <button id="dark-mode" class="material-symbols-outlined">dark_mode</button>
+          </div>
+        <div class="add-event">
+            <button id="add-event" onclick="newEvent()" class="material-symbols-outlined">add</button>
+        </div>
 
-    <div class="dark-mode">
-        <button id="dark-mode" onclick="toggle()" class="material-symbols-outlined">dark_mode</button>
-      </div>
 
 
     <div class="table">
@@ -40,21 +47,42 @@
             <li>Qui.</li>
             <li>Sex.</li>
             <li>Sab.</li>
-        
+        </ul>
+
+        <ul class="days">
+        </ul>
+    </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <div class="container">
-            </ul>
-            <ul class="days">
-            </ul>
+
+                
 
             <div class="container hideme">
                 <div class="newUI">
-                    
+                    <div class="time">
+                        <ul class="hour">   
+                            <li>08:00</li>
+                            <li>09:00</li>
+                            <li>10:00</li>
+                            <li>11:00</li>
+                            <li>12:00</li>
+                            <li>13:00</li>
+                            <li>14:00</li>
+                            <li>15:00</li>
+                            <li>16:00</li>
+                            <li>17:00</li>
+                            <li>18:00</li>
+                            <li>19:00</li>
+                            <li>20:00</li>
+                            <li>21:00</li>
+                            <li>22:00</li>
+                            <li>23:00</li>
+                            <li>24:00</li>
+                        </ul>
+                    </div>
                 </div>
 
             </div>
-        </div>
 
     </body>
 
