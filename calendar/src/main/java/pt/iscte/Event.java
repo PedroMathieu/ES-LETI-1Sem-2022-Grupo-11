@@ -1,6 +1,5 @@
 package pt.iscte;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.time.LocalTime;
@@ -55,9 +54,6 @@ public class Event {
         return Integer.parseInt(s.substring(x, y));
     }
 
-
-    
-
     /**
      * The following functions serve to streamline the code.
      * Each of them obtains components of the date/hour from
@@ -87,9 +83,6 @@ public class Event {
     public static int getLocalMinutes(String s) {
         return parse(s, 11, 13);
     }
-
-
-
 
     /**
      * Get day of event. Only works if event starts and ends in

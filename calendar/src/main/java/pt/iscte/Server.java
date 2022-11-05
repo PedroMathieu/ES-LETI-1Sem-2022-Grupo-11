@@ -4,11 +4,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import spark.Request;
 import spark.Response;
+import spark.servlet.SparkApplication;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.System.exit;
 import static spark.Spark.*;
 
 /**
@@ -17,15 +20,13 @@ import static spark.Spark.*;
  *
  * @author Jose Soares
  */
-public class Server {
-    private Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
+public class Server implements SparkApplication {
+    private String serverPath;
+    private static final Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
 
-    public Server(Map<String, PersonalCalendar> personalCalendars) {
-        port(4444);
-        this.personalCalendarObjects = personalCalendars;
-        staticFiles.location("/calendarWeb");
-        setupEndpoints();
-        System.out.println("[SERVER] alive setup at: http://localhost:4444");
+
+    public Server() {
+        init();
     }
 
     /**
@@ -61,19 +62,19 @@ public class Server {
      */
     private boolean validateOwner(String rOwner) {
         System.out.println("[SERVER] checking if calendar owner exists");
-        for (String owner : App.getPersonalCalendarObjects().keySet())
+        for (String owner : personalCalendarObjects.keySet())
             if (rOwner.equals(owner)) return true;
         return false;
     }
 
     /**
-     * Builds data in JSON to send it to the front end.
+     * Builds event data in JSON to send it to the front end.
      *
      * @param rOwner calendar owner, to get its calendar
      * @param dateRequested requested date to get events
      * @return JSON object to send to front end
      */
-    private Object buildEventsInJson(String rOwner, LocalDate dateRequested) {
+    private JSONObject buildEventsInJson(String rOwner, LocalDate dateRequested) {
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
@@ -81,6 +82,18 @@ public class Server {
             jsonArray.add(e.convertEventToJson());
 
         json.put("events", jsonArray);
+        return json;
+    }
+
+    /**
+     * Sends a simple message in json format
+     *
+     * @param message message to send
+     * @return JSONObject with message to send
+     */
+    public Object sendErrorInJson(String message) {
+        JSONObject json = new JSONObject();
+        json.put("error", message);
         return json;
     }
 
@@ -95,6 +108,7 @@ public class Server {
     private Object getEventsByDayRoute(Request req, Response res) {
         int rYear, rMonth, rDay;
         String rOwner = req.params("userId");
+        res.type("application/json");
 
         // Make sure that the date provided are numbers
         System.out.println("[SERVER] converting date");
@@ -103,21 +117,18 @@ public class Server {
             rMonth = Integer.parseInt(req.params("month"));
             rDay = Integer.parseInt(req.params("day"));
         } catch (NumberFormatException e) {
-            return "Year, month or day is not a number";
+            return sendErrorInJson("Year, month or day is not a number");
         }
 
-        // Make sure that a calendar Owner was specifieds
-        System.out.println("[SERVER] checking if calendar owner is present");
-        if (rOwner.equals("")) return "Specify a calendar owner";
-
         // Validate date params and calendar owner
-        if (!validateDateParams(rYear, rMonth, rDay) && !validateOwner(rOwner))
-            return "Something wrong in parameters";
+        if (!validateDateParams(rYear, rMonth, rDay) || !validateOwner(rOwner)) {
+            return sendErrorInJson("Something wrong in parameters");
+        }
 
         System.out.println("[SERVER] getting events");
         LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
 
-        res.type("application/json");
+        res.status(200);
         return buildEventsInJson(rOwner, dateRequested);
     }
 
@@ -133,5 +144,44 @@ public class Server {
         });
 
         get("/getEvents/:userId/:year/:month/:day", this::getEventsByDayRoute);
+    }
+
+    /**
+     * Loads calendars present in the calendars folders and creates
+     * PersonalCalendar objects from them. It puts them in a global map
+     * with a unique ID, to be used later on.
+     *
+     * @throws SecurityException if we don't have read permissions to the directory
+     * @throws NullPointerException if the calendars folder path is wrong or no calendars in it
+     */
+    private void loadCalendars () {
+        File folder = new File(System.getProperty("user.dir") + "/calendars");
+        try {
+            for (File fileEntry : folder.listFiles()) {
+                PersonalCalendar personalCalendarHandler = new PersonalCalendar(fileEntry.getAbsolutePath());
+                personalCalendarObjects.put(personalCalendarHandler.getCalendarOwner(), personalCalendarHandler);
+            }
+        } catch (NullPointerException e) {
+            System.err.println("Could not read anything in the folder " + folder.getAbsolutePath());
+            exit(0);
+        }
+    }
+
+    /**
+     * Get personal calendar objects
+     * @return map with personal calendar objects and owners
+     */
+    public Map<String, PersonalCalendar> getPersonalCalendarObjects() {
+        return personalCalendarObjects;
+    }
+
+    @Override
+    public void init() {
+        loadCalendars();
+        port(4444);
+        staticFiles.location("/calendarWeb");
+        setupEndpoints();
+        this.serverPath = "http://localhost:4444";
+        System.out.println("[SERVER] alive at: http://localhost:4444");
     }
 }
