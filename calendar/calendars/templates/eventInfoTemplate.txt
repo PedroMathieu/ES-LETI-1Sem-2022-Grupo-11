@@ -1,0 +1,9 @@
+                {
+					"dtstamp": "CAL_DTSTAMP",
+					"dtstart": "CAL_DTSTART",
+					"dtend": "CAL_DTEND",
+					"summary": "CAL_SUMMARY",
+					"uid": "CAL_UID",
+					"description": "CAL_DESCRIPTION",
+					"location": "CAL_LOCATION"
+				}

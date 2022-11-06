@@ -1,0 +1,8 @@
+{
+	"vcalendar": [
+		{
+			"prodid": "CAL_PRODID",
+			"version": "CAL_VERSION",
+			"calscale": "CAL_CALSCALE",
+			"x-wr-calname": "CAL_CALNAME",
+			"vevent": [
