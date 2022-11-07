@@ -155,7 +155,7 @@ public class Server implements SparkApplication {
      * @throws NullPointerException if the calendars folder path is wrong or no calendars in it
      */
     private void loadCalendars () {
-        File folder = new File(System.getProperty("user.dir") + "/calendars");
+        File folder = new File(System.getProperty("user.dir") + "/calendars/jsonFiles/");
         try {
             for (File fileEntry : folder.listFiles()) {
                 PersonalCalendar personalCalendarHandler = new PersonalCalendar(fileEntry.getAbsolutePath());

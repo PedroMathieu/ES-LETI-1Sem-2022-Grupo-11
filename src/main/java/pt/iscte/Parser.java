@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import static java.lang.System.exit;
 
 /**
  * This class' job will be to take the information stored in a .ics file stored
@@ -18,10 +19,14 @@ import java.util.Scanner;
 public class Parser {
 
     // Directory
-    public final String DIR = System.getProperty("user.dir") + "/calendars/";
+    public final String DIR_MAIN = System.getProperty("user.dir") + "/calendars/";
+    public final String DIR_ICS = DIR_MAIN + "icsFiles/";
+    public final String DIR_JSON = DIR_MAIN + "jsonFiles/";
+    public final String DIR_TEMPLATES = DIR_MAIN + "templates/";
 
-    // Path for the output .json file
-    private Path path;
+    // Paths for the .ics file and where the .json will be stored
+    private Path path_read;
+    private Path path_write;
 
     // Calendar information
     private String calendar_prodID;
@@ -52,8 +57,7 @@ public class Parser {
      * @param filename - the name of the .ics file to be scanned
      */
     public void initiateCalendar(String filename) throws IOException {
-        File file = new File(DIR + filename);
-        System.out.println(System.getProperty("user.dir"));
+        File file = new File(DIR_ICS + filename);
 
         try {
 
@@ -80,7 +84,7 @@ public class Parser {
                     // if it found the END tag its job is done and won't keep reading the file
                     case ("END:VCALENDAR"):
                         flag_CanReadFile = false;
-                        Files.writeString(path, Files.readString(path) + "\n" + generateEndTemplate());
+                        Files.writeString(path_write, Files.readString(path_write) + "\n" + generateEndTemplate());
                         break;
 
                     // having found a BEGINEVENT tag it means it has already previously taken in the
@@ -132,6 +136,7 @@ public class Parser {
 
         } catch (FileNotFoundException e) { // in case something happens when it tries to read the file
             System.err.println("ERROR: The file " + file + " was not found/couldn't be opened properly!");
+            exit(0);
         }
     }
 
@@ -161,7 +166,8 @@ public class Parser {
         // takes in the name of the calendar
         else if (line.startsWith("X-WR-CALNAME:")) {
             calendar_name = line.replace("X-WR-CALNAME:", "");
-            path = Path.of(DIR + "jsonFiles/" + calendar_name + ".json");
+            path_write = Path.of(DIR_JSON + calendar_name + ".json");
+            path_read = Path.of(DIR_ICS + calendar_name);
         }
 
     }
@@ -244,7 +250,7 @@ public class Parser {
         template = template.replace("CAL_CALSCALE", calendar_type);
         template = template.replace("CAL_CALNAME", calendar_name);
 
-        Files.writeString(path, encodeUTF8(template) + "\n");
+        Files.writeString(path_write, encodeUTF8(template) + "\n");
     }
 
     /**
@@ -252,7 +258,7 @@ public class Parser {
      */
     public void writeCurrentEventCalendarInfo() throws IOException {
         if (!flag_FirstEvent) {
-            Files.writeString(path, Files.readString(path) + ",\n");
+            Files.writeString(path_write, Files.readString(path_write) + ",\n");
         } else {
             flag_FirstEvent = false;
         }
@@ -267,7 +273,7 @@ public class Parser {
         template = template.replace("CAL_DESCRIPTION", event_Description);
         template = template.replace("CAL_LOCATION", event_Location);
 
-        Files.writeString(path, Files.readString(path) + encodeUTF8(template));
+        Files.writeString(path_write, Files.readString(path_write) + encodeUTF8(template));
     }
 
     /**
@@ -279,7 +285,7 @@ public class Parser {
      * @throws IOException
      */
     public String generateMainTemplate() throws IOException {
-        return Files.readString(Path.of(DIR + "/templates/mainInfoTemplate.txt"));
+        return Files.readString(Path.of(DIR_TEMPLATES + "mainInfoTemplate.txt"));
     }
 
     /**
@@ -291,7 +297,7 @@ public class Parser {
      * @throws IOException
      */
     public String generateEventTemplate() throws IOException {
-        return Files.readString(Path.of(DIR + "/templates/eventInfoTemplate.txt"));
+        return Files.readString(Path.of(DIR_TEMPLATES + "eventInfoTemplate.txt"));
     }
 
     /**
@@ -300,7 +306,7 @@ public class Parser {
      * @throws IOException
      */
     public String generateEndTemplate() throws IOException {
-        return Files.readString(Path.of(DIR + "/templates/endingFileTemplate.txt"));
+        return Files.readString(Path.of(DIR_TEMPLATES + "endingFileTemplate.txt"));
     }
 
     /**
@@ -317,13 +323,26 @@ public class Parser {
         event_uID = "";
     }
 
-    public static void readFiles(){
-        
-    }   
+    public void readFiles() throws IOException {
+        File folder = new File(DIR_ICS);
+        System.out.println(DIR_ICS);
+        try {
+            for(File curFile : folder.listFiles()){
+                initiateCalendar(curFile.getName());
+            }
+        } catch (NullPointerException e) {
+            System.err.println("Couldn't find any files in the folder!");
+            exit(0);
+        }
+    }
 
 
 
 
+
+
+
+    
     public static void main(String[] args) throws IOException {
         Parser p = new Parser();
         System.out.print("Enter your file's name: ");
