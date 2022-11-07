@@ -49,12 +49,13 @@
   let days = "";
 
   for (let x = firstDayIndex; x > 0; x--) {
-    days += `<button id="${prevLastDay - x + 1}" onclick="getID(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
+    days += `<button onclick="getID(this)" id="${prevLastDay - x + 1}" class="prev-date">${prevLastDay - x + 1}</button>`;
   }
 
   for (let i = 1; i <= lastDay; i++) {
     if (
-      i === new Date().getDate() && date.getMonth() === new Date().getMonth()
+      i === new Date().getDate() &&
+      date.getMonth() && date.getFullYear() === new Date().getDate()
     ) {
         days += `<button onclick="getID(this)" id="${i}" class="today">${i}</button>`;
     } else {
@@ -63,14 +64,12 @@
   }
 
   for (let j = 1; j <= nextDays; j++) {
-    days += `<button id="${j}" onclick="getID(this)" class="next-date">${j}</button>`;
+    days += `<button onclick="getID(this)" id="${j}" class="next-date">${j}</button>`;
+    monthDays.innerHTML = days;
   }
-  monthDays.innerHTML = days;
 };
 
-function getID(obj){
-  alert(obj.id);
-}
+
 
 document.querySelector(".prev").addEventListener("click", () => {
   date.setMonth(date.getMonth() - 1);
@@ -82,10 +81,12 @@ document.querySelector(".next").addEventListener("click", () => {
   renderCalendar();
 });
 
-document.querySelector(".days").addEventListener("click", () => {
+document.querySelector(".days").addEventListener("click", getID);
+
+function getID(o){
   document.getElementById("w").remove();
   document.getElementById("d").remove();
-})
+}
 
 renderCalendar();
 
