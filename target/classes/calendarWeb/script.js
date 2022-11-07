@@ -54,8 +54,7 @@
 
   for (let i = 1; i <= lastDay; i++) {
     if (
-      i === new Date().getDate() &&
-      date.getMonth() && date.getFullYear() === new Date().getDate()
+      i === new Date().getDate() && date.getMonth() === new Date().getMonth()
     ) {
         days += `<button onclick="getID(this)" id="${i}" class="today">${i}</button>`;
     } else {
@@ -65,8 +64,8 @@
 
   for (let j = 1; j <= nextDays; j++) {
     days += `<button id="${j}" onclick="getID(this)" class="next-date">${j}</button>`;
-    monthDays.innerHTML = days;
   }
+  monthDays.innerHTML = days;
 };
 
 function getID(obj){
