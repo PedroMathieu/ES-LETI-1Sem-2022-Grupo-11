@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class Parser {
 
     // Directory
-    public final String DIR = System.getProperty("user.dir") + "/calendar/calendars/";
+    public final String DIR = System.getProperty("user.dir") + "/calendars/";
 
     // Path for the output .json file
     private Path path;
@@ -92,7 +92,10 @@ public class Parser {
                         }
                         break;
 
-                    //
+                    // having found the ENDEVENT tag it has finished reading the current event, and
+                    // it changes the flag that refers to being currently reading the description to
+                    // false, as well as cleaning the local variables and writing the taken info
+                    // into the .json file
                     case ("END:VEVENT"):
                         writeCurrentEventCalendarInfo();
                         cleanEventVariables();
@@ -158,7 +161,7 @@ public class Parser {
         // takes in the name of the calendar
         else if (line.startsWith("X-WR-CALNAME:")) {
             calendar_name = line.replace("X-WR-CALNAME:", "");
-            path = Path.of(DIR + calendar_name + ".json");
+            path = Path.of(DIR + "jsonFiles/" + calendar_name + ".json");
         }
 
     }
@@ -313,6 +316,13 @@ public class Parser {
         event_startDate = "";
         event_uID = "";
     }
+
+    public static void readFiles(){
+        
+    }   
+
+
+
 
     public static void main(String[] args) throws IOException {
         Parser p = new Parser();
