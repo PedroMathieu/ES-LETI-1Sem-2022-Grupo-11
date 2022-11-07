@@ -1,88 +1,94 @@
-const daysTag = document.querySelector(".days"),
-    currentDate = document.querySelector(".current-date"),
-    prevNextIcon = document.querySelectorAll(".arrows span");
-    let x = 0;
-// getting new date, current year and month
-let date = new Date(),
-    currYear = date.getFullYear(),
-    currMonth = date.getMonth();
-// storing full name of all months in array
-const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
+
+  const monthDays = document.querySelector(".days"),
+  prevNextIcon = document.querySelectorAll(".month"),
+  currentDate = document.querySelector(".current-date");
+  var eventDate = document.getElementById("date");
+  var start = document.getElementById("starttime");
+  var end = document.getElementById("endtime");
+  const date = new Date();
+  currMonth = date.getMonth(),
+  currYear = date.getFullYear();
+
+  const renderCalendar = () => {
+  date.setDate(1);
+
+  
+
+  const lastDay = new Date(
+    date.getFullYear(),
+    date.getMonth() + 1,
+    0
+  ).getDate();
+
+  const prevLastDay = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    0
+  ).getDate();
+  
+  
+
+  const firstDayIndex = date.getDay();
+
+  const lastDayIndex = new Date(
+    date.getFullYear(),
+    date.getMonth() + 1,
+    0
+  ).getDay();
+
+  const nextDays = 7 - lastDayIndex - 1;
+
+  const months = 
+  ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
     "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-const renderCalendar = () => {
-    let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
-        lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
-        lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
-        lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
-    let liTag = "";
-    let day = 0;
-    for (let i = firstDayofMonth; i > 0; i--) { // creating li of previous month last days
-        liTag += `<button class="inactive">${lastDateofLastMonth - i + 1}</button>`;
-    }
-    for (let i = 1; i <= lastDateofMonth; i++) { // creating li of all days of current month
-        // adding active class to li if the current day, month, and year matched
-        day++;
-        let isToday = i === date.getDate() && currMonth === new Date().getMonth()
-            && currYear === new Date().getFullYear() ? "active" : "";
-        liTag += `<button onclick="a(this)" id="${day}"class="${isToday}">${i}</button>`;
-        //liTag += `<button onclick="getID(this);a()" id="${day}"class="${isToday}">${i}</button>`;
-    }
-    for (let i = lastDayofMonth; i < 6; i++) { // creating li of next month first days
-        liTag += `<button class="inactive">${i - lastDayofMonth + 1}</button>`
 
-    }
-    currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-    daysTag.innerHTML = liTag;
-}
-    
- function getID(obj)
- {
-    alert(obj.id);
- }
+  document.querySelector(".date h1").innerHTML = months[date.getMonth()];
 
-function a() {
-    $(".arrows span").addClass("hideme")
-    $("h1").addClass("hideme")
-	$(".dia button").addClass("hideme")
-    $(".container").removeClass("hideme")
-    document.getElementById("voltar").style.visibility="visible"
-    document.getElementById("voltar").style.cursor="pointer"
-}   
+  document.querySelector(".date p").innerHTML = date.getFullYear();
 
-function darkMode() {
-    document.getElementById("pagina").style.backgroundColor="black"
-    document.getElementById("prev").style.color="white"
-    document.getElementById("next").style.color="white"
-    document.getElementById("title").style.color="white"
-    document.getElementById("dark-mode").style.color="white"
-    document.getElementById("dark-mode").style.backgroundColor="black"
-    document.getElementById("voltar").style.color="white"
-    document.getElementById("voltar").style.backgroundColor="black"
-  } 
+  let days = "";
 
-  function lightMode() {
-    document.getElementById("pagina").style.backgroundColor="white"
-    document.getElementById("prev").style.color="black"
-    document.getElementById("next").style.color="black"
-    document.getElementById("title").style.color="black"
-    document.getElementById("dark-mode").style.color="black"
-    document.getElementById("dark-mode").style.backgroundColor="white"
-    document.getElementById("voltar").style.color="black"
-    document.getElementById("voltar").style.backgroundColor="white"
-  } 
-
-  function toggle(){
-    x++;
-    if(Math.abs(x % 2) == 1)
-{
-    document.getElementsByTagName('body')[0].classList.add(darkMode());
+  for (let x = firstDayIndex; x > 0; x--) {
+    days += `<button id="${prevLastDay - x + 1}" onclick="getID(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
   }
-  else if( x % 2 == 0){
-    document.getElementsByTagName('body')[0].classList.add(lightMode())
+
+  for (let i = 1; i <= lastDay; i++) {
+    if (
+      i === new Date().getDate() &&
+      date.getMonth() && date.getFullYear() === new Date().getDate()
+    ) {
+        days += `<button onclick="getID(this)" id="${i}" class="today">${i}</button>`;
+    } else {
+      days += `<button onclick="getID(this)" id="${i}">${i}</button>`;
+    }
   }
+
+  for (let j = 1; j <= nextDays; j++) {
+    days += `<button id="${j}" onclick="getID(this)" class="next-date">${j}</button>`;
+    monthDays.innerHTML = days;
+  }
+};
+
+function getID(obj){
+  alert(obj.id);
 }
 
-renderCalendar();   
+document.querySelector(".prev").addEventListener("click", () => {
+  date.setMonth(date.getMonth() - 1);
+  renderCalendar();
+});
+
+document.querySelector(".next").addEventListener("click", () => {
+  date.setMonth(date.getMonth() + 1); 
+  renderCalendar();
+});
+
+document.querySelector(".days").addEventListener("click", () => {
+  document.getElementById("w").remove();
+  document.getElementById("d").remove();
+})
+
+renderCalendar();
 
 prevNextIcon.forEach(icon => { // getting prev and next icons
     icon.addEventListener("click", () => { // adding click event on both icons
