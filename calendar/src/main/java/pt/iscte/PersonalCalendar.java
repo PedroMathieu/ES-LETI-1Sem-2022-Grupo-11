@@ -1,5 +1,6 @@
 package pt.iscte;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.time.LocalDate;
@@ -23,22 +24,20 @@ import org.json.simple.parser.JSONParser;
  * @author Jose Soares
  */
 public class PersonalCalendar {
-    String id = "";
     String calendarFile = "";
     String calendarOwner = "";
     
     List<Event> events = new LinkedList<>();
     JSONParser parser = new JSONParser();
 
-    public PersonalCalendar(String id, String calendarFile) {
-        this.id = id;
+    public PersonalCalendar(String calendarFile) {
         this.calendarFile = calendarFile;
         parseJsonCalendar();
     }
 
     /**
      * Gets data from JSON calendar file and processes it
-     * by getting all the events in an list for easier
+     * by getting all the events in a list for easier
      * data manipulation and the calendar owner
      */
     private void parseJsonCalendar() {
@@ -56,7 +55,7 @@ public class PersonalCalendar {
                 vCalendarObjects.add((JSONObject) vCalendarIterator.next());
             
             // From vcalendar, get the calendar owner (email) and the events
-            calendarOwner = (String) vCalendarObjects.get(0).get("x-wr-calname");
+            calendarOwner = ((String) vCalendarObjects.get(0).get("x-wr-calname")).split("@")[0];
             JSONArray vEvents = (JSONArray) vCalendarObjects.get(0).get("vevent");
             Iterator<JSONObject> vEventsIterator = vEvents.iterator();
             
@@ -70,6 +69,14 @@ public class PersonalCalendar {
         } catch (Exception e) {
             System.err.println("Couldn't read file " + calendarFile);
         }
+    }
+
+    /**
+     * Gets the calendar owner
+     * @return username of email of calendar owner (its unique)
+     */
+    public String getCalendarOwner() {
+        return calendarOwner;
     }
 
     /**
