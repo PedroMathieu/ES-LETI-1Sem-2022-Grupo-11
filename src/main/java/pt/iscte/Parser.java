@@ -327,7 +327,7 @@ public class Parser {
         File folder = new File(DIR_ICS);
         System.out.println(DIR_ICS);
         try {
-            for(File curFile : folder.listFiles()){
+            for (File curFile : folder.listFiles()) {
                 initiateCalendar(curFile.getName());
             }
         } catch (NullPointerException e) {
@@ -336,13 +336,6 @@ public class Parser {
         }
     }
 
-
-
-
-
-
-
-    
     public static void main(String[] args) throws IOException {
         Parser p = new Parser();
         System.out.print("Enter your file's name: ");
