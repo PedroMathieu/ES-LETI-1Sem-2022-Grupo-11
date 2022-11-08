@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,6 +106,28 @@ public class Server implements SparkApplication {
     }
 
     /**
+     * Generates a random string of letters to be used to create
+     * a temp file with a random name. Just to avoid duplicate files
+     * when uploading multiple files. This a scalable way to upload calendars.
+     *
+     * @return string with random characters
+     */
+    private String generateRandomTempName() {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+        StringBuilder buffer = new StringBuilder(targetStringLength);
+        for (int i = 0; i < targetStringLength; i++) {
+            int randomLimitedInt = leftLimit + (int)
+                    (random.nextFloat() * (rightLimit - leftLimit + 1));
+            buffer.append((char) randomLimitedInt);
+        }
+
+        return buffer.toString();
+    }
+
+    /**
      * Uploads a .ics calendar to server so that it can be used by the parser
      *
      * @param req Spark request object, contains parameters info
@@ -112,44 +135,41 @@ public class Server implements SparkApplication {
      * @return response to give
      */
     private Object uploadCalendarToServer(Request req, Response res) throws IOException {
-        //TODO: Develop a validation that checks if the file being uploaded is an ics file
-        //TODO: Handle errors that come with parsing and prevent uploading wrong files
-        //      maybe the parser already handles these issues?
-
         String calendarUrl = req.queryParams("calendar-link-input");
+
+        // Checks if the link protocol is webcal and then it changes it to https for download
+        System.out.println("[SERVER] Validating URL protocol");
+        if (!(calendarUrl.substring(0, 7).equals(" webcal"))) {
+            res.type("application/json");
+            return sendErrorInJson("Please make sure the url is webcal://");
+        }
+
+        calendarUrl = calendarUrl.replaceAll(" webcal://", "https://");
         System.out.println("[SERVER] Starting upload of " + calendarUrl + " to the server!");
 
         //Create a temp .ics file to be parsed and deleted later. Preserve space...
         System.out.println("[SERVER] Creating a temp .ics file for parsing");
         byte[] array = new byte[7];
         new Random().nextBytes(array);
-        String tempFileName = new String(array, Charset.forName("UTF-8")) + "_temp.ics";
+        String tempFileName = generateRandomTempName() + "_temp.ics";
         String tempFilePath = System.getProperty("user.dir") + "/calendars/icsFiles/" + tempFileName;
 
-        // Checks if the link has the correct protocol
-        /**
-        System.out.println("[SERVER] Validating URL protocol");
-        if (!calendarUrl.contains("http://") || !calendarUrl.contains("https://"))
-            return sendErrorInJson("Please insert a url with http or https!");
-         */
-
-        URL url = new URL(calendarUrl);
-
-        // Reading file into
+        // Reading calendar data into temp file
         System.out.println("[SERVER] Getting calendar data stream");
-        BufferedInputStream bis = new BufferedInputStream(url.openStream());
+        BufferedInputStream bis = new BufferedInputStream(new URL(calendarUrl).openStream());
 
         System.out.println("[SERVER] Creating calendar output file");
-        FileOutputStream fis = new FileOutputStream(tempFilePath);
-        byte[] buffer = new byte[1024];
-        int count=0;
+        try (FileOutputStream fis = new FileOutputStream(tempFilePath)) {
+            byte[] buffer = new byte[1024];
+            int count = 0;
 
-        System.out.println("[SERVER] Writing calendar to file");
-        while((count = bis.read(buffer,0,1024)) != -1)
-            fis.write(buffer, 0, count);
+            System.out.println("[SERVER] Writing calendar to file");
+            while ((count = bis.read(buffer, 0, 1024)) != -1)
+                fis.write(buffer, 0, count);
 
-        fis.close();
-        bis.close();
+            fis.close();
+            bis.close();
+        } catch (FileNotFoundException e) {}
 
         // Parse the .ics calendar
         parser.initiateCalendar(tempFileName);
