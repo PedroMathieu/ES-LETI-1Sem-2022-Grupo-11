@@ -6,13 +6,21 @@ import spark.Request;
 import spark.Response;
 import spark.servlet.SparkApplication;
 
-import java.io.File;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static java.lang.System.exit;
+import static java.lang.System.load;
 import static spark.Spark.*;
+
 
 /**
  * The server class is responsible for handling requests from the front end.
@@ -23,6 +31,7 @@ import static spark.Spark.*;
 public class Server implements SparkApplication {
     private String serverPath;
     private static final Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
+    private static final Parser parser = new Parser();
     public Server() {
         init();
     }
@@ -96,6 +105,70 @@ public class Server implements SparkApplication {
     }
 
     /**
+     * Uploads a .ics calendar to server so that it can be used by the parser
+     *
+     * @param req Spark request object, contains parameters info
+     * @param res Spark response object
+     * @return response to give
+     */
+    private Object uploadCalendarToServer(Request req, Response res) throws IOException {
+        //TODO: Develop a validation that checks if the file being uploaded is an ics file
+        //TODO: Handle errors that come with parsing and prevent uploading wrong files
+        //      maybe the parser already handles these issues?
+
+        String calendarUrl = req.queryParams("calendar-link-input");
+        System.out.println("[SERVER] Starting upload of " + calendarUrl + " to the server!");
+
+        //Create a temp .ics file to be parsed and deleted later. Preserve space...
+        System.out.println("[SERVER] Creating a temp .ics file for parsing");
+        byte[] array = new byte[7];
+        new Random().nextBytes(array);
+        String tempFileName = new String(array, Charset.forName("UTF-8")) + "_temp.ics";
+        String tempFilePath = System.getProperty("user.dir") + "/calendars/icsFiles/" + tempFileName;
+
+        // Checks if the link has the correct protocol
+        /**
+        System.out.println("[SERVER] Validating URL protocol");
+        if (!calendarUrl.contains("http://") || !calendarUrl.contains("https://"))
+            return sendErrorInJson("Please insert a url with http or https!");
+         */
+
+        URL url = new URL(calendarUrl);
+
+        // Reading file into
+        System.out.println("[SERVER] Getting calendar data stream");
+        BufferedInputStream bis = new BufferedInputStream(url.openStream());
+
+        System.out.println("[SERVER] Creating calendar output file");
+        FileOutputStream fis = new FileOutputStream(tempFilePath);
+        byte[] buffer = new byte[1024];
+        int count=0;
+
+        System.out.println("[SERVER] Writing calendar to file");
+        while((count = bis.read(buffer,0,1024)) != -1)
+            fis.write(buffer, 0, count);
+
+        fis.close();
+        bis.close();
+
+        // Parse the .ics calendar
+        parser.initiateCalendar(tempFileName);
+
+        // Delete .ics temp file
+        File f= new File(tempFilePath);
+        if (f.delete())
+            System.out.println("[SERVER] " + f.getName() + " deleted temp file");
+        else
+            System.err.println("[SERVER] couldn't delete temp file");
+
+        // Reload calendars
+        loadCalendars();
+
+        res.redirect("/Site.html");
+        return null;
+    }
+
+    /**
      * Route of getEventsByDay. Gets all the events from the calendar.
      * Given the owner of the calendar by giving the date
      *
@@ -146,10 +219,7 @@ public class Server implements SparkApplication {
            return null;
         });
 
-        post("/insertCalendars", (req, res) -> {
-            res.redirect("/Site.html");
-            return null;
-        });
+        post("/uploadCalendarLink", this::uploadCalendarToServer);
 
         get("/getEvents/:userId/:year/:month/:day", this::getEventsByDayRoute);
     }
@@ -164,6 +234,7 @@ public class Server implements SparkApplication {
      */
     private void loadCalendars () {
         File folder = new File(System.getProperty("user.dir") + "/calendars/jsonFiles/");
+        personalCalendarObjects.clear();
         try {
             for (File fileEntry : folder.listFiles()) {
                 PersonalCalendar personalCalendarHandler = new PersonalCalendar(fileEntry.getAbsolutePath());

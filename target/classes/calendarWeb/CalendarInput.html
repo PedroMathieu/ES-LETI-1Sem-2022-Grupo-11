@@ -63,10 +63,10 @@
 </body>
     <div id="container-form">
         <div id="formCalendar" >
-            <form action="/insertCalendars" method="post">
-                <label for="calendar-link-input">Insert calendar link</label> 
-                <input id="calendar-link-input" type="text">
-                <input id="submit-button" type="submit" value="Upload calendar">  
+            <form action="/uploadCalendarLink" method="POST">
+                <label for="calendar-link-input">Insert calendar link</label>
+                <input id="calendar-link-input" name="calendar-link-input" type="text">
+                <input id="submit-button" type="submit" value="Upload calendar">
             </form>
             <p style="font-size: 12px; color:#d2d2e9; margin-top: 30px;">Warning: please enter the file with the <b>https://</b> protocol. Don't input a <b>webcal://</b> link</p>
         </div>
