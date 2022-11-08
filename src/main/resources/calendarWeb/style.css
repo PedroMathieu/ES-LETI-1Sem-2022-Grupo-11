@@ -12,6 +12,15 @@
   .button  {
     opacity: 1;
   }
+
+  #insert-new-calendars-link {
+    width: 100%;
+    background-color: #9494ab;
+    text-align: center;
+    font-size: 16px;
+    color: #eee;
+    height: 10vh;
+  }
   
   #voltar{
     position: absolute;
@@ -28,7 +37,7 @@
   
   .container {
     width: 100%;
-    height: 100vh;
+    height: 90vh;
     background-color: #9494ab;
     color: #eee;
     display: flex;

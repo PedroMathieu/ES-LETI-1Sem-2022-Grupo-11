@@ -23,8 +23,6 @@ import static spark.Spark.*;
 public class Server implements SparkApplication {
     private String serverPath;
     private static final Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
-
-
     public Server() {
         init();
     }
@@ -139,6 +137,16 @@ public class Server implements SparkApplication {
         System.out.println("[SERVER] setting up routes");
 
         get("/", (req, res) -> {
+            res.redirect("/Site.html");
+            return null;
+        });
+
+        get("/insertCalendars", (req, res) -> {
+           res.redirect("/CalendarInput.html");
+           return null;
+        });
+
+        post("/insertCalendars", (req, res) -> {
             res.redirect("/Site.html");
             return null;
         });
