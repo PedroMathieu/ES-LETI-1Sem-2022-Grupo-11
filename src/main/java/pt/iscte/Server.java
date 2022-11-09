@@ -135,22 +135,18 @@ public class Server implements SparkApplication {
      * @return response to give
      */
     private Object uploadCalendarToServer(Request req, Response res) throws IOException {
-        String calendarUrl = req.queryParams("calendar-link-input");
+        String calendarUrl = req.queryParams("calendar-link-input").trim();
 
         // Checks if the link protocol is webcal and then it changes it to https for download
         System.out.println("[SERVER] Validating URL protocol");
-        if (!(calendarUrl.substring(0, 7).equals(" webcal"))) {
+        if (!(calendarUrl.startsWith("webcal"))) {
             res.type("application/json");
             return sendErrorInJson("Please make sure the url is webcal://");
         }
 
-        calendarUrl = calendarUrl.replaceAll(" webcal://", "https://");
+        calendarUrl = calendarUrl.replace("webcal://", "https://");
         System.out.println("[SERVER] Starting upload of " + calendarUrl + " to the server!");
 
-        //Create a temp .ics file to be parsed and deleted later. Preserve space...
-        System.out.println("[SERVER] Creating a temp .ics file for parsing");
-        byte[] array = new byte[7];
-        new Random().nextBytes(array);
         String tempFileName = generateRandomTempName() + "_temp.ics";
         String tempFilePath = System.getProperty("user.dir") + "/calendars/icsFiles/" + tempFileName;
 
