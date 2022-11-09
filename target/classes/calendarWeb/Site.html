@@ -49,11 +49,17 @@
       </div>
       <div id="d" class="days"></div>
     </div>
+    <div id="current-calendar-owners">
+      <p style="margin-bottom: 10px">Choose the calendars you want to see when analyzing a day</p>
+      #foreach( $owner in $owners )
+          <input type="checkbox" name="$owner">
+          <label for="$owner">$owner</label><br>
+      #end
+    </div>
   </div>
   <div id="insert-new-calendars-link">
     <p>To insert a new calendar go <a href="/insertCalendars">here</a></p>
   </div>
-
   <script src="script.js"></script>
 </body>
 

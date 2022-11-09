@@ -1,91 +1,114 @@
+ /**
+ * TODO: THIS JAVASCRIPT FILE NEEDS TO BE REFACTORED ASAP. CONTAINS BUGS AND IT COULD BE BETTER ORGANIZED
+ * Is there a better way to make the calendar work in javascript? Maybe a library?
+ * We should TRY to refactor the whole file structure (and front end structure) and also some bad practices,
+ * such as const and let misuse.
+ * 
+ * Ideas to get day calendar:
+ * - Build a new endpoint that sends the json event data in each response, embedded in the template
+ * - Build an endpoint that only renders a template and then use url params to make javascript requests
+ */
 
-  const monthDays = document.querySelector(".days"),
-  prevNextIcon = document.querySelectorAll(".month"),
-  currentDate = document.querySelector(".current-date");
-  var eventDate = document.getElementById("date");
-  var start = document.getElementById("starttime");
-  var end = document.getElementById("endtime");
-  const date = new Date();
-  currMonth = date.getMonth(),
-  currYear = date.getFullYear();
+const monthDays = document.querySelector(".days"),
+    prevNextIcon = document.querySelectorAll(".month"),
+    currentDate = document.querySelector(".current-date");
+let eventDate = document.getElementById("date");
+let start = document.getElementById("starttime");
+let end = document.getElementById("endtime");
+let date = new Date();
+currMonth = date.getMonth(),
+    currYear = date.getFullYear();
 
-  const renderCalendar = () => {
-  date.setDate(1);
+const renderCalendar = () => {
+    date.setDate(1);
 
-  
+    const lastDay = new Date(
+        date.getFullYear(),
+        date.getMonth() + 1,
+        0
+    ).getDate();
 
-  const lastDay = new Date(
-    date.getFullYear(),
-    date.getMonth() + 1,
-    0
-  ).getDate();
+    const prevLastDay = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        0
+    ).getDate();
 
-  const prevLastDay = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    0
-  ).getDate();
-  
-  
 
-  const firstDayIndex = date.getDay();
 
-  const lastDayIndex = new Date(
-    date.getFullYear(),
-    date.getMonth() + 1,
-    0
-  ).getDay();
+    const firstDayIndex = date.getDay();
 
-  const nextDays = 7 - lastDayIndex - 1;
+    const lastDayIndex = new Date(
+        date.getFullYear(),
+        date.getMonth() + 1,
+        0
+    ).getDay();
 
-  const months = 
-  ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
-    "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const nextDays = 7 - lastDayIndex - 1;
 
-  document.querySelector(".date h1").innerHTML = months[date.getMonth()];
+    const months =
+        ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
+            "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-  document.querySelector(".date p").innerHTML = date.getFullYear();
+    document.querySelector(".date h1").innerHTML = months[date.getMonth()];
 
-  let days = "";
+    document.querySelector(".date p").innerHTML = date.getFullYear();
 
-  for (let x = firstDayIndex; x > 0; x--) {
-    days += `<button id="${prevLastDay - x + 1}" onclick="getID(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
-  }
+    let days = "";
 
-  for (let i = 1; i <= lastDay; i++) {
-    if (
-      i === new Date().getDate() &&
-      date.getMonth() && date.getFullYear() === new Date().getDate()
-    ) {
-        days += `<button onclick="getID(this)" id="${i}" class="today">${i}</button>`;
-    } else {
-      days += `<button onclick="getID(this)" id="${i}">${i}</button>`;
+    for (let x = firstDayIndex; x > 0; x--) {
+        days += `<button id="${prevLastDay - x + 1}" onclick="getID(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
     }
-  }
 
-  for (let j = 1; j <= nextDays; j++) {
-    days += `<button id="${j}" onclick="getID(this)" class="next-date">${j}</button>`;
-    monthDays.innerHTML = days;
-  }
+    for (let i = 1; i <= lastDay; i++) {
+        if (
+            i === new Date().getDate() &&
+            date.getMonth() && date.getFullYear() === new Date().getDate()
+        ) {
+            days += `<button onclick="getID(this)" id="${i}" class="today">${i}</button>`;
+        } else {
+            days += `<button onclick="getID(this)" id="${i}">${i}</button>`;
+        }
+    }
+
+    for (let j = 1; j <= nextDays; j++) {
+        days += `<button id="${j}" onclick="getID(this)" class="next-date">${j}</button>`;
+        monthDays.innerHTML = days;
+    }
 };
 
-function getID(obj){
-  alert(obj.id);
+function buildUrl() {
+    let checked = []
+    let checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+    let urlBuilder;
+    let clickedDay = ""; //TODO but first we need to refactor this whole file
+
+    for (let i = 0; i < checkboxes.length; i++) {
+        checked.push(checkboxes[i].name)
+    }
+
+    urlBuilder = "/calendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
+    console.log(urlBuilder)
+}
+
+
+function getID(obj) {
+    alert(obj.id)    
 }
 
 document.querySelector(".prev").addEventListener("click", () => {
-  date.setMonth(date.getMonth() - 1);
-  renderCalendar();
+    date.setMonth(date.getMonth() - 1);
+    renderCalendar();
 });
 
 document.querySelector(".next").addEventListener("click", () => {
-  date.setMonth(date.getMonth() + 1); 
-  renderCalendar();
+    date.setMonth(date.getMonth() + 1);
+    renderCalendar();
 });
 
 document.querySelector(".days").addEventListener("click", () => {
-  document.getElementById("w").remove();
-  document.getElementById("d").remove();
+    document.getElementById("w").remove();
+    document.getElementById("d").remove();
 })
 
 renderCalendar();

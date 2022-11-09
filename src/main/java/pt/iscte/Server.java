@@ -2,24 +2,18 @@ package pt.iscte;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.servlet.SparkApplication;
+import spark.template.velocity.VelocityTemplateEngine;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.System.exit;
-import static java.lang.System.load;
 import static spark.Spark.*;
 
 
@@ -225,9 +219,16 @@ public class Server implements SparkApplication {
     private void setupEndpoints() {
         System.out.println("[SERVER] setting up routes");
 
+        // Using a template engine only in this endpoint. At least for now...
         get("/", (req, res) -> {
-            res.redirect("/Site.html");
-            return null;
+            Map<String, List<String>> data = new HashMap<>();
+            List<String> ownerList = new ArrayList<>(getPersonalCalendarObjects().keySet());
+
+            data.put("owners", ownerList);
+
+            return new VelocityTemplateEngine().render(
+                    new ModelAndView(data, "calendarWeb/Site.html")
+            );
         });
 
         get("/insertCalendars", (req, res) -> {
@@ -266,7 +267,7 @@ public class Server implements SparkApplication {
      * Get personal calendar objects
      * @return map with personal calendar objects and owners
      */
-    public Map<String, PersonalCalendar> getPersonalCalendarObjects() {
+    public static Map<String, PersonalCalendar> getPersonalCalendarObjects() {
         return personalCalendarObjects;
     }
 
