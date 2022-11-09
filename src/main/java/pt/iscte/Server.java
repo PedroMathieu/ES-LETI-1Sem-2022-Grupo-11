@@ -139,7 +139,8 @@ public class Server implements SparkApplication {
 
         // Checks if the link protocol is webcal and then it changes it to https for download
         System.out.println("[SERVER] Validating URL protocol");
-        if (!(calendarUrl.substring(0, 7).equals(" webcal"))) {
+        System.out.println(calendarUrl);
+        if (!(calendarUrl.substring(0, 7).equals("webcal"))) {
             res.type("application/json");
             return sendErrorInJson("Please make sure the url is webcal://");
         }

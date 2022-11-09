@@ -162,14 +162,3 @@
     border: 0.2rem solid #777;
     cursor: pointer;
   }
-  
-  .circleBase {
-    border-radius: 50%;
-    margin-bottom: -30px;
-  }
-  
-  .circle1 {
-    width: 15px;
-    height: 15px;
-    background: #dc7b0d;
-  }
