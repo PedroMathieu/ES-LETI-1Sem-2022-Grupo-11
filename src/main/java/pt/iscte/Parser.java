@@ -339,7 +339,6 @@ public class Parser {
             }
         } catch (NullPointerException e) {
             System.err.println("Couldn't find any files in the folder!");
-            exit(0);
         }
     }
 
