@@ -162,10 +162,10 @@ public class Server implements SparkApplication {
         } catch (FileNotFoundException e) {}
 
         // Parse the .ics calendar
-        parser.initiateCalendar(tempFileName);
+        new Parser().initiateCalendar(tempFileName);
 
         // Delete .ics temp file
-        File f= new File(tempFilePath);
+        File f = new File(tempFilePath);
         if (f.delete())
             System.out.println("[SERVER] " + f.getName() + " deleted temp file");
         else
