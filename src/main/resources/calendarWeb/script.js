@@ -12,12 +12,10 @@
 const monthDays = document.querySelector(".days"),
     prevNextIcon = document.querySelectorAll(".month"),
     currentDate = document.querySelector(".current-date");
-let eventDate = document.getElementById("date");
-let start = document.getElementById("starttime");
-let end = document.getElementById("endtime");
-let date = new Date();
-currMonth = date.getMonth(),
+    let date = new Date();
+    currMonth = date.getMonth(),
     currYear = date.getFullYear();
+
 
 const renderCalendar = () => {
     date.setDate(1);
@@ -53,11 +51,11 @@ const renderCalendar = () => {
     document.querySelector(".date h1").innerHTML = months[date.getMonth()];
 
     document.querySelector(".date p").innerHTML = date.getFullYear();
-
     let days = "";
 
+    
     for (let x = firstDayIndex; x > 0; x--) {
-        days += `<button id="${prevLastDay - x + 1}" onclick="getID(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
+        days += `<button id="${prevLastDay - x + 1}" onclick="buildUrl(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
     }
 
     for (let i = 1; i <= lastDay; i++) {
@@ -65,39 +63,38 @@ const renderCalendar = () => {
             i === new Date().getDate() &&
             date.getMonth() && date.getFullYear() === new Date().getDate()
         ) {
-            days += `<button onclick="getID(this)" id="${i}" class="today">${i}</button>`;
+            days += `<button onclick="buildURl(this)" id="${i}" class="today">${i}</button>`;
         } else {
-            days += `<button onclick="getID(this)" id="${i}">${i}</button>`;
+            days += `<button onclick="buildUrl(this)" id="${i}">${i}</button>`;
         }
     }
 
     for (let j = 1; j <= nextDays; j++) {
-        days += `<button id="${j}" onclick="getID(this)" class="next-date">${j}</button>`;
+        days += `<button id="${j}" onclick="buildUrl(this)" class="next-date">${j}</button>`;
         monthDays.innerHTML = days;
     }
 };
 
-function buildUrl() {
+function buildUrl(obj) {
     let checked = []
     let checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
     let urlBuilder;
-    let clickedDay = ""; //TODO but first we need to refactor this whole file
+    let clickedDay = obj.id; //TODO but first we need to refactor this whole file
 
     for (let i = 0; i < checkboxes.length; i++) {
         checked.push(checkboxes[i].name)
     }
-
-    urlBuilder = "/calendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
+ 
+    urlBuilder = "/personalCalendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
     console.log(urlBuilder)
+    window.location.href= "CalendarDaily.html";
+    let dte=  currYear + "/" + date.getMonth() + "/" + clickedDay;
+    document.getElementById("calDate").innerHTML = "2";
 }
 
-
-function getID(obj) {
-    alert(obj.id)    
-}
 
 document.querySelector(".prev").addEventListener("click", () => {
-    date.setMonth(date.getMonth() - 1);
+    date.setMonth(date.getMonth() - 1); 
     renderCalendar();
 });
 
@@ -105,11 +102,6 @@ document.querySelector(".next").addEventListener("click", () => {
     date.setMonth(date.getMonth() + 1);
     renderCalendar();
 });
-
-document.querySelector(".days").addEventListener("click", () => {
-    document.getElementById("w").remove();
-    document.getElementById("d").remove();
-})
 
 renderCalendar();
 
