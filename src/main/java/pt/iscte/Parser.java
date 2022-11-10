@@ -41,6 +41,7 @@ public class Parser {
     private String event_uID;
     private String event_Description;
     private String event_Location;
+    private int event_no = 2;
 
     // Flags
     private boolean flag_CanReadFile = false;
@@ -103,6 +104,7 @@ public class Parser {
                     case ("END:VEVENT"):
                         writeCurrentEventCalendarInfo();
                         cleanEventVariables();
+                        cleanMainCalendarInfo();
                         break;
 
                     // not having found any of the special tags, it will read the file as normal
@@ -114,7 +116,7 @@ public class Parser {
                         }
 
                         // continues taking in the summary in case it occupies another line
-                        else if (flag_ReadingSummary && !line.startsWith("UID:")){
+                        else if (flag_ReadingSummary && !line.startsWith("UID:")) {
                             // same as ReadingDescription below
                             event_Summary = event_Summary + line.substring(1, line.length());
                         }
@@ -266,8 +268,10 @@ public class Parser {
     public void writeCurrentEventCalendarInfo() throws IOException {
         if (!flag_FirstEvent) {
             Files.writeString(path_write, Files.readString(path_write) + ",\n");
+            System.out.println("[PARSER]: Managed to write event no.1" + "to file " + path_write);
         } else {
             flag_FirstEvent = false;
+            System.out.println("[PARSER]: Managed to write event no." + event_no++ + "to file " + path_write);
         }
 
         String template = generateEventTemplate();
@@ -330,16 +334,25 @@ public class Parser {
         event_uID = "";
     }
 
+    public void cleanMainCalendarInfo(){
+        calendar_name = "";
+        calendar_prodID = "";
+        calendar_type = "";
+        calendar_version = "";
+    }
+
+    // -------------------------------------------------------------------------
+
     public void readFiles() throws IOException {
         File folder = new File(DIR_ICS);
         System.out.println(DIR_ICS);
         try {
             for (File curFile : folder.listFiles()) {
+                System.out.println("FILE: " + curFile);
                 initiateCalendar(curFile.getName());
             }
         } catch (NullPointerException e) {
             System.err.println("Couldn't find any files in the folder!");
-            exit(0);
         }
     }
 
