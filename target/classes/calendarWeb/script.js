@@ -9,10 +9,10 @@
  * - Build an endpoint that only renders a template and then use url params to make javascript requests
  */
 
-const monthDays = document.querySelector(".days"),
+    const monthDays = document.querySelector(".days"),
     prevNextIcon = document.querySelectorAll(".month"),
     currentDate = document.querySelector(".current-date");
-    let date = new Date();
+    const date = new Date();
     currMonth = date.getMonth(),
     currYear = date.getFullYear();
 
@@ -48,6 +48,7 @@ const renderCalendar = () => {
         ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
             "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
+
     document.querySelector(".date h1").innerHTML = months[date.getMonth()];
 
     document.querySelector(".date p").innerHTML = date.getFullYear();
@@ -75,26 +76,8 @@ const renderCalendar = () => {
     }
 };
 
-function buildUrl(obj) {
-    let checked = []
-    let checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
-    let urlBuilder;
-    let clickedDay = obj.id; //TODO but first we need to refactor this whole file
-
-    for (let i = 0; i < checkboxes.length; i++) {
-        checked.push(checkboxes[i].name)
-    }
- 
-    urlBuilder = "/personalCalendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
-    console.log(urlBuilder)
-    window.location.href= "CalendarDaily.html";
-    let dte=  currYear + "/" + date.getMonth() + "/" + clickedDay;
-    document.getElementById("calDate").innerHTML = "2";
-}
-
-
 document.querySelector(".prev").addEventListener("click", () => {
-    date.setMonth(date.getMonth() - 1); 
+    date.setMonth(date.getMonth() - 1);
     renderCalendar();
 });
 
@@ -120,3 +103,20 @@ prevNextIcon.forEach(icon => { // getting prev and next icons
         renderCalendar(); // calling renderCalendar function
     });
 });
+
+function buildUrl(obj) {
+    let checked = []
+    let checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+    let urlBuilder;
+    let clickedDay = obj.id; //TODO but first we need to refactor this whole file
+
+    for (let i = 0; i < checkboxes.length; i++) {
+        checked.push(checkboxes[i].name)
+    }
+ 
+    urlBuilder = "/personalCalendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
+    console.log(urlBuilder)
+    window.location.href= "CalendarDaily.html";
+    let dte=  currYear + "/" + date.getMonth() + "/" + clickedDay;
+    document.getElementById("calDate").innerHTML = "2";
+}
