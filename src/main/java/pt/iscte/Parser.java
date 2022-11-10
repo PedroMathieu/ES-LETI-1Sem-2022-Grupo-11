@@ -25,7 +25,6 @@ public class Parser {
     public final String DIR_TEMPLATES = DIR_MAIN + "templates/";
 
     // Paths for the .ics file and where the .json will be stored
-    private Path path_read;
     private Path path_write;
 
     // Calendar information
@@ -42,10 +41,12 @@ public class Parser {
     private String event_uID;
     private String event_Description;
     private String event_Location;
+    private int event_no = 2;
 
     // Flags
     private boolean flag_CanReadFile = false;
     private boolean flag_TakenCalendarInfo = false;
+    private boolean flag_ReadingSummary = false;
     private boolean flag_ReadingDescription = false;
     private boolean flag_FirstEvent = true;
 
@@ -103,7 +104,7 @@ public class Parser {
                     case ("END:VEVENT"):
                         writeCurrentEventCalendarInfo();
                         cleanEventVariables();
-                        flag_ReadingDescription = false;
+                        cleanMainCalendarInfo();
                         break;
 
                     // not having found any of the special tags, it will read the file as normal
@@ -112,6 +113,12 @@ public class Parser {
                         // if it hasn't taken in the calendar info yet, it'll do so
                         if (!flag_TakenCalendarInfo) {
                             takeTheCalendarInfo(line);
+                        }
+
+                        // continues taking in the summary in case it occupies another line
+                        else if (flag_ReadingSummary && !line.startsWith("UID:")) {
+                            // same as ReadingDescription below
+                            event_Summary = event_Summary + line.substring(1, line.length());
                         }
 
                         // continues taking in the description until it reaches the next parameter
@@ -167,7 +174,6 @@ public class Parser {
         else if (line.startsWith("X-WR-CALNAME:")) {
             calendar_name = line.replace("X-WR-CALNAME:", "");
             path_write = Path.of(DIR_JSON + calendar_name + ".json");
-            path_read = Path.of(DIR_ICS + calendar_name);
         }
 
     }
@@ -204,9 +210,11 @@ public class Parser {
         // takes in the summary of the event
         else if (line.startsWith("SUMMARY:")) {
             event_Summary = line.replace("SUMMARY:", "");
+            flag_ReadingSummary = true;
         }
 
         else if (line.startsWith("UID:")) {
+            flag_ReadingSummary = false;
             event_uID = line.replace("UID:", "");
         }
 
@@ -218,6 +226,7 @@ public class Parser {
 
         // takes in the location of the event
         else if (line.startsWith("LOCATION:")) {
+            flag_ReadingDescription = false;
             event_Location = line.replace("LOCATION:", "");
         }
 
@@ -259,8 +268,10 @@ public class Parser {
     public void writeCurrentEventCalendarInfo() throws IOException {
         if (!flag_FirstEvent) {
             Files.writeString(path_write, Files.readString(path_write) + ",\n");
+            System.out.println("[PARSER]: Managed to write event no.1" + "to file " + path_write);
         } else {
             flag_FirstEvent = false;
+            System.out.println("[PARSER]: Managed to write event no." + event_no++ + "to file " + path_write);
         }
 
         String template = generateEventTemplate();
@@ -323,16 +334,25 @@ public class Parser {
         event_uID = "";
     }
 
+    public void cleanMainCalendarInfo(){
+        calendar_name = "";
+        calendar_prodID = "";
+        calendar_type = "";
+        calendar_version = "";
+    }
+
+    // -------------------------------------------------------------------------
+
     public void readFiles() throws IOException {
         File folder = new File(DIR_ICS);
         System.out.println(DIR_ICS);
         try {
             for (File curFile : folder.listFiles()) {
+                System.out.println("FILE: " + curFile);
                 initiateCalendar(curFile.getName());
             }
         } catch (NullPointerException e) {
             System.err.println("Couldn't find any files in the folder!");
-            exit(0);
         }
     }
 

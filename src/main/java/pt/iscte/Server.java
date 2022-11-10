@@ -162,10 +162,10 @@ public class Server implements SparkApplication {
         } catch (FileNotFoundException e) {}
 
         // Parse the .ics calendar
-        parser.initiateCalendar(tempFileName);
+        new Parser().initiateCalendar(tempFileName);
 
         // Delete .ics temp file
-        File f= new File(tempFilePath);
+        File f = new File(tempFilePath);
         if (f.delete())
             System.out.println("[SERVER] " + f.getName() + " deleted temp file");
         else
@@ -174,7 +174,7 @@ public class Server implements SparkApplication {
         // Reload calendars
         loadCalendars();
 
-        res.redirect("/Site.html");
+        res.redirect("/");
         return null;
     }
 
@@ -223,6 +223,7 @@ public class Server implements SparkApplication {
         get("/", (req, res) -> {
             Map<String, List<String>> data = new HashMap<>();
             List<String> ownerList = new ArrayList<>(getPersonalCalendarObjects().keySet());
+            System.out.println(ownerList);
 
             data.put("owners", ownerList);
 
@@ -251,7 +252,7 @@ public class Server implements SparkApplication {
      */
     private void loadCalendars () {
         File folder = new File(System.getProperty("user.dir") + "/calendars/jsonFiles/");
-        personalCalendarObjects.clear();
+        //personalCalendarObjects.clear();
         try {
             for (File fileEntry : folder.listFiles()) {
                 PersonalCalendar personalCalendarHandler = new PersonalCalendar(fileEntry.getAbsolutePath());
