@@ -149,6 +149,13 @@
   .current-date{
     display: flex;
   }
+
+  /* #calDate{
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    visibility: visible;
+  } */
   
   .today {
     font-size: 1.7rem;

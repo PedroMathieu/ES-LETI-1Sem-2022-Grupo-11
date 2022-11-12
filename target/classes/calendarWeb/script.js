@@ -12,6 +12,7 @@
     const monthDays = document.querySelector(".days"),
     prevNextIcon = document.querySelectorAll(".month"),
     currentDate = document.querySelector(".current-date");
+    //Gets the current year and month
     const date = new Date();
     currMonth = date.getMonth(),
     currYear = date.getFullYear();
@@ -20,12 +21,14 @@
 const renderCalendar = () => {
     date.setDate(1);
 
+    //Gets the last date of the month
     const lastDay = new Date(
         date.getFullYear(),
         date.getMonth() + 1,
         0
     ).getDate();
 
+    //Gets the last date of the previous month
     const prevLastDay = new Date(
         date.getFullYear(),
         date.getMonth(),
@@ -33,7 +36,7 @@ const renderCalendar = () => {
     ).getDate();
 
 
-
+    
     const firstDayIndex = date.getDay();
 
     const lastDayIndex = new Date(
@@ -44,21 +47,24 @@ const renderCalendar = () => {
 
     const nextDays = 7 - lastDayIndex - 1;
 
+    //Stores the full name of all months in this array
     const months =
         ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
             "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-
+    //Writes the month in HTML
     document.querySelector(".date h1").innerHTML = months[date.getMonth()];
 
+    //Writes the date in HTML
     document.querySelector(".date p").innerHTML = date.getFullYear();
     let days = "";
 
-    
+    //Creates buttons of the previous month last days
     for (let x = firstDayIndex; x > 0; x--) {
         days += `<button id="${prevLastDay - x + 1}" onclick="buildUrl(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
     }
 
+    //Creates buttons of the all the days of current month
     for (let i = 1; i <= lastDay; i++) {
         if (
             i === new Date().getDate() &&
@@ -70,17 +76,20 @@ const renderCalendar = () => {
         }
     }
 
+    //Creates buttons of the first days in the next month
     for (let j = 1; j <= nextDays; j++) {
         days += `<button id="${j}" onclick="buildUrl(this)" class="next-date">${j}</button>`;
         monthDays.innerHTML = days;
     }
 };
 
+//If you click in the previous icon the month is decremented by 1
 document.querySelector(".prev").addEventListener("click", () => {
     date.setMonth(date.getMonth() - 1);
     renderCalendar();
 });
 
+//If you click in the next icon the month is incremented by 1
 document.querySelector(".next").addEventListener("click", () => {
     date.setMonth(date.getMonth() + 1);
     renderCalendar();
@@ -118,5 +127,4 @@ function buildUrl(obj) {
     console.log(urlBuilder)
     window.location.href= "CalendarDaily.html";
     let dte=  currYear + "/" + date.getMonth() + "/" + clickedDay;
-    document.getElementById("calDate").innerHTML = "2";
 }
