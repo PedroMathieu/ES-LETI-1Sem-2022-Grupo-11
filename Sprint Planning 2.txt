@@ -1,0 +1,22 @@
+Sprint Planning:
+
+Reorganização do Trello:
+
+	-Usado agora o sistema de ter checklists no Product Backlog e transformando-os em cartões no Sprint Backlog; 
+	-Cada um desses cartões tem também as suas próprias sub-tarefas a dividir pelos membros, representadas também em checklists;
+	-Usado o Power-Up de Card Priority para ordenar os cartões de modo a ser feita uma organização melhor das prioridades dos cartões;
+	-Foram associados cartões relevantes: todos os do Sprint Backlog têm uma associação ao cartão do Product Backlog de onde originaram; bem como cartões que dependem de outros estão marcados pela cor *Rosa* e associados aos mesmos.
+
+
+
+Sprint mais focado no Front-end;
+	
+	-Foi definido o Sprint Goal: Desenvolver uma UI funcional;
+	-Foi definida a duração do sprint (sujeita a alteração);	
+	-Foi decidido que podia ser tirada inspiração do estilo do Google Calendar e ao clicar num dia aparecerem slots de horas que depois podem ser sub-dividos em períodos mais pequenos;
+
+
+A decidir nas reuniões Scrum deste Sprint:
+
+	-Escolher entre server-side rendering ou client-side rendering no que toca aos dados dos eventos de cada pessoa por dia.
+	
