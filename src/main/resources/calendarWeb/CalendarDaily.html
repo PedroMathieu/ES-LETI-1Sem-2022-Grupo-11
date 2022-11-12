@@ -57,18 +57,18 @@
         align-items: center;
     }
 
-
     </style>
 </head>
-</body>
+<body onload="getText()">
 
     <div id="container-form">
         <div id="formCalendar" >
             <form action="/getEvents/:userId/:year/:month/:day" method="POST">
-                <p id="calDate">Day</p>
+                <p id="calDate"></p>
             </form>
             
         </div>
     </div>
-    <script src="script.js"></script>
+</body>
+<script src="script.js"></script>
 </html>

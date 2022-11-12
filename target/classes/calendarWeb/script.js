@@ -126,5 +126,10 @@ function buildUrl(obj) {
     urlBuilder = "/personalCalendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
     console.log(urlBuilder)
     window.location.href= "CalendarDaily.html";
-    let dte=  currYear + "/" + date.getMonth() + "/" + clickedDay;
+
 }
+function getText(){
+    let dte=  currYear + "/" + date.getMonth() + "/" + date.getDate();
+    document.getElementById("calDate").innerHTML= dte;
+}
+
