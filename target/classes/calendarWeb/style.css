@@ -32,8 +32,8 @@
   
   #voltar{
     position: absolute;
-    margin-top: -90px;
-    margin-left: -550px;
+    margin-top: -102px;
+    margin-left: -395px;
     scale: 140%;
     border: none;
     background: transparent;
@@ -149,6 +149,13 @@
   .current-date{
     display: flex;
   }
+
+  /* #calDate{
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    visibility: visible;
+  } */
   
   .today {
     font-size: 1.7rem;

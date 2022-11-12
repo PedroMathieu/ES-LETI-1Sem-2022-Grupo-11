@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Input new calendars</title>
+    <style>
+        .container {
+            background-color: #d2d2e9;
+        }
+
+        #formCalendar {
+            background-color: #9292e1;
+            padding: 20px;
+            font-size: 20px;
+            width: 50%;
+        }
+
+        input[type=text] {
+            padding: 10px;
+            margin: 10px 0;
+            box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+            border-radius:10px;
+            width:100%;
+        }
+
+        input[type=text]:focus {
+            background-color: #d2d2e9;
+            border-color: #000;
+        }
+
+        input[type=submit] {
+
+        /* remove default behavior */
+        appearance:none;
+        -webkit-appearance:none;
+
+        /* usual styles */
+        padding:10px;
+        border:none;
+        background-color:#3F51B5;
+        color:#fff;
+        font-weight:600;
+        border-radius:5px;
+        margin-top: 30px;
+        width:100%;
+    }
+
+    #container-form {
+        width: 100%;
+        height: 100vh;
+        background-color: #9494ab;
+        color: #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    </style>
+</head>
+<body onload="getText()">
+
+    <div id="container-form">
+        <div id="formCalendar" >
+            <form action="/getEvents/:userId/:year/:month/:day" method="POST">
+                <p id="calDate"></p>
+            </form>
+            
+        </div>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>

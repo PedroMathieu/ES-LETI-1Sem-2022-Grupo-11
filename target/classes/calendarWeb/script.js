@@ -9,25 +9,26 @@
  * - Build an endpoint that only renders a template and then use url params to make javascript requests
  */
 
-const monthDays = document.querySelector(".days"),
+    const monthDays = document.querySelector(".days"),
     prevNextIcon = document.querySelectorAll(".month"),
     currentDate = document.querySelector(".current-date");
-let eventDate = document.getElementById("date");
-let start = document.getElementById("starttime");
-let end = document.getElementById("endtime");
-let date = new Date();
-currMonth = date.getMonth(),
+    //Gets the current year and month
+    const date = new Date();
+    currMonth = date.getMonth(),
     currYear = date.getFullYear();
+
 
 const renderCalendar = () => {
     date.setDate(1);
 
+    //Gets the last date of the month
     const lastDay = new Date(
         date.getFullYear(),
         date.getMonth() + 1,
         0
     ).getDate();
 
+    //Gets the last date of the previous month
     const prevLastDay = new Date(
         date.getFullYear(),
         date.getMonth(),
@@ -35,7 +36,7 @@ const renderCalendar = () => {
     ).getDate();
 
 
-
+    
     const firstDayIndex = date.getDay();
 
     const lastDayIndex = new Date(
@@ -46,70 +47,53 @@ const renderCalendar = () => {
 
     const nextDays = 7 - lastDayIndex - 1;
 
+    //Stores the full name of all months in this array
     const months =
         ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
             "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
+    //Writes the month in HTML
     document.querySelector(".date h1").innerHTML = months[date.getMonth()];
 
+    //Writes the date in HTML
     document.querySelector(".date p").innerHTML = date.getFullYear();
-
     let days = "";
 
+    //Creates buttons of the previous month last days
     for (let x = firstDayIndex; x > 0; x--) {
-        days += `<button id="${prevLastDay - x + 1}" onclick="getID(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
+        days += `<button id="${prevLastDay - x + 1}" onclick="buildUrl(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
     }
 
+    //Creates buttons of the all the days of current month
     for (let i = 1; i <= lastDay; i++) {
         if (
             i === new Date().getDate() &&
             date.getMonth() && date.getFullYear() === new Date().getDate()
         ) {
-            days += `<button onclick="getID(this)" id="${i}" class="today">${i}</button>`;
+            days += `<button onclick="buildURl(this)" id="${i}" class="today">${i}</button>`;
         } else {
-            days += `<button onclick="getID(this)" id="${i}">${i}</button>`;
+            days += `<button onclick="buildUrl(this)" id="${i}">${i}</button>`;
         }
     }
 
+    //Creates buttons of the first days in the next month
     for (let j = 1; j <= nextDays; j++) {
-        days += `<button id="${j}" onclick="getID(this)" class="next-date">${j}</button>`;
+        days += `<button id="${j}" onclick="buildUrl(this)" class="next-date">${j}</button>`;
         monthDays.innerHTML = days;
     }
 };
 
-function buildUrl() {
-    let checked = []
-    let checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
-    let urlBuilder;
-    let clickedDay = ""; //TODO but first we need to refactor this whole file
-
-    for (let i = 0; i < checkboxes.length; i++) {
-        checked.push(checkboxes[i].name)
-    }
-
-    urlBuilder = "/calendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
-    console.log(urlBuilder)
-}
-
-
-function getID(obj) {
-    alert(obj.id)    
-}
-
+//If you click in the previous icon the month is decremented by 1
 document.querySelector(".prev").addEventListener("click", () => {
     date.setMonth(date.getMonth() - 1);
     renderCalendar();
 });
 
+//If you click in the next icon the month is incremented by 1
 document.querySelector(".next").addEventListener("click", () => {
     date.setMonth(date.getMonth() + 1);
     renderCalendar();
 });
-
-document.querySelector(".days").addEventListener("click", () => {
-    document.getElementById("w").remove();
-    document.getElementById("d").remove();
-})
 
 renderCalendar();
 
@@ -128,3 +112,24 @@ prevNextIcon.forEach(icon => { // getting prev and next icons
         renderCalendar(); // calling renderCalendar function
     });
 });
+
+function buildUrl(obj) {
+    let checked = []
+    let checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+    let urlBuilder;
+    let clickedDay = obj.id; //TODO but first we need to refactor this whole file
+
+    for (let i = 0; i < checkboxes.length; i++) {
+        checked.push(checkboxes[i].name)
+    }
+ 
+    urlBuilder = "/personalCalendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
+    console.log(urlBuilder)
+    window.location.href= "CalendarDaily.html";
+
+}
+function getText(){
+    let dte=  currYear + "/" + date.getMonth() + "/" + date.getDate();
+    document.getElementById("calDate").innerHTML= dte;
+}
+
