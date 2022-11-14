@@ -123,9 +123,9 @@ function buildUrl(obj) {
         checked.push(checkboxes[i].name)
     }
  
-    urlBuilder = "/personalCalendar/" + checked.join(";") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
+    urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
     console.log(urlBuilder)
-    window.location.href= "CalendarDaily.html";
+    window.location.href= urlBuilder;
 
 }
 function getText(){

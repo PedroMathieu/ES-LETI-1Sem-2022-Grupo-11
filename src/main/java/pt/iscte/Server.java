@@ -188,29 +188,37 @@ public class Server implements SparkApplication {
      */
     private Object getEventsByDayRoute(Request req, Response res) {
         int rYear, rMonth, rDay;
-        String rOwner = req.params("userId");
+        List<String> requestedOwners = List.of(req.params("userId").split("-"));
         res.type("application/json");
+        JSONObject jsonEvents = new JSONObject();
 
-        // Make sure that the date provided are numbers
-        System.out.println("[SERVER] converting date");
-        try {
-            rYear = Integer.parseInt(req.params("year"));
-            rMonth = Integer.parseInt(req.params("month"));
-            rDay = Integer.parseInt(req.params("day"));
-        } catch (NumberFormatException e) {
-            return sendErrorInJson("Year, month or day is not a number");
+        if (requestedOwners.size() == 0) {} // render main page with a message to specify at least one user
+        else {
+            for (String rOwner : requestedOwners) {
+                // Make sure that the date provided are numbers
+                System.out.println("[SERVER] converting date");
+                try {
+                    rYear = Integer.parseInt(req.params("year"));
+                    rMonth = Integer.parseInt(req.params("month"));
+                    rDay = Integer.parseInt(req.params("day"));
+                } catch (NumberFormatException e) {
+                    return sendErrorInJson("Year, month or day is not a number");
+                }
+
+                // Validate date params and calendar owner
+                if (!validateDateParams(rYear, rMonth, rDay) || !validateOwner(rOwner)) {
+                    return sendErrorInJson("Something wrong in parameters");
+                }
+
+                System.out.println("[SERVER] getting events");
+                LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
+
+                jsonEvents.put(rOwner, buildEventsInJson(rOwner, dateRequested));
+            }
         }
-
-        // Validate date params and calendar owner
-        if (!validateDateParams(rYear, rMonth, rDay) || !validateOwner(rOwner)) {
-            return sendErrorInJson("Something wrong in parameters");
-        }
-
-        System.out.println("[SERVER] getting events");
-        LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
 
         res.status(200);
-        return buildEventsInJson(rOwner, dateRequested);
+        return jsonEvents;
     }
 
     /**
@@ -239,7 +247,7 @@ public class Server implements SparkApplication {
 
         post("/uploadCalendarLink", this::uploadCalendarToServer);
 
-        get("/getEvents/:userId/:year/:month/:day", this::getEventsByDayRoute);
+        get("/personalCalendar/:userId/:year/:month/:day", this::getEventsByDayRoute);
     }
 
     /**
@@ -252,7 +260,6 @@ public class Server implements SparkApplication {
      */
     private void loadCalendars () {
         File folder = new File(System.getProperty("user.dir") + "/calendars/jsonFiles/");
-        //personalCalendarObjects.clear();
         try {
             for (File fileEntry : folder.listFiles()) {
                 PersonalCalendar personalCalendarHandler = new PersonalCalendar(fileEntry.getAbsolutePath());
