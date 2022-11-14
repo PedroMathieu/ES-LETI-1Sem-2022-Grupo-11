@@ -189,8 +189,9 @@ public class Server implements SparkApplication {
     private Object getEventsByDayRoute(Request req, Response res) {
         int rYear, rMonth, rDay;
         List<String> requestedOwners = List.of(req.params("userId").split("-"));
-        res.type("application/json");
         JSONObject jsonEvents = new JSONObject();
+        Map<String, JSONObject> data = new HashMap<>();
+
 
         if (requestedOwners.size() == 0) {} // render main page with a message to specify at least one user
         else {
@@ -217,8 +218,11 @@ public class Server implements SparkApplication {
             }
         }
 
-        res.status(200);
-        return jsonEvents;
+        data.put("events", jsonEvents);
+
+        return new VelocityTemplateEngine().render(
+                new ModelAndView(data, "calendarWeb/CalendarDaily.html")
+        );
     }
 
     /**
@@ -231,7 +235,6 @@ public class Server implements SparkApplication {
         get("/", (req, res) -> {
             Map<String, List<String>> data = new HashMap<>();
             List<String> ownerList = new ArrayList<>(getPersonalCalendarObjects().keySet());
-            System.out.println(ownerList);
 
             data.put("owners", ownerList);
 
