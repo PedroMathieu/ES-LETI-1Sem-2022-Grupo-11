@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Something went wrong...</title>
+    <style>
+        body {
+            background-color: #9494ab;
+            font-family: "Quicksand", sans-serif;
+        }
+        #err {
+            background: #5a5a72;
+            margin-top:5%;
+            margin-left: 30%;
+            margin-right: 30%;
+            border: 1px solid #2d2d39;
+            padding: 50px;
+            color: #fff;
+            text-align: center;
+            
+        }
+        #go-to-main-page {
+            margin-top: 50px;
+            width: 100%;
+            background-color: #9494ab;
+            text-align: center;
+            font-size: 16px;
+            color: #eee;
+            height: 5vh;
+        }
+    </style>
+
+</head>
+<body>
+    #if ( $hasMessage )
+        <div id="err">
+            <h1>Oops! Something went wrong...</h1>
+            <h2>$messageSrc</h2>
+            <iframe src="https://giphy.com/embed/Awa5Y73PQNUS7HEdyu" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p>
+            <h4>$message</h4>
+        </div>
+    #end
+    <div id="go-to-main-page">
+        <p>Click <a href="/">here</a> to go back to the main page.</p>
+    </div>
+<!--
+    #if ( $hasMessage )
+        <div id="err">$message</div>
+    #end
+    -->
+    
+</body>
+</html>

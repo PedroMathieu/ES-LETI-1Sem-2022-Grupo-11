@@ -24,9 +24,7 @@ import static spark.Spark.*;
  * @author Jose Soares
  */
 public class Server implements SparkApplication {
-    private String serverPath;
     private static final Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
-    private static final Parser parser = new Parser();
     public Server() {
         init();
     }
@@ -88,15 +86,22 @@ public class Server implements SparkApplication {
     }
 
     /**
-     * Sends a simple message in json format
+     * Renders a custom error template
      *
      * @param message message to send
      * @return JSONObject with message to send
      */
-    public Object sendErrorInJson(String message) {
-        JSONObject json = new JSONObject();
-        json.put("error", message);
-        return json;
+    public Object senErrorToUser(String message) {
+        System.out.println("[SERVER ERROR] something went wrong -> " + message);
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("message", message);
+        data.put("messageSrc", "Server Error");
+        data.put("hasMessage", true);
+
+        return new VelocityTemplateEngine().render(
+                new ModelAndView(data, "calendarWeb/ErrorPage.vm")
+        );
     }
 
     /**
@@ -134,8 +139,7 @@ public class Server implements SparkApplication {
         // Checks if the link protocol is webcal and then it changes it to https for download
         System.out.println("[SERVER] Validating URL protocol");
         if (!(calendarUrl.startsWith("webcal"))) {
-            res.type("application/json");
-            return sendErrorInJson("Please make sure the url is webcal://");
+            return senErrorToUser("Please make sure the url is webcal://");
         }
 
         calendarUrl = calendarUrl.replace("webcal://", "https://");
@@ -191,11 +195,14 @@ public class Server implements SparkApplication {
         List<String> requestedOwners = List.of(req.params("userId").split("-"));
         JSONObject jsonEvents = new JSONObject();
         Map<String, JSONObject> data = new HashMap<>();
+        System.out.println(requestedOwners);
 
 
         if (requestedOwners.size() == 0) {} // render main page with a message to specify at least one user
         else {
             for (String rOwner : requestedOwners) {
+                System.out.println("[SERVER] getting events of " + rOwner);
+
                 // Make sure that the date provided are numbers
                 System.out.println("[SERVER] converting date");
                 try {
@@ -203,12 +210,12 @@ public class Server implements SparkApplication {
                     rMonth = Integer.parseInt(req.params("month"));
                     rDay = Integer.parseInt(req.params("day"));
                 } catch (NumberFormatException e) {
-                    return sendErrorInJson("Year, month or day is not a number");
+                    return senErrorToUser("Year, month or day is not a number");
                 }
 
                 // Validate date params and calendar owner
                 if (!validateDateParams(rYear, rMonth, rDay) || !validateOwner(rOwner)) {
-                    return sendErrorInJson("Something wrong in parameters");
+                    return senErrorToUser("Parameters contain problems");
                 }
 
                 System.out.println("[SERVER] getting events");
@@ -230,6 +237,18 @@ public class Server implements SparkApplication {
      */
     private void setupEndpoints() {
         System.out.println("[SERVER] setting up routes");
+
+        notFound((req, res) -> {
+            Map<String, Object> data = new HashMap<>();
+
+            data.put("message", "What you're looking for can't be found!");
+            data.put("messageSrc", "404 Not found");
+            data.put("hasMessage", true);
+
+            return new VelocityTemplateEngine().render(
+                    new ModelAndView(data, "calendarWeb/ErrorPage.vm")
+            );
+        });
 
         // Using a template engine only in this endpoint. At least for now...
         get("/", (req, res) -> {
@@ -288,7 +307,6 @@ public class Server implements SparkApplication {
         port(4444);
         staticFiles.location("/calendarWeb");
         setupEndpoints();
-        this.serverPath = "http://localhost:4444";
         System.out.println("[SERVER] alive at: http://localhost:4444");
     }
 }
