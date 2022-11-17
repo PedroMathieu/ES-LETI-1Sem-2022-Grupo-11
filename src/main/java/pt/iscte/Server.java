@@ -26,7 +26,6 @@ import static spark.Spark.*;
 public class Server implements SparkApplication {
     private static final Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
     public Server() {
-        init();
     }
 
     /**
