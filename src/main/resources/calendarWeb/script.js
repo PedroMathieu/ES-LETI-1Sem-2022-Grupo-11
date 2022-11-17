@@ -123,9 +123,8 @@ function buildUrl(obj) {
         checked.push(checkboxes[i].name)
     }
  
-    urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
-    console.log(urlBuilder)
-    window.location.href= urlBuilder;
+    urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + date.getMonth() + "/" + obj.id;
+    window.location.href = urlBuilder;
 
 }
 function getText(){

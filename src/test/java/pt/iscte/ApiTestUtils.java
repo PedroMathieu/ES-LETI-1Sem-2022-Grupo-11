@@ -2,6 +2,7 @@ package pt.iscte;
 
 import spark.utils.IOUtils;
 
+import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -14,6 +15,11 @@ public class ApiTestUtils {
         connection.connect();
         String body = IOUtils.toString(connection.getInputStream());
         return new TestResponse(connection.getResponseCode(), body);
+    }
+
+    public static TestResponse requestPostCalendarInuput(String path, String data) throws Exception {
+        //TODO
+        return null;
     }
 
     public static class TestResponse {
