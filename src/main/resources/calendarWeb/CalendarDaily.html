@@ -20,9 +20,9 @@
         input[type=text] {
             padding: 10px;
             margin: 10px 0;
-            box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
-            border-radius:10px;
-            width:100%;
+            box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+            border-radius: 10px;
+            width: 100%;
         }
 
         input[type=text]:focus {
@@ -32,47 +32,48 @@
 
         input[type=submit] {
 
-        /* remove default behavior */
-        appearance:none;
-        -webkit-appearance:none;
+            /* remove default behavior */
+            appearance: none;
+            -webkit-appearance: none;
 
-        /* usual styles */
-        padding:10px;
-        border:none;
-        background-color:#3F51B5;
-        color:#fff;
-        font-weight:600;
-        border-radius:5px;
-        margin-top: 30px;
-        width:100%;
-    }
+            /* usual styles */
+            padding: 10px;
+            border: none;
+            background-color: #3F51B5;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 5px;
+            margin-top: 30px;
+            width: 100%;
+        }
 
-    #container-form {
-        width: 100%;
-        height: 100vh;
-        background-color: #9494ab;
-        color: #eee;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
+        #container-form {
+            width: 100%;
+            height: 100vh;
+            background-color: #9494ab;
+            color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 
     <script>
         const eventsFromServer = $events;
     </script>
 </head>
+
 <body onload="getText()">
 
     <div id="container-form">
-        <div id="formCalendar" >
+        <div id="formCalendar">
             <form action="/getEvents/:userId/:year/:month/:day" method="POST">
                 <p id="calDate"></p>
             </form>
-            
+
         </div>
     </div>
 </body>
 <script src="script.js"></script>
+
 </html>

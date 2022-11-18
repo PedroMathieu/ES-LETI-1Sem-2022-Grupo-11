@@ -16,7 +16,6 @@ import java.util.*;
 import static java.lang.System.exit;
 import static spark.Spark.*;
 
-
 /**
  * The server class is responsible for handling requests from the front end.
  * The requests are mainly Event requests.
@@ -25,6 +24,7 @@ import static spark.Spark.*;
  */
 public class Server implements SparkApplication {
     private static final Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
+
     public Server() {
     }
 
@@ -32,9 +32,9 @@ public class Server implements SparkApplication {
      * Checks if date is valid. By checking year, month and day ranges.
      * Also checks if the given days are in the range of the given month.
      *
-     * @param year requested year to validate
+     * @param year  requested year to validate
      * @param month requested month to validate
-     * @param day request day to validate
+     * @param day   request day to validate
      * @return true if date is valid, false otherwise
      */
     private boolean validateDateParams(int year, int month, int day) {
@@ -62,14 +62,15 @@ public class Server implements SparkApplication {
     private boolean validateOwner(String rOwner) {
         System.out.println("[SERVER] checking if calendar owner exists");
         for (String owner : personalCalendarObjects.keySet())
-            if (rOwner.equals(owner)) return true;
+            if (rOwner.equals(owner))
+                return true;
         return false;
     }
 
     /**
      * Builds event data in JSON to send it to the front end.
      *
-     * @param rOwner calendar owner, to get its calendar
+     * @param rOwner        calendar owner, to get its calendar
      * @param dateRequested requested date to get events
      * @return JSON object to send to front end
      */
@@ -99,8 +100,7 @@ public class Server implements SparkApplication {
         data.put("hasMessage", true);
 
         return new VelocityTemplateEngine().render(
-                new ModelAndView(data, "calendarWeb/ErrorPage.vm")
-        );
+                new ModelAndView(data, "calendarWeb/ErrorPage.vm"));
     }
 
     /**
@@ -117,8 +117,7 @@ public class Server implements SparkApplication {
         Random random = new Random();
         StringBuilder buffer = new StringBuilder(targetStringLength);
         for (int i = 0; i < targetStringLength; i++) {
-            int randomLimitedInt = leftLimit + (int)
-                    (random.nextFloat() * (rightLimit - leftLimit + 1));
+            int randomLimitedInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit + 1));
             buffer.append((char) randomLimitedInt);
         }
 
@@ -135,7 +134,8 @@ public class Server implements SparkApplication {
     private Object uploadCalendarToServer(Request req, Response res) throws IOException {
         String calendarUrl = req.queryParams("calendar-link-input").trim();
 
-        // Checks if the link protocol is webcal and then it changes it to https for download
+        // Checks if the link protocol is webcal and then it changes it to https for
+        // download
         System.out.println("[SERVER] Validating URL protocol");
         if (!(calendarUrl.startsWith("webcal"))) {
             return senErrorToUser("Please make sure the url is webcal://");
@@ -162,7 +162,8 @@ public class Server implements SparkApplication {
 
             fis.close();
             bis.close();
-        } catch (FileNotFoundException e) {}
+        } catch (FileNotFoundException e) {
+        }
 
         // Parse the .ics calendar
         new Parser().initiateCalendar(tempFileName);
@@ -196,8 +197,8 @@ public class Server implements SparkApplication {
         Map<String, JSONObject> data = new HashMap<>();
         System.out.println(requestedOwners);
 
-
-        if (requestedOwners.size() == 0) {} // render main page with a message to specify at least one user
+        if (requestedOwners.size() == 0) {
+        } // render main page with a message to specify at least one user
         else {
             for (String rOwner : requestedOwners) {
                 System.out.println("[SERVER] getting events of " + rOwner);
@@ -206,8 +207,12 @@ public class Server implements SparkApplication {
                 System.out.println("[SERVER] converting date");
                 try {
                     rYear = Integer.parseInt(req.params("year"));
+                    System.out.println("[SERVER] Year: " + rYear);
                     rMonth = Integer.parseInt(req.params("month"));
+                    System.out.println("[SERVER] Month: " + rMonth);
+                    System.out.println("[SERVER] Day before parsing: " + req.params("day"));
                     rDay = Integer.parseInt(req.params("day"));
+                    System.out.println("[SERVER] Day: " + rDay);
                 } catch (NumberFormatException e) {
                     return senErrorToUser("Year, month or day is not a number");
                 }
@@ -227,8 +232,7 @@ public class Server implements SparkApplication {
         data.put("events", jsonEvents);
 
         return new VelocityTemplateEngine().render(
-                new ModelAndView(data, "calendarWeb/CalendarDaily.html")
-        );
+                new ModelAndView(data, "calendarWeb/CalendarDaily.html"));
     }
 
     /**
@@ -245,8 +249,7 @@ public class Server implements SparkApplication {
             data.put("hasMessage", true);
 
             return new VelocityTemplateEngine().render(
-                    new ModelAndView(data, "calendarWeb/ErrorPage.vm")
-            );
+                    new ModelAndView(data, "calendarWeb/ErrorPage.vm"));
         });
 
         // Using a template engine only in this endpoint. At least for now...
@@ -257,13 +260,12 @@ public class Server implements SparkApplication {
             data.put("owners", ownerList);
 
             return new VelocityTemplateEngine().render(
-                    new ModelAndView(data, "calendarWeb/Site.html")
-            );
+                    new ModelAndView(data, "calendarWeb/Site.html"));
         });
 
         get("/insertCalendars", (req, res) -> {
-           res.redirect("/CalendarInput.html");
-           return null;
+            res.redirect("/CalendarInput.html");
+            return null;
         });
 
         post("/uploadCalendarLink", this::uploadCalendarToServer);
@@ -276,10 +278,12 @@ public class Server implements SparkApplication {
      * PersonalCalendar objects from them. It puts them in a global map
      * with a unique ID, to be used later on.
      *
-     * @throws SecurityException if we don't have read permissions to the directory
-     * @throws NullPointerException if the calendars folder path is wrong or no calendars in it
+     * @throws SecurityException    if we don't have read permissions to the
+     *                              directory
+     * @throws NullPointerException if the calendars folder path is wrong or no
+     *                              calendars in it
      */
-    private void loadCalendars () {
+    private void loadCalendars() {
         File folder = new File(System.getProperty("user.dir") + "/calendars/jsonFiles/");
         try {
             for (File fileEntry : folder.listFiles()) {
@@ -294,6 +298,7 @@ public class Server implements SparkApplication {
 
     /**
      * Get personal calendar objects
+     * 
      * @return map with personal calendar objects and owners
      */
     public static Map<String, PersonalCalendar> getPersonalCalendarObjects() {

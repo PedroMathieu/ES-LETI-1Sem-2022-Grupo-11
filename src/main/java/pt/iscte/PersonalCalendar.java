@@ -15,8 +15,8 @@ import org.json.simple.parser.JSONParser;
 
 /**
  * The calendar class represents all the events of a specific calendar owner
- * It parses all the data from the already converted JSON calendars in the 
- * calendars folder. 
+ * It parses all the data from the already converted JSON calendars in the
+ * calendars folder.
  * To use more calendars simply download your calendar at fenix.iscte-iul.pt/
  * and convert it to JSON in https://ical-to-json.herokuapp.com/
  * This class will take care of the rest :)
@@ -26,7 +26,7 @@ import org.json.simple.parser.JSONParser;
 public class PersonalCalendar {
     String calendarFile = "";
     String calendarOwner = "";
-    
+
     List<Event> events = new LinkedList<>();
     JSONParser parser = new JSONParser();
 
@@ -49,18 +49,18 @@ public class PersonalCalendar {
             JSONArray vcalendar = (JSONArray) jsonObject.get("vcalendar");
             List<JSONObject> vCalendarObjects = new ArrayList<>();
             Iterator<JSONObject> vCalendarIterator = vcalendar.iterator();
-            
+
             // Add all vcalendar attributes to a list
-            while (vCalendarIterator.hasNext()) 
+            while (vCalendarIterator.hasNext())
                 vCalendarObjects.add((JSONObject) vCalendarIterator.next());
-            
+
             // From vcalendar, get the calendar owner (email) and the events
             calendarOwner = ((String) vCalendarObjects.get(0).get("x-wr-calname")).split("@")[0];
             JSONArray vEvents = (JSONArray) vCalendarObjects.get(0).get("vevent");
             Iterator<JSONObject> vEventsIterator = vEvents.iterator();
-            
+
             // Add all the events to a JSONObject arraylist
-            while (vEventsIterator.hasNext()) 
+            while (vEventsIterator.hasNext())
                 eventListJson.add((JSONObject) vEventsIterator.next());
 
             // Convert all events from JSON to Event
@@ -73,6 +73,7 @@ public class PersonalCalendar {
 
     /**
      * Gets the calendar owner
+     * 
      * @return username of email of calendar owner (its unique)
      */
     public String getCalendarOwner() {
@@ -82,6 +83,7 @@ public class PersonalCalendar {
     /**
      * Converts all the events in JSON to Event objects
      * Makes it easier for searching
+     * 
      * @param eventListJson list of events as JSON objects
      * @return a List of all the events as Event objects
      */
@@ -90,18 +92,17 @@ public class PersonalCalendar {
 
         for (JSONObject j : eventListJson) {
             eventsToReturn.add(new Event(
-                    calendarOwner, 
-                    (String) j.get("summary"), 
+                    calendarOwner,
+                    (String) j.get("summary"),
                     (String) j.get("dtstart"),
-                    (String) j.get("dtend"))
-            );
+                    (String) j.get("dtend")));
         }
-        
+
         return eventsToReturn;
     }
 
     /**
-     * Gets the list that contains all the events of the 
+     * Gets the list that contains all the events of the
      * respective calendar
      * 
      * @return a List of events as Event objects
@@ -111,7 +112,7 @@ public class PersonalCalendar {
     }
 
     /**
-     * Gets all the events happening in a day. This will be 
+     * Gets all the events happening in a day. This will be
      * useful when drawing the calendar on the screen.
      * 
      * @param d targeted day
@@ -120,7 +121,8 @@ public class PersonalCalendar {
     public List<Event> getEventsInADay(LocalDate d) {
         List<Event> result = new ArrayList<>();
         for (Event e : events)
-            if (e.getDayOfEvent().equals(d)) result.add(e);
+            if (e.getDayOfEvent().equals(d))
+                result.add(e);
         return result;
     }
 }

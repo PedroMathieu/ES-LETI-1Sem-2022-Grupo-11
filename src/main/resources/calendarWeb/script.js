@@ -1,21 +1,21 @@
- /**
- * TODO: THIS JAVASCRIPT FILE NEEDS TO BE REFACTORED ASAP. CONTAINS BUGS AND IT COULD BE BETTER ORGANIZED
- * Is there a better way to make the calendar work in javascript? Maybe a library?
- * We should TRY to refactor the whole file structure (and front end structure) and also some bad practices,
- * such as const and let misuse.
- * 
- * Ideas to get day calendar:
- * - Build a new endpoint that sends the json event data in each response, embedded in the template
- * - Build an endpoint that only renders a template and then use url params to make javascript requests
- */
+/**
+* TODO: THIS JAVASCRIPT FILE NEEDS TO BE REFACTORED ASAP. CONTAINS BUGS AND IT COULD BE BETTER ORGANIZED
+* Is there a better way to make the calendar work in javascript? Maybe a library?
+* We should TRY to refactor the whole file structure (and front end structure) and also some bad practices,
+* such as const and let misuse.
+* 
+* Ideas to get day calendar:
+* - Build a new endpoint that sends the json event data in each response, embedded in the template
+* - Build an endpoint that only renders a template and then use url params to make javascript requests
+*/
 
-    const monthDays = document.querySelector(".days"),
+const monthDays = document.querySelector(".days"),
     prevNextIcon = document.querySelectorAll(".month"),
     currentDate = document.querySelector(".current-date");
-    //Gets the current year and month
-    const date = new Date();
-    currMonth = date.getMonth(),
-    currYear = date.getFullYear();
+//Gets the current year and month
+const date = new Date();
+currMonth = date.getMonth();
+currYear = date.getFullYear();
 
 
 const renderCalendar = () => {
@@ -31,12 +31,12 @@ const renderCalendar = () => {
     //Gets the last date of the previous month
     const prevLastDay = new Date(
         date.getFullYear(),
-        date.getMonth(),
+        date.getMonth() - 1,
         0
     ).getDate();
 
 
-    
+
     const firstDayIndex = date.getDay();
 
     const lastDayIndex = new Date(
@@ -121,15 +121,15 @@ function buildUrl(obj) {
 
     for (let i = 0; i < checkboxes.length; i++) {
         checked.push(checkboxes[i].name)
-    }
- 
-    urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + date.getMonth() + "/" + clickedDay
+    }   
+
+    urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()+1) + "/" + clickedDay
     console.log(urlBuilder)
-    window.location.href= urlBuilder;
+    window.location.href = urlBuilder;
 
 }
-function getText(){
-    let dte=  currYear + "/" + date.getMonth() + "/" + date.getDate();
-    document.getElementById("calDate").innerHTML= dte;
+function getText() {
+    let dte = currYear + "/" + date.getMonth() + "/" + date.getDate();
+    document.getElementById("calDate").innerHTML = dte;
 }
 
