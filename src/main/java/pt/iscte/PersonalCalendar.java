@@ -1,6 +1,5 @@
 package pt.iscte;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.time.LocalDate;

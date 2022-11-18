@@ -16,6 +16,11 @@ public class ApiTestUtils {
         return new TestResponse(connection.getResponseCode(), body);
     }
 
+    public static TestResponse requestPostCalendarInuput(String path, String data) throws Exception {
+        //TODO
+        return null;
+    }
+
     public static class TestResponse {
 
         public final String body;

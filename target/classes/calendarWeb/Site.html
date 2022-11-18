@@ -46,7 +46,7 @@
     <div id="current-calendar-owners">
       <p style="margin-bottom: 10px">Choose the calendars you want to see when analyzing a day</p>
       #foreach( $owner in $owners )
-          <input type="checkbox" name="$owner">
+          <input type="checkbox" name="$owner" checked>
           <label for="$owner">$owner</label><br>
       #end
     </div>
