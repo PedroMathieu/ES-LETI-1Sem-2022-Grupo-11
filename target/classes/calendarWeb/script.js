@@ -123,10 +123,11 @@ function buildUrl(obj) {
         checked.push(checkboxes[i].name)
     }
  
-    urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + date.getMonth() + "/" + obj.id;
+    urlBuilder = "/personalCalendar/e/" + checked.join("-") + "/" + currYear + "/" + date.getMonth() + "/" + obj.id;
     window.location.href = urlBuilder;
 
 }
+
 function getText(){
     let dte=  currYear + "/" + date.getMonth() + "/" + date.getDate();
     document.getElementById("calDate").innerHTML= dte;

@@ -184,7 +184,9 @@ public class Server implements SparkApplication {
 
     /**
      * Route of getEventsByDay. Gets all the events from the calendar.
-     * Given the owner of the calendar by giving the date
+     * Given the owner of the calendar by giving the date.
+     * It can do 2 different operations. It can return the number of events,
+     * or return the number of events in a day.
      *
      * @param req Spark request object, contains parameters info
      * @param res Spark response object
@@ -194,8 +196,11 @@ public class Server implements SparkApplication {
         int rYear, rMonth, rDay;
         JSONObject jsonEvents = new JSONObject();
         Map<String, JSONObject> data = new HashMap<>();
+        String operation = req.params("operation");
 
         List<String> requestedOwners = List.of(req.params("userId").split("-"));
+
+        System.out.println(operation.equals("n") || !operation.equals("e"));
 
         // Make sure that the date provided are numbers
         System.out.println("[SERVER] converting date");
@@ -217,8 +222,16 @@ public class Server implements SparkApplication {
 
             System.out.println("[SERVER] getting events");
             LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
+            JSONObject requestedEvents = buildEventsInJson(rOwner, dateRequested);
+            JSONArray arrayOfEvents = (JSONArray) requestedEvents.get("events");
 
-            jsonEvents.put(rOwner, buildEventsInJson(rOwner, dateRequested));
+            // n is to get number of events, e is to get events              
+            if (operation.equals("e"))
+                jsonEvents.put(rOwner, requestedEvents);
+            else if (operation.equals("n"))
+                jsonEvents.put(rOwner, arrayOfEvents.size());
+            else
+                return sendErrorToUser("Selected operation does not exist");
         }
 
         data.put("events", jsonEvents);
@@ -266,7 +279,7 @@ public class Server implements SparkApplication {
 
         post("/uploadCalendarLink", this::uploadCalendarToServer);
 
-        get("/personalCalendar/:userId/:y/:m/:d", this::getEventsInDay);
+        get("/personalCalendar/:operation/:userId/:y/:m/:d", this::getEventsInDay);
     }
 
     /**

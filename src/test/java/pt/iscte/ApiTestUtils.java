@@ -2,7 +2,6 @@ package pt.iscte;
 
 import spark.utils.IOUtils;
 
-import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
