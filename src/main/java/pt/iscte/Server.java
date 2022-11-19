@@ -230,7 +230,6 @@ public class Server implements SparkApplication {
         }
 
         data.put("events", jsonEvents);
-
         return new VelocityTemplateEngine().render(
                 new ModelAndView(data, "calendarWeb/CalendarDaily.html"));
     }
