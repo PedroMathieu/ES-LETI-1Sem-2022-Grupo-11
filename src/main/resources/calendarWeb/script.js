@@ -61,7 +61,7 @@ const renderCalendar = () => {
 
     //Creates buttons of the previous month last days
     for (let x = firstDayIndex; x > 0; x--) {
-        days += `<button id="${prevLastDay - x + 1}" onclick="buildUrl(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
+        days += `<button id="${prevLastDay - x + 1}p" onclick="buildUrl(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
     }
 
     //Creates buttons of the all the days of current month
@@ -78,7 +78,7 @@ const renderCalendar = () => {
 
     //Creates buttons of the first days in the next month
     for (let j = 1; j <= nextDays; j++) {
-        days += `<button id="${j}" onclick="buildUrl(this)" class="next-date">${j}</button>`;
+        days += `<button id="${j}n" onclick="buildUrl(this)" class="next-date">${j}</button>`;
         monthDays.innerHTML = days;
     }
 };
@@ -123,7 +123,14 @@ function buildUrl(obj) {
         checked.push(checkboxes[i].name)
     }   
 
-    urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()+1) + "/" + clickedDay
+    if(clickedDay.includes("p")){
+        urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()) + "/" + clickedDay.slice(0,2)
+    }else if(clickedDay.includes("n")){
+        urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()+2) + "/" + clickedDay.slice(0,1)
+    }else{
+        urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()+1) + "/" + clickedDay
+    }
+
     console.log(urlBuilder)
     window.location.href = urlBuilder;
 
