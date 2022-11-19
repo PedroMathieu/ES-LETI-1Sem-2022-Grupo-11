@@ -2,6 +2,7 @@
  * Generate hours in a day
  */
 function generateHours() {
+	console.log("Generating hours");
 	let result = [];
 	let startingHour = 6;
 	addHalfAnHour = true;
