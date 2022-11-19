@@ -5,6 +5,7 @@
   font-family: "Quicksand", sans-serif;
 }
 
+/*
 body {
   display: flex;
   align-items: center;
@@ -13,6 +14,7 @@ body {
   padding: 4rem 0;
   font-family: -system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
+*/
 
 html {
   font-size: 79.5%;

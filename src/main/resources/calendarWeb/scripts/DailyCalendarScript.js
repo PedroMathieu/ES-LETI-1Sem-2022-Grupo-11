@@ -33,8 +33,10 @@ function generateHours() {
  */
 function drawTimeBlock(timeBlock) {
 	let div = document.createElement("div");
+	div.classList.add("time");
+	div.classList.add("start-"+timeBlock.replace(":", ""));
 	div.innerHTML = timeBlock;
-	document.getElementById("main").appendChild(div);
+	document.getElementById("scheduleContainer").appendChild(div);
 }
 
 window.onload = generateHours;
