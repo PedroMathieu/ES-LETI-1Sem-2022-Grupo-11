@@ -43,11 +43,5 @@
     <div id="go-to-main-page">
         <p>Click <a href="/">here</a> to go back to the main page.</p>
     </div>
-<!--
-    #if ( $hasMessage )
-        <div id="err">$message</div>
-    #end
-    -->
-    
 </body>
 </html>
