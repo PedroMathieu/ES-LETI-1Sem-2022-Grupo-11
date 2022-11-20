@@ -91,7 +91,7 @@ public class Server implements SparkApplication {
      * @param message message to send
      * @return JSONObject with message to send
      */
-    public Object senErrorToUser(String message) {
+    public Object sendErrorToUser(String message) {
         System.out.println("[SERVER ERROR] something went wrong -> " + message);
         Map<String, Object> data = new HashMap<>();
 
@@ -138,7 +138,7 @@ public class Server implements SparkApplication {
         // download
         System.out.println("[SERVER] Validating URL protocol");
         if (!(calendarUrl.startsWith("webcal"))) {
-            return senErrorToUser("Please make sure the url is webcal://");
+            return sendErrorToUser("Please make sure the url is webcal://");
         }
 
         calendarUrl = calendarUrl.replace("webcal://", "https://");
@@ -195,43 +195,53 @@ public class Server implements SparkApplication {
         List<String> requestedOwners = List.of(req.params("userId").split("-"));
         JSONObject jsonEvents = new JSONObject();
         Map<String, JSONObject> data = new HashMap<>();
-        System.out.println(requestedOwners);
+        String operation = req.params("operation");
+        boolean reqWasNumOfEvents = false;
 
-        if (requestedOwners.size() == 0) {
-        } // render main page with a message to specify at least one user
-        else {
-            for (String rOwner : requestedOwners) {
-                System.out.println("[SERVER] getting events of " + rOwner);
-
-                // Make sure that the date provided are numbers
-                System.out.println("[SERVER] converting date");
-                try {
-                    rYear = Integer.parseInt(req.params("year"));
-                    System.out.println("[SERVER] Year: " + rYear);
-                    rMonth = Integer.parseInt(req.params("month"));
-                    System.out.println("[SERVER] Month: " + rMonth);
-                    System.out.println("[SERVER] Day before parsing: " + req.params("day"));
-                    rDay = Integer.parseInt(req.params("day"));
-                    System.out.println("[SERVER] Day: " + rDay);
-                } catch (NumberFormatException e) {
-                    return senErrorToUser("Year, month or day is not a number");
-                }
-
-                // Validate date params and calendar owner
-                if (!validateDateParams(rYear, rMonth, rDay) || !validateOwner(rOwner)) {
-                    return senErrorToUser("Parameters contain problems");
-                }
-
-                System.out.println("[SERVER] getting events");
-                LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
-
-                jsonEvents.put(rOwner, buildEventsInJson(rOwner, dateRequested));
-            }
+        // Make sure that the date provided are numbers
+        System.out.println("[SERVER] converting date");
+        try {
+            rYear = Integer.parseInt(req.params("year"));
+            rMonth = Integer.parseInt(req.params("month"));
+            rDay = Integer.parseInt(req.params("day"));
+        } catch (NumberFormatException e) {
+            return sendErrorToUser("Year, month or day is not a number");
         }
 
-        data.put("events", jsonEvents);
-        return new VelocityTemplateEngine().render(
-                new ModelAndView(data, "calendarWeb/CalendarDaily.html"));
+        for (String rOwner : requestedOwners) {
+            System.out.println("[SERVER] getting events of " + rOwner);
+
+            // Validate date params and calendar owner
+            if (!validateDateParams(rYear, rMonth, rDay) || !validateOwner(rOwner)) {
+                return sendErrorToUser("Parameters contain problems");
+            }
+
+            System.out.println("[SERVER] getting events");
+            LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
+            JSONObject requestedEvents = buildEventsInJson(rOwner, dateRequested);
+            JSONArray arrayOfEvents = (JSONArray) requestedEvents.get("events");
+
+            // n is to get number of events, e is to get events
+            if (operation.equals("e"))
+                jsonEvents.put(rOwner, requestedEvents);
+            else if (operation.equals("n")) {
+                jsonEvents.put(rOwner, arrayOfEvents.size());
+                reqWasNumOfEvents = true;
+            }
+            else
+                return sendErrorToUser("Selected operation does not exist");
+        }
+
+        // If the operation was numbers, return json. Else return template with events
+        if (reqWasNumOfEvents) {
+            res.header("Content-Type", "application/json");
+            return jsonEvents;
+
+        } else {
+            data.put("events", jsonEvents);
+            return new VelocityTemplateEngine().render(
+                    new ModelAndView(data, "calendarWeb/CalendarDaily.html"));
+        }
     }
 
     /**
@@ -269,7 +279,7 @@ public class Server implements SparkApplication {
 
         post("/uploadCalendarLink", this::uploadCalendarToServer);
 
-        get("/personalCalendar/:userId/:year/:month/:day", this::getEventsByDayRoute);
+        get("/personalCalendar/:operation/:userId/:year/:month/:day", this::getEventsByDayRoute);
     }
 
     /**

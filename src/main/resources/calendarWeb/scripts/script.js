@@ -16,6 +16,7 @@ const monthDays = document.querySelector(".days"),
 const date = new Date();
 currMonth = date.getMonth();
 currYear = date.getFullYear();
+let jsonNumberOfEvents = {};
 
 
 const renderCalendar = () => {
@@ -123,11 +124,49 @@ function buildUrl(obj) {
         checked.push(checkboxes[i].name)
     }   
 
-    urlBuilder = "/personalCalendar/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()+1) + "/" + clickedDay
+    urlBuilder = "/personalCalendar/e/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()+1) + "/" + clickedDay
     console.log(urlBuilder)
     window.location.href = urlBuilder;
 
 }
+
+function getRepresentedDaysEvents() {
+    let daysDiv = document.getElementById("d");
+    let daysElements = daysDiv.getElementsByTagName("button");
+    let dates = [];
+
+    for (let i = 0; i < daysElements.length; i++) {
+
+        // For now, it only adds days of the represented month
+        if (daysElements[i].className != "prev-date" && daysElements[i].className != "next-date")
+            dates.push(date.getFullYear() + "/" + (date.getMonth()+1) + "/" + daysElements[i].id);
+    }
+
+    return dates;
+}
+
+function requestNumberOfEventsThisMonth() {
+    console.log("getting number of events");
+    let dates = getRepresentedDaysEvents();
+    let checked = [];
+    let checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
+    let jsonResponses = {};
+
+    for (let i = 0; i < checkboxes.length; i++) {
+        checked.push(checkboxes[i].name)
+    }
+
+    for (let i = 0; i < dates.length; i++) {
+        let dateSplit = dates[i].split("/");
+        let day = dateSplit[dateSplit.length - 1].toString()
+        fetch("/personalCalendar/n/" + checked.join("-") + "/" + dates[i])
+        .then(res => res.json())
+        .then(json => jsonResponses[day] = json);
+    }
+
+    jsonNumberOfEvents = jsonResponses;
+}
+
 function getText() {
     let dte = currYear + "/" + date.getMonth() + "/" + date.getDate();
     document.getElementById("calDate").innerHTML = dte;
