@@ -87,12 +87,14 @@ const renderCalendar = () => {
 document.querySelector(".prev").addEventListener("click", () => {
     date.setMonth(date.getMonth() - 1);
     renderCalendar();
+    requestNumberOfEventsThisMonth();
 });
 
 //If you click in the next icon the month is incremented by 1
 document.querySelector(".next").addEventListener("click", () => {
     date.setMonth(date.getMonth() + 1);
     renderCalendar();
+    requestNumberOfEventsThisMonth();
 });
 
 renderCalendar();
