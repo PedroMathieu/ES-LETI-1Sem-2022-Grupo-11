@@ -13,10 +13,9 @@ const monthDays = document.querySelector(".days"),
     prevNextIcon = document.querySelectorAll(".month"),
     currentDate = document.querySelector(".current-date");
 //Gets the current year and month
-const date = new Date();
+let date = new Date();
 currMonth = date.getMonth();
 currYear = date.getFullYear();
-let jsonNumberOfEvents = {};
 
 
 const renderCalendar = () => {
@@ -114,61 +113,28 @@ prevNextIcon.forEach(icon => { // getting prev and next icons
     });
 });
 
-function buildUrl(obj) {
+function getCheckedUsers() {
     let checked = []
     let checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+
+    for (let i = 0; i < checkboxes.length; i++)
+        checked.push(checkboxes[i].name)
+
+    return checked;
+}
+
+function buildUrl(obj) {
+    let checked = getCheckedUsers()
     let urlBuilder;
     let clickedDay = obj.id; //TODO but first we need to refactor this whole file
-
-    for (let i = 0; i < checkboxes.length; i++) {
-        checked.push(checkboxes[i].name)
-    }   
 
     urlBuilder = "/personalCalendar/e/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()+1) + "/" + clickedDay
     console.log(urlBuilder)
     window.location.href = urlBuilder;
-
 }
 
-function getRepresentedDaysEvents() {
-    let daysDiv = document.getElementById("d");
-    let daysElements = daysDiv.getElementsByTagName("button");
-    let dates = [];
-
-    for (let i = 0; i < daysElements.length; i++) {
-
-        // For now, it only adds days of the represented month
-        if (daysElements[i].className != "prev-date" && daysElements[i].className != "next-date")
-            dates.push(date.getFullYear() + "/" + (date.getMonth()+1) + "/" + daysElements[i].id);
-    }
-
-    return dates;
-}
-
-function requestNumberOfEventsThisMonth() {
-    console.log("getting number of events");
-    let dates = getRepresentedDaysEvents();
-    let checked = [];
-    let checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
-    let jsonResponses = {};
-
-    for (let i = 0; i < checkboxes.length; i++) {
-        checked.push(checkboxes[i].name)
-    }
-
-    for (let i = 0; i < dates.length; i++) {
-        let dateSplit = dates[i].split("/");
-        let day = dateSplit[dateSplit.length - 1].toString()
-        fetch("/personalCalendar/n/" + checked.join("-") + "/" + dates[i])
-        .then(res => res.json())
-        .then(json => jsonResponses[day] = json);
-    }
-
-    jsonNumberOfEvents = jsonResponses;
-}
 
 function getText() {
     let dte = currYear + "/" + date.getMonth() + "/" + date.getDate();
     document.getElementById("calDate").innerHTML = dte;
 }
-
