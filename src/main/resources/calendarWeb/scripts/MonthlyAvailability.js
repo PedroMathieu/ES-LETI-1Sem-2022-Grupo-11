@@ -1,6 +1,6 @@
 let jsonNumberOfEvents = {};
 let meanNumberOfEvents = 0;
-let dates = getRepresentedDaysEvents();
+let dates = [];
 
 
 function getRepresentedDaysEvents() {
@@ -26,6 +26,7 @@ function getDayOfRepresentedDates(date) {
     
 function requestNumberOfEventsThisMonth() {
 	console.log("getting number of events");
+    dates = getRepresentedDaysEvents();
 	let checked = getCheckedUsers();
 	let jsonResponses = {};
 
@@ -56,7 +57,7 @@ function drawAvailabilityOnCalendar() {
             
             // Obter o numero de maximo de events de cada utilizador selecionado nesse dia
             for (let j = 0; j < checked.length; j++) {
-
+                console.log(Number(daysElements[i].innerHTML))
                 maxNumberOfEventsInDay = maxNumberOfEventsInDay + 
                     jsonNumberOfEvents[Number(daysElements[i].innerHTML)][checked[j]];
             }
