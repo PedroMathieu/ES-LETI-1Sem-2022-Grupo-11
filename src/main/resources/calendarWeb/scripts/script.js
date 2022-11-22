@@ -58,7 +58,7 @@ const renderCalendar = () => {
 
     //Creates buttons of the previous month last days
     for (let x = firstDayIndex; x > 0; x--) {
-        days += `<button id="${prevLastDay - x + 1}" onclick="buildUrl(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
+        days += `<button id="${prevLastDay - x + 1}.prev" onclick="buildUrl(this)" class="prev-date">${prevLastDay - x + 1}</button>`;
     }
 
     //Creates buttons of the all the days of current month
@@ -75,7 +75,7 @@ const renderCalendar = () => {
 
     //Creates buttons of the first days in the next month
     for (let j = 1; j <= nextDays; j++) {
-        days += `<button id="${j}" onclick="buildUrl(this)" class="next-date">${j}</button>`;
+        days += `<button id="${j}.next" onclick="buildUrl(this)" class="next-date">${j}</button>`;
         monthDays.innerHTML = days;
     }
 };
@@ -117,10 +117,31 @@ function getCheckedUsers() {
 function buildUrl(obj) {
     let checked = getCheckedUsers()
     let urlBuilder;
-    let clickedDay = obj.id; //TODO but first we need to refactor this whole file
+    let clickedDay = obj.id;
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
 
-    urlBuilder = "/personalCalendar/e/" + checked.join("-") + "/" + currYear + "/" + (date.getMonth()+1) + "/" + clickedDay
-    console.log(urlBuilder)
+    if (clickedDay.includes("prev")) {
+        if (month == 1) {
+            month = 12;
+            year = year - 1;
+        } else
+            month = month - 1;
+
+        clickedDay = clickedDay.replace(".prev", "");
+    }
+    
+    if (clickedDay.includes("next")) {
+        if (month == 12) {
+            month = 1;
+            year = year + 1;
+        } else
+            month = month + 1;
+
+        clickedDay = clickedDay.replace(".next", "");
+    }
+
+    urlBuilder = "/personalCalendar/e/" + checked.join("-") + "/" + year + "/" + month + "/" + clickedDay;
     window.location.href = urlBuilder;
 }
 

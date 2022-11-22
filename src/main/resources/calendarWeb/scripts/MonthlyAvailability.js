@@ -57,7 +57,6 @@ function drawAvailabilityOnCalendar() {
             
             // Obter o numero de maximo de events de cada utilizador selecionado nesse dia
             for (let j = 0; j < checked.length; j++) {
-                console.log(Number(daysElements[i].innerHTML))
                 maxNumberOfEventsInDay = maxNumberOfEventsInDay + 
                     jsonNumberOfEvents[Number(daysElements[i].innerHTML)][checked[j]];
             }
