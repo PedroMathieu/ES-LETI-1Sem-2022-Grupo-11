@@ -20,7 +20,7 @@ date.setDate(1);
 
 const renderCalendar = () => {
 
-    //Gets the last date of the month
+    //Gets the last date of the current month
     const lastDay = new Date(
         date.getFullYear(),
         date.getMonth() + 1,
@@ -30,19 +30,21 @@ const renderCalendar = () => {
     //Gets the last date of the previous month
     const prevLastDay = new Date(
         date.getFullYear(),
-        date.getMonth() - 1,
+        date.getMonth(), 
         0
     ).getDate();
 
+    // Day of the week the current month starts
     const firstDayIndex = date.getDay();
 
+    // Day of the week the current month ends
     const lastDayIndex = new Date(
         date.getFullYear(),
         date.getMonth() + 1,
         0
     ).getDay();
 
-    const nextDays = 7 - lastDayIndex - 1;
+    const nextDays = 6 - lastDayIndex;
 
     //Stores the full name of all months in this array
     const months =
@@ -74,10 +76,10 @@ const renderCalendar = () => {
     }
 
     //Creates buttons of the first days in the next month
-    for (let j = 1; j <= nextDays; j++) {
+    for (let j = 1; j <= nextDays; j++)
         days += `<button id="${j}.next" onclick="buildUrl(this)" class="next-date">${j}</button>`;
-        monthDays.innerHTML = days;
-    }
+
+    monthDays.innerHTML = days;
 };
 
 //If you click in the previous icon the month is decremented by 1
@@ -144,7 +146,6 @@ function buildUrl(obj) {
     urlBuilder = "/personalCalendar/e/" + checked.join("-") + "/" + year + "/" + month + "/" + clickedDay;
     window.location.href = urlBuilder;
 }
-
 
 function getText() {
     let dte = currYear + "/" + date.getMonth() + "/" + date.getDate();
