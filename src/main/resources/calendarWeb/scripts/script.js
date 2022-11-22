@@ -16,15 +16,14 @@ const monthDays = document.querySelector(".days"),
 let date = new Date();
 currMonth = date.getMonth();
 currYear = date.getFullYear();
-
+date.setDate(1);
 
 const renderCalendar = () => {
-    date.setDate(1);
 
     //Gets the last date of the month
     const lastDay = new Date(
         date.getFullYear(),
-        date.getMonth() + 1,
+        date.getMonth(),
         0
     ).getDate();
 
@@ -34,8 +33,6 @@ const renderCalendar = () => {
         date.getMonth() - 1,
         0
     ).getDate();
-
-
 
     const firstDayIndex = date.getDay();
 
@@ -85,35 +82,27 @@ const renderCalendar = () => {
 
 //If you click in the previous icon the month is decremented by 1
 document.querySelector(".prev").addEventListener("click", () => {
-    date.setMonth(date.getMonth() - 1);
+    if (date.getMonth() != 0)
+        date.setFullYear(date.getFullYear(), date.getMonth() - 1, 1);
+    else 
+        date.setFullYear(date.getFullYear() - 1, 11, 1);
+    
     renderCalendar();
     requestNumberOfEventsThisMonth();
 });
 
 //If you click in the next icon the month is incremented by 1
 document.querySelector(".next").addEventListener("click", () => {
-    date.setMonth(date.getMonth() + 1);
+    if (date.getMonth() != 11)
+        date.setFullYear(date.getFullYear(), date.getMonth() + 1, 1);
+    else 
+        date.setFullYear(date.getFullYear() + 1, 0, 1);
+    
     renderCalendar();
     requestNumberOfEventsThisMonth();
 });
 
 renderCalendar();
-
-prevNextIcon.forEach(icon => { // getting prev and next icons
-    icon.addEventListener("click", () => { // adding click event on both icons
-        // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
-        currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
-        if (currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
-            // creating a new date of current year & month and pass it as date value
-            date = new Date(currYear, currMonth);
-            currYear = date.getFullYear(); // updating current year with new date year
-            currMonth = date.getMonth(); // updating current month with new date month
-        } else {
-            date = new Date(); // pass the current date as date value
-        }
-        renderCalendar(); // calling renderCalendar function
-    });
-});
 
 function getCheckedUsers() {
     let checked = []
