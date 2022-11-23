@@ -16,7 +16,7 @@ const monthDays = document.querySelector(".days"),
 let date = new Date();
 currMonth = date.getMonth();
 currYear = date.getFullYear();
-date.setDate(1);
+//date.setDate(1);
 
 const renderCalendar = () => {
 
@@ -65,11 +65,11 @@ const renderCalendar = () => {
 
     //Creates buttons of the all the days of current month
     for (let i = 1; i <= lastDay; i++) {
+        
         if (
-            i === new Date().getDate() &&
-            date.getMonth() && date.getFullYear() === new Date().getDate()
+            i === date.getDate() && currMonth === date.getMonth() && currYear === date.getFullYear()
         ) {
-            days += `<button onclick="buildURl(this)" id="${i}" class="today">${i}</button>`;
+            days += `<button onclick="buildUrl(this)" id="${i}" class="today">${i}</button>`;
         } else {
             days += `<button onclick="buildUrl(this)" id="${i}">${i}</button>`;
         }
@@ -145,9 +145,4 @@ function buildUrl(obj) {
 
     urlBuilder = "/personalCalendar/e/" + checked.join("-") + "/" + year + "/" + month + "/" + clickedDay;
     window.location.href = urlBuilder;
-}
-
-function getText() {
-    let dte = currYear + "/" + date.getMonth() + "/" + date.getDate();
-    document.getElementById("calDate").innerHTML = dte;
 }

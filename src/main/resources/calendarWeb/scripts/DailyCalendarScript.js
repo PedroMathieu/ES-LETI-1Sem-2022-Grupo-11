@@ -39,4 +39,8 @@ function drawTimeBlock(timeBlock) {
 	document.getElementById("scheduleContainer").appendChild(div);
 }
 
+function createEvent() {
+	
+}
+
 window.onload = generateHours;
