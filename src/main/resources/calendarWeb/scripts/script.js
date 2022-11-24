@@ -19,6 +19,7 @@ currYear = date.getFullYear();
 //date.setDate(1);
 
 const renderCalendar = () => {
+    date.setDate(1);
 
     //Gets the last date of the current month
     const lastDay = new Date(
@@ -67,7 +68,7 @@ const renderCalendar = () => {
     for (let i = 1; i <= lastDay; i++) {
         
         if (
-            i === date.getDate() && currMonth === date.getMonth() && currYear === date.getFullYear()
+            i === new Date().getDate() && date.getMonth() === new Date().getMonth() && currYear === date.getFullYear()
         ) {
             days += `<button onclick="buildUrl(this)" id="${i}" class="today">${i}</button>`;
         } else {
