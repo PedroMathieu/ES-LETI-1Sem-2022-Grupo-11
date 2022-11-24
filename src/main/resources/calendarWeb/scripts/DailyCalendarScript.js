@@ -37,7 +37,7 @@ let prevTime
 function drawTimeBlock(timeBlock) {
 	let div = document.createElement("div")
 	let button = document.createElement("button")
-	let input = document.createElement("textarea")
+	let input = document.createElement("input")
 
 	input.id = `${timeBlock}_1`
 
@@ -56,5 +56,6 @@ function drawTimeBlock(timeBlock) {
 	document.getElementById(timeBlock).appendChild(button)
 	document.getElementById(timeBlock).appendChild(input)
 }
+
 
 window.onload = generateHours;

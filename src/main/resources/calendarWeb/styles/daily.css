@@ -23,8 +23,9 @@ body{
     resize: none;
     background-color: darkcyan;
     font: bold;
+    color: black;
     row-gap: 0.5;
-    height: 105px;
+    height: 100px;
     width: 105px;
   }
 
