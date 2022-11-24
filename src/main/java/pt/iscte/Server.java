@@ -163,6 +163,7 @@ public class Server implements SparkApplication {
             fis.close();
             bis.close();
         } catch (FileNotFoundException e) {
+            System.err.println("File not found!");
         }
 
         // Parse the .ics calendar

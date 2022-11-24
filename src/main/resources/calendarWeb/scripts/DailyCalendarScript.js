@@ -4,11 +4,11 @@
 function generateHours() {
 	console.log("Generating hours");
 	let result = [];
-	let startingHour = 6;
-	addHalfAnHour = true;
+	let startingHour = 0;
+	addHalfAnHour = false;
 	result.push(startingHour.toString());
 
-	while (startingHour <= 19) {
+	while (startingHour <= 23) {
 		if (addHalfAnHour) {
 			result.push(startingHour.toString() + ":30");
 			addHalfAnHour = false;

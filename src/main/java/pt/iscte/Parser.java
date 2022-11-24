@@ -341,7 +341,7 @@ public class Parser {
         calendar_version = "";
     }
 
-    // -------------------------------------------------------------------------
+    // ------------------------------- TEST FUNCTIONS ------------------------------------------
 
     public void readFiles() throws IOException {
         File folder = new File(DIR_ICS);
