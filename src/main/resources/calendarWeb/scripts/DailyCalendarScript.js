@@ -31,16 +31,30 @@ function generateHours() {
  * Draw the generated hour in the screen
  * @param {String} timeBlock 
  */
-function drawTimeBlock(timeBlock) {
-	let div = document.createElement("div");
-	div.classList.add("time");
-	div.classList.add("start-"+timeBlock.replace(":", ""));
-	div.innerHTML = timeBlock;
-	document.getElementById("scheduleContainer").appendChild(div);
-}
 
-function createEvent() {
-	
+let prevTime
+
+function drawTimeBlock(timeBlock) {
+	let div = document.createElement("div")
+	let button = document.createElement("button")
+	let input = document.createElement("textarea")
+
+	input.id = `${timeBlock}_1`
+
+	input.classList.add("hide")
+	button.innerText = timeBlock
+	button.onclick = function(){
+		var text = document.getElementById(input.id)
+		text.classList.toggle("hide")
+		text.classList.toggle("input")
+
+	}
+
+	div.id = timeBlock
+	div.classList.add("time")
+	document.getElementById("scheduleContainer").appendChild(div)
+	document.getElementById(timeBlock).appendChild(button)
+	document.getElementById(timeBlock).appendChild(input)
 }
 
 window.onload = generateHours;

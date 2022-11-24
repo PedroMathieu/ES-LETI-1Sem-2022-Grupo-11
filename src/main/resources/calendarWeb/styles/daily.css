@@ -2,7 +2,7 @@ body{
     font-family: Arial;
     font-size: 24px;
     margin:50px;
-    background: #000;
+    background: rgb(52, 103, 150);
     color:#fff;
   }
 
@@ -11,139 +11,56 @@ body{
     block-size:35px;
   }
 
+
+  
+  
+  .hide {
+    display: none;
+  }
+
+  .input {
+    size: 5px;
+    resize: none;
+    background-color: darkcyan;
+    font: bold;
+    row-gap: 0.5;
+    height: 105px;
+    width: 105px;
+  }
+
 /**
  * Time
  */
  .time {
-    background-color: rgb(199, 185, 176);
-    display: flex;
-    align-items: center;
-    border-top: thin dashed #ccc;
-    height: 100%;
-    padding: 0 0.8rem;
-    font-size: 1.5rem;
+  background-color: rgb(199, 185, 176);
+  display: flex;
+  align-items: center;
+  border-top: thin dashed #ccc;
+  height: 100%;
+  padding: 0 0.8rem;
+  font-size: 1.5rem;
     
   }
 
-  
+  .time button {
+    font-size: 1.1rem;
+  margin: 0.3rem;
+  width: 42px;
+  height: 2.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5);
+  transition: background-color 0.2s;
+  background-color: rgb(199, 185, 176);
+  color: white;
+  border: none;
+  }
 
-  .time.start-630 {
-    grid-area: time2000;
+  .time button:hover {
+    background-color: #262626;
+  border: 0.2rem solid #777;
+  cursor: pointer;
   }
-  .time.start-700 {
-    grid-area: time2030;
-  }
-  .time.start-7300 {
-    grid-area: time2130;
-  }
-  .time.start-800 {
-    grid-area: time800;
-  }
-  .time.start-830 {
-    grid-area: time830;
-  }
-  .time.start-900 {
-    grid-area: time900;
-  }
-  .time.start-930 {
-    grid-area: time930;
-  }
-  .time.start-1000 {
-    grid-area: time1000;
-  }
-  .time.start-1030 {
-    grid-area: time1030;
-  }
-  .time.start-1100 {
-    grid-area: time1100;
-  }
-  .time.start-1130 {
-    grid-area: time1130;
-  }
-  .time.start-1200 {
-    grid-area: time1200;
-  }
-  .time.start-1230 {
-    grid-area: time1230;
-  }
-  .time.start-1300 {
-    grid-area: time1300;
-  }
-  .time.start-1330 {
-    grid-area: time1330;
-  }
-  .time.start-1400 {
-    grid-area: time1400;
-  }
-  .time.start-1430 {
-    grid-area: time1430;
-  }
-  .time.start-1500 {
-    grid-area: time1500;
-  }
-  .time.start-1530 {
-    grid-area: time1530;
-  }
-  .time.start-1600 {
-    grid-area: time1600;
-  }
-  .time.start-1630 {
-    grid-area: time1630;
-  }
-  .time.start-1700 {
-    grid-area: time1700;
-  }
-  .time.start-1730 {
-    grid-area: time1730;
-  }
-  .time.start-1800 {
-    grid-area: time1800;
-  }
-  .time.start-1830 {
-    grid-area: time1830;
-  }
-  .time.start-1900 {
-    grid-area: time1900;
-  }
-  .time.start-1930 {
-    grid-area: time1930;
-  }
-  .time[class*="30"]:not(.start-1300) {
-    color: rgb(92, 92, 92);
-  }
+
   
-  .hourlyContainer {
-    display: grid;
-    grid-gap: 10px;
-  
-    grid-template-columns: 5rem repeat(5, 1fr);
-    grid-template-rows: repeat(27, 1fr);
-    grid-template-areas: 
-    "time630 stage stage stage stage stage"
-    "time700 stage stage stage stage stage"
-    "time730 stage stage stage stage stage"
-    "time800 stage stage stage stage stage"
-    "time830 stage stage stage stage stage"
-    "time900 stage stage stage stage stage"
-    "time930 stage stage stage stage stage"
-    "time1000 stage stage stage stage stage"
-    "time1030 stage stage stage stage stage"
-    "time1100 stage stage stage stage stage"
-    "time1130 stage stage stage stage stage"
-    "time1200 stage stage stage stage stage"
-    "time1230 stage stage stage stage stage"
-    "time1300 stage stage stage stage stage"
-    "time1330 stage stage stage stage stage"
-    "time1400 stage stage stage stage stage"
-    "time1430 stage stage stage stage stage"
-    "time1500 stage stage stage stage stage"
-    "time1530 stage stage stage stage stage"
-    "time1600 stage stage stage stage stage"
-    "time1630 stage stage stage stage stage"
-    "time1700 stage stage stage stage stage"
-    "time1730 stage stage stage stage stage"
-    "time1800 stage stage stage stage stage"
-    "time1830 stage stage stage stage stage"
-    "time1900 stage stage stage stage stage"
-    "time1930 stage stage stage stage stage";
-  }
