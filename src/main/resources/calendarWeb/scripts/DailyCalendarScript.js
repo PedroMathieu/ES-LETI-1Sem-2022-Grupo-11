@@ -13,7 +13,7 @@ function generateHours() {
 			result.push(startingHour.toString() + ":30");
 			addHalfAnHour = false;
 			startingHour++;
-			drawTimeBlock(result[result.length -1]); // desenhar div da hora agora criada
+			drawTimeBlock(result[result.length - 1]); // desenhar div da hora agora criada
 			continue;
 		}
 
@@ -24,7 +24,7 @@ function generateHours() {
 			continue;
 		}
 	}
-    console.log(result);
+	console.log(result);
 }
 
 /**
@@ -43,7 +43,7 @@ function drawTimeBlock(timeBlock) {
 
 	input.classList.add("hide")
 	button.innerText = timeBlock
-	button.onclick = function(){
+	button.onclick = function () {
 		var text = document.getElementById(input.id)
 		text.classList.toggle("hide")
 		text.classList.toggle("input")
@@ -57,5 +57,18 @@ function drawTimeBlock(timeBlock) {
 	document.getElementById(timeBlock).appendChild(input)
 }
 
+function drawEvents() {
+	let url = window.location.pathname;
+	let urlParts = url.split("/");
+	let owners = urlParts[3].split("-");
+
+	console.log(owners)
+	owners.forEach( user => {
+		for (let i = 0; i < eventsFromServer[user]["events"].length; i++){
+			console.log(eventsFromServer[user]["events"][i]);
+		}
+	})
+	
+}
 
 window.onload = generateHours;
