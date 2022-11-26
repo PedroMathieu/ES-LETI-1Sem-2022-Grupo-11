@@ -1,4 +1,4 @@
-package pt.iscte;
+package pt.iscte.serverTest;
 
 import spark.utils.IOUtils;
 
@@ -16,10 +16,17 @@ public class ApiTestUtils {
         return new TestResponse(connection.getResponseCode(), body);
     }
 
-    public static TestResponse requestPostCalendarInuput(String path, String data) throws Exception {
-        //TODO
-        return null;
-    }
+    /**
+     * public static TestResponse requestPostCalendarInuput(String path, String data) throws Exception {
+     *         //TODO
+     *         return null;
+     *     }
+     * @param path
+     * @param data
+     * @return
+     * @throws Exception
+     */
+
 
     public static class TestResponse {
 

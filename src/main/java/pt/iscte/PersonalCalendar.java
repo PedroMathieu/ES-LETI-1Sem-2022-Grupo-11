@@ -25,7 +25,6 @@ import org.json.simple.parser.JSONParser;
 public class PersonalCalendar {
     String calendarFile = "";
     String calendarOwner = "";
-
     List<Event> events = new LinkedList<>();
     JSONParser parser = new JSONParser();
 
@@ -51,7 +50,7 @@ public class PersonalCalendar {
 
             // Add all vcalendar attributes to a list
             while (vCalendarIterator.hasNext())
-                vCalendarObjects.add((JSONObject) vCalendarIterator.next());
+                vCalendarObjects.add(vCalendarIterator.next());
 
             // From vcalendar, get the calendar owner (email) and the events
             calendarOwner = ((String) vCalendarObjects.get(0).get("x-wr-calname")).split("@")[0];
@@ -60,7 +59,7 @@ public class PersonalCalendar {
 
             // Add all the events to a JSONObject arraylist
             while (vEventsIterator.hasNext())
-                eventListJson.add((JSONObject) vEventsIterator.next());
+                eventListJson.add(vEventsIterator.next());
 
             // Convert all events from JSON to Event
             this.events = convertEventListFromJSON(eventListJson);

@@ -118,13 +118,13 @@ public class Parser {
                         // continues taking in the summary in case it occupies another line
                         else if (flag_ReadingSummary && !line.startsWith("UID:")) {
                             // same as ReadingDescription below
-                            event_Summary = event_Summary + line.substring(1, line.length());
+                            event_Summary = event_Summary + line.substring(1);
                         }
 
                         // continues taking in the description until it reaches the next parameter
                         else if (flag_ReadingDescription && !line.startsWith("LOCATION:")) {
                             // erases the first character since it's a space that's not needed
-                            event_Description = event_Description + line.substring(1, line.length());
+                            event_Description = event_Description + line.substring(1);
                         }
 
                         // taking in the events of the calendar
@@ -138,6 +138,8 @@ public class Parser {
             // in case it prematurely closes because it didn't find the beginning
             if (!line.equals("BEGIN:VCALENDAR") && !line.equals("END:VCALENDAR")) {
                 System.err.println("ERROR IN LINE: \"" + line + "\"");
+                s.close();
+                throw new IOException();
             }
             s.close();
 
@@ -345,7 +347,6 @@ public class Parser {
 
     public void readFiles() throws IOException {
         File folder = new File(DIR_ICS);
-        System.out.println(DIR_ICS);
         try {
             for (File curFile : folder.listFiles()) {
                 System.out.println("FILE: " + curFile);
