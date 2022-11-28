@@ -2,6 +2,7 @@ package pt.iscte.server.controllers;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import pt.iscte.PersonalCalendar;
 import pt.iscte.server.Server;
 import pt.iscte.server.ServerService;
 import pt.iscte.server.ServerUtil;
@@ -23,11 +24,17 @@ import java.util.Map;
  * @author Jose Soares
  */
 public class GetEventsController extends Controller {
-    public GetEventsController() {}
+    private Map<String, PersonalCalendar> calendars = new HashMap<>();
+
+    public GetEventsController(Map<String, PersonalCalendar> calendars) {
+        this.calendars = calendars;
+    }
 
     @Override
     public Object handle(Request req, Response res) {
         Map<String, JSONObject> data = new HashMap<>();
+        this.calendars = Server.getPersonalCalendarObjects(); // Use in memory loaded calendars, updated everytime
+
         Map<String, Object> response = process(req.params());
 
          // If the operation was numbers, return json. Else return template with events
@@ -65,12 +72,12 @@ public class GetEventsController extends Controller {
         for (String rOwner : requestedOwners) {
 
             // Validate date params and calendar owner
-            if (!ServerUtil.validateDateParams(rYear, rMonth, rDay) || !ServerService.validateOwner(rOwner)) {
+            if (!ServerUtil.validateDateParams(rYear, rMonth, rDay) || !ServerService.validateOwner(rOwner, calendars)) {
                 return buildResponseMap(null, "Parameters contain problems", false, true);
             }
 
             LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
-            JSONObject requestedEvents = ServerService.buildEventsInJson(rOwner, dateRequested, Server.getPersonalCalendarObjects());
+            JSONObject requestedEvents = ServerService.buildEventsInJson(rOwner, dateRequested, calendars);
             JSONArray arrayOfEvents = (JSONArray) requestedEvents.get("events");
 
             // n is to get number of events, e is to get events

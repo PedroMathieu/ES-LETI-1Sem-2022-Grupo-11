@@ -47,6 +47,9 @@ public abstract class Controller {
 
     /**
      * Process parameter data and do the logic for each controller.
+     * This part of the controller is only used by the server, which
+     * makes it possible to test the logic of each controller without
+     * having to deal with server connections.
      *
      * @param params parameters from front-end
      * @return response map with the parameters to be handled by the handler

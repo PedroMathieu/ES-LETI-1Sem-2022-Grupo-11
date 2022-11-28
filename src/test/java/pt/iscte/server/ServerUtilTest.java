@@ -33,7 +33,7 @@ public class ServerUtilTest {
 
     @Test
     public void givenWrongDayNumberForSpecifiedMonth_whenValidating_returnsFalse() {
-        int randomlyObtainedMonth = r.nextInt(13);
+        int randomlyObtainedMonth = r.nextInt(13-1) + 1;
         int greaterThanRangeForMonth = ServerUtil.monthLength[randomlyObtainedMonth-1] + 1;
         int lessThanRangeForMonth = 0;
         Assertions.assertFalse(ServerUtil.validateDateParams(2022, randomlyObtainedMonth, greaterThanRangeForMonth));

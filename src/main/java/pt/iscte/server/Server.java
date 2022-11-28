@@ -25,7 +25,7 @@ import static spark.Spark.*;
  */
 public class Server implements SparkApplication {
     private static Map<String, PersonalCalendar> personalCalendarObjects;
-    private Controller cEvents = new GetEventsController();
+    private Controller cEvents = new GetEventsController(getPersonalCalendarObjects());
     private Controller cUpload = new CalendarUploadController();
 
     public Server() {

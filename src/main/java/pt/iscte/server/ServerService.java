@@ -49,8 +49,8 @@ public class ServerService {
      * @param rOwner name of calendar owner to check
      * @return true if there's a calendar with that owner, false otherwise
      */
-    public static boolean validateOwner(String rOwner) {
-        for (String owner : Server.getPersonalCalendarObjects().keySet())
+    public static boolean validateOwner(String rOwner, Map<String, PersonalCalendar> calendars) {
+        for (String owner : calendars.keySet())
             if (rOwner.equals(owner))
                 return true;
         return false;
