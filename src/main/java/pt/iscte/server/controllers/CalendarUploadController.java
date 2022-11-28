@@ -48,7 +48,7 @@ public class CalendarUploadController extends Controller {
         String calendarUrl = params.get("calendarLink").trim();
 
         // Checks if the link protocol is webcal and then it changes it to https for download
-        if (!(calendarUrl.startsWith("webcal"))) {
+        if (!(calendarUrl.startsWith("webcal://"))) {
             return buildResponseMap(null, "Please make sure the url is webcal://", false, true);
         }
 

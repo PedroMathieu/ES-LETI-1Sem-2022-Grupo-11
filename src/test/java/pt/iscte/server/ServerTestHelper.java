@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ServerTestHelper {
-        /**
+     /**
      * Builds dummy events to use for building test calendars
      *
      * @param calendarNumber number of calendar, from iteration in buildTestCalednars
@@ -65,5 +65,21 @@ public class ServerTestHelper {
             randomNames.add(ServerUtil.generateRandomTempName());
 
         return randomNames;
+    }
+
+    public static Map<String, String> buildGetEventsParams(String owners, String operation, String year, String month, String day) {
+        Map<String, String> params = new HashMap<>();
+        params.put(":userid", owners);
+        params.put(":operation", operation);
+        params.put(":year", year);
+        params.put(":month", month);
+        params.put(":day", day);
+        return params;
+    }
+
+    public static Map<String, String> buildUploadCalendarParams(String calendarUrl) {
+        Map<String, String> params = new HashMap<>();
+        params.put("calendarLink", calendarUrl);
+        return params;
     }
 }
