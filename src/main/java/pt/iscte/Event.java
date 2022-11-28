@@ -147,12 +147,4 @@ public class Event {
         json.put("time_end", eventTimeEnd.toString());
         return json;
     }
-
-    @Override
-    public String toString() {
-        return "Owner: " + eventOwner
-                + "\nSummary: " + eventSummary
-                + "\nStartDate: " + eventDateStart
-                + "\nEndDate: " + eventDateEnd;
-    }
 }

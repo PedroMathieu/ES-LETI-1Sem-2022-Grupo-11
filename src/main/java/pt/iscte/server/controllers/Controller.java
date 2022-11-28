@@ -58,7 +58,7 @@ public abstract class Controller {
      *
      * @param req Spark request containing all request data
      * @param res Spark response, used to respond to a request
-     * @return
+     * @return http response
      */
     public abstract Object handle(Request req, Response res);
 }

@@ -13,13 +13,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 /**
- * The calendar class represents all the events of a specific calendar owner
- * It parses all the data from the already converted JSON calendars in the
- * calendars folder.
- * To use more calendars simply download your calendar at fenix.iscte-iul.pt/
- * and convert it to JSON in https://ical-to-json.herokuapp.com/
- * This class will take care of the rest :)
- * 
+ * This class represents a "virtual" personal calendar. It links
+ * all the events from a parsed calendar to an owner.
+ *
  * @author Jose Soares
  */
 public class PersonalCalendar {
@@ -31,6 +27,21 @@ public class PersonalCalendar {
     public PersonalCalendar(String calendarFile) {
         this.calendarFile = calendarFile;
         parseJsonCalendar();
+    }
+
+    public PersonalCalendar() {}
+
+    /**
+     * Gets the calendar owner
+     *
+     * @return username of email of calendar owner (its unique)
+     */
+    public String getCalendarOwner() {
+        return calendarOwner;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 
     /**
@@ -62,20 +73,11 @@ public class PersonalCalendar {
                 eventListJson.add(vEventsIterator.next());
 
             // Convert all events from JSON to Event
-            this.events = convertEventListFromJSON(eventListJson);
+            setEvents(convertEventListFromJSON(eventListJson));
 
         } catch (Exception e) {
             System.err.println("Couldn't read file " + calendarFile);
         }
-    }
-
-    /**
-     * Gets the calendar owner
-     * 
-     * @return username of email of calendar owner (its unique)
-     */
-    public String getCalendarOwner() {
-        return calendarOwner;
     }
 
     /**
@@ -97,16 +99,6 @@ public class PersonalCalendar {
         }
 
         return eventsToReturn;
-    }
-
-    /**
-     * Gets the list that contains all the events of the
-     * respective calendar
-     * 
-     * @return a List of events as Event objects
-     */
-    public List<Event> getEvents() {
-        return events;
     }
 
     /**

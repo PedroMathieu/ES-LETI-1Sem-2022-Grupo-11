@@ -9,6 +9,8 @@ import java.util.Random;
  */
 public class ServerUtil {
 
+    public static int[] monthLength = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
     /**
      * Checks if date is valid. By checking year, month and day ranges.
      * Also checks if the given days are in the range of the given month.
@@ -23,10 +25,8 @@ public class ServerUtil {
         if (year == -1 && month == -1 && day == -1) return false;
 
         // Check the ranges of month and year
-        if (year < 1000 || year > 3000 || month == 0 || month > 12)
+        if (year < 1000 || year > 3000 || month <= 0 || month > 12)
             return false;
-
-        int[] monthLength = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
         // Adjust for leap years
         if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
@@ -44,10 +44,10 @@ public class ServerUtil {
      * @return string with random characters
      */
     public static String generateRandomTempName() {
+        Random random = new Random();
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
-        int targetStringLength = 10;
-        Random random = new Random();
+        int targetStringLength = random.nextInt(21-5) + 5;
         StringBuilder buffer = new StringBuilder(targetStringLength);
         for (int i = 0; i < targetStringLength; i++) {
             int randomLimitedInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit + 1));

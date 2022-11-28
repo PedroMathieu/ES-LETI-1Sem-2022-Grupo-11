@@ -28,12 +28,13 @@ public class ServerService {
      *
      * @param rOwner        calendar owner, to get its calendar
      * @param dateRequested requested date to get events
+     * @param calendars map containing calendars and their owners
      * @return JSON object to send to front end
      */
-    public static JSONObject buildEventsInJson(String rOwner, LocalDate dateRequested) {
+    public static JSONObject buildEventsInJson(String rOwner, LocalDate dateRequested, Map<String, PersonalCalendar> calendars) {
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        List<Event> events = Server.getPersonalCalendarObjects().get(rOwner).getEventsInADay(dateRequested);
+        List<Event> events = calendars.get(rOwner).getEventsInADay(dateRequested);
 
         for (Event e : events)
             jsonArray.add(e.convertEventToJson());
@@ -81,7 +82,7 @@ public class ServerService {
 
         try {
             for (File file : icsFolder.listFiles())
-                System.out.println("Deleted temp file? " + file.delete());
+                file.delete();
 
         } catch (NullPointerException e) {
             System.err.println("Couldn't delete files in temp file");
@@ -100,7 +101,7 @@ public class ServerService {
      * @return Map that connects a calendar and its owner string
      *
      */
-    public static void loadCalendars() {
+    public static Map<String, PersonalCalendar> loadCalendars() {
         File folder = new File(System.getProperty("user.dir") + "/calendars/jsonFiles/");
         Map<String, PersonalCalendar> personalCalendarObjects = new HashMap<>();
 
@@ -115,5 +116,6 @@ public class ServerService {
         }
 
         Server.updatePersonalCalendarObjects(personalCalendarObjects);
+        return personalCalendarObjects;
     }
 }

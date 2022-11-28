@@ -2,6 +2,7 @@ package pt.iscte.server.controllers;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import pt.iscte.server.Server;
 import pt.iscte.server.ServerService;
 import pt.iscte.server.ServerUtil;
 import spark.ModelAndView;
@@ -69,7 +70,7 @@ public class GetEventsController extends Controller {
             }
 
             LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);
-            JSONObject requestedEvents = ServerService.buildEventsInJson(rOwner, dateRequested);
+            JSONObject requestedEvents = ServerService.buildEventsInJson(rOwner, dateRequested, Server.getPersonalCalendarObjects());
             JSONArray arrayOfEvents = (JSONArray) requestedEvents.get("events");
 
             // n is to get number of events, e is to get events
