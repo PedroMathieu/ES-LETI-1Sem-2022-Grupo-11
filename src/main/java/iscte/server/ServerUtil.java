@@ -1,4 +1,4 @@
-package pt.iscte.server;
+package iscte.server;
 
 import java.util.Random;
 

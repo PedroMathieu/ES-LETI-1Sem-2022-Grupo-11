@@ -1,7 +1,7 @@
-package pt.iscte.server.controllers;
+package iscte.server.controllers;
 
 import org.json.simple.JSONObject;
-import pt.iscte.server.ServerService;
+import iscte.server.ServerService;
 import spark.Request;
 import spark.Response;
 

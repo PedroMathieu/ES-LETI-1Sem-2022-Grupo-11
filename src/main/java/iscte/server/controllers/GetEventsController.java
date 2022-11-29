@@ -1,11 +1,11 @@
-package pt.iscte.server.controllers;
+package iscte.server.controllers;
 
+import iscte.server.Server;
+import iscte.server.ServerService;
+import iscte.server.ServerUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import pt.iscte.PersonalCalendar;
-import pt.iscte.server.Server;
-import pt.iscte.server.ServerService;
-import pt.iscte.server.ServerUtil;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;

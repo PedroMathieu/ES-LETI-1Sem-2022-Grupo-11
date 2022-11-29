@@ -1,7 +1,8 @@
-package pt.iscte.server;
+package pt.iscte;
 
 import pt.iscte.Event;
 import pt.iscte.PersonalCalendar;
+import iscte.server.ServerUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ServerTestHelper {
+public class TestUtils {
      /**
      * Builds dummy events to use for building test calendars
      *

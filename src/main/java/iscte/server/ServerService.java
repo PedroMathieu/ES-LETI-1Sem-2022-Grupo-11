@@ -1,4 +1,4 @@
-package pt.iscte.server;
+package iscte.server;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

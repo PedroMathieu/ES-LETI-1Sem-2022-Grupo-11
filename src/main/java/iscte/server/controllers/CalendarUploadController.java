@@ -1,8 +1,8 @@
-package pt.iscte.server.controllers;
+package iscte.server.controllers;
 
 import pt.iscte.Parser;
-import pt.iscte.server.ServerService;
-import pt.iscte.server.ServerUtil;
+import iscte.server.ServerService;
+import iscte.server.ServerUtil;
 import spark.Request;
 import spark.Response;
 

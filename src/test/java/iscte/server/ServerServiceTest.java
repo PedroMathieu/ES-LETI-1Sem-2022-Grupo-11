@@ -1,10 +1,12 @@
-package pt.iscte.server;
+package iscte.server;
 
+import iscte.server.ServerService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pt.iscte.PersonalCalendar;
+import pt.iscte.TestUtils;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -24,7 +26,7 @@ import java.util.Map;
  * @author Jose Soares
  */
 public class ServerServiceTest {
-    private final Map<String, PersonalCalendar> testCalendars = ServerTestHelper.buildTestCalendars();
+    private final Map<String, PersonalCalendar> testCalendars = TestUtils.buildTestCalendars();
     private final LocalDate TEST_DATE = LocalDate.of(2022, 10, 27);
     private final String TEST_OWNER0 = "test0";
     private final String TEST_OWNER1 = "test1";
@@ -51,7 +53,7 @@ public class ServerServiceTest {
     @Test
     public void whenDeletingTempIcsFiles_allFilesAreDeleted() {
         File icsFolder = new File(System.getProperty("user.dir") + "/calendars/icsFiles/");
-        ServerTestHelper.createDummyTempIcsFiles(icsFolder);
+        TestUtils.createDummyTempIcsFiles(icsFolder);
 
         // Makes sure dummy files were created
         Assertions.assertEquals(11, icsFolder.listFiles().length);

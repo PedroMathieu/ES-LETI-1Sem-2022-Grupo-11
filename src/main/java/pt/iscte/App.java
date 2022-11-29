@@ -1,6 +1,6 @@
 package pt.iscte;
 
-import pt.iscte.server.Server;
+import iscte.server.Server;
 
 import java.io.IOException;
 

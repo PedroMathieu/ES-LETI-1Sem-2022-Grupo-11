@@ -1,18 +1,13 @@
-package pt.iscte.server;
+package iscte.server;
 
-import pt.iscte.Parser;
 import pt.iscte.PersonalCalendar;
-import pt.iscte.server.controllers.CalendarUploadController;
-import pt.iscte.server.controllers.Controller;
-import pt.iscte.server.controllers.GetEventsController;
+import iscte.server.controllers.CalendarUploadController;
+import iscte.server.controllers.Controller;
+import iscte.server.controllers.GetEventsController;
 import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
 import spark.servlet.SparkApplication;
 import spark.template.velocity.VelocityTemplateEngine;
 
-import java.io.*;
-import java.net.URL;
 import java.util.*;
 
 import static spark.Spark.*;

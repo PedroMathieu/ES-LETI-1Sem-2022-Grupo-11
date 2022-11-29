@@ -1,7 +1,8 @@
-package pt.iscte.server;
+package iscte.server;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pt.iscte.TestUtils;
 
 import java.util.Random;
 
@@ -48,7 +49,7 @@ public class ServerUtilTest {
 
     @Test
     public void whenGeneratingRandomName_returnsCorrectLength() {
-        for (String rName : ServerTestHelper.getRandomNames()) {
+        for (String rName : TestUtils.getRandomNames()) {
             boolean correctLength = rName.length() >= 5 && rName.length() < 21;
             Assertions.assertTrue(correctLength);
         }
@@ -56,7 +57,7 @@ public class ServerUtilTest {
 
     @Test
     public void whenGeneratingRandomName_allCharsAreLetters() {
-        for (String rName : ServerTestHelper.getRandomNames()) {
+        for (String rName : TestUtils.getRandomNames()) {
             char[] charsOfName = rName.toCharArray();
             for (char c : charsOfName) Assertions.assertTrue(Character.isLetter(c));
         }

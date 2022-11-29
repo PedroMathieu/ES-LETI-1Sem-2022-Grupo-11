@@ -1,24 +1,24 @@
-package pt.iscte.server.controllers;
+package iscte.server.controllers;
 
-import org.eclipse.jetty.util.ajax.JSON;
+import iscte.server.controllers.Controller;
+import iscte.server.controllers.GetEventsController;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pt.iscte.server.Server;
-import pt.iscte.server.ServerTestHelper;
+import pt.iscte.TestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class GetEventsControllerTest {
-    Controller ge = new GetEventsController(ServerTestHelper.buildTestCalendars());
+    Controller ge = new GetEventsController(TestUtils.buildTestCalendars());
 
     @Test
     public void givenDatesThatAreNaN_whenGettingEvents_returnsError() {
-        Map<String, String> params0 = ServerTestHelper.buildGetEventsParams("test0-test1", "e", "a", "12", "1");
-        Map<String, String> params1 = ServerTestHelper.buildGetEventsParams("test0-test1", "e", "2022", "3.12", "1");
+        Map<String, String> params0 = TestUtils.buildGetEventsParams("test0-test1", "e", "a", "12", "1");
+        Map<String, String> params1 = TestUtils.buildGetEventsParams("test0-test1", "e", "2022", "3.12", "1");
         List<Map<String, Object>> responses = new ArrayList<>();
         responses.add(ge.process(params0));
         responses.add(ge.process(params1));
@@ -32,8 +32,8 @@ public class GetEventsControllerTest {
 
     @Test
     public void givenWrongOwners_whenGettingEvents_returnsError() {
-        Map<String, String> params0 = ServerTestHelper.buildGetEventsParams("foo-bar", "e", "2022", "11", "28");
-        Map<String, String> params1 = ServerTestHelper.buildGetEventsParams("foo", "e", "2022", "11", "28");
+        Map<String, String> params0 = TestUtils.buildGetEventsParams("foo-bar", "e", "2022", "11", "28");
+        Map<String, String> params1 = TestUtils.buildGetEventsParams("foo", "e", "2022", "11", "28");
         List<Map<String, Object>> responses = new ArrayList<>();
         responses.add(ge.process(params0));
         responses.add(ge.process(params1));
@@ -47,7 +47,7 @@ public class GetEventsControllerTest {
 
     @Test
     public void givenNonExistentOperation_whenGettingEvents_returnsError() {
-        Map<String, String> params0 = ServerTestHelper.buildGetEventsParams("test0-test1", "x", "2022", "11", "28");
+        Map<String, String> params0 = TestUtils.buildGetEventsParams("test0-test1", "x", "2022", "11", "28");
         Map<String, Object> response = ge.process(params0);
 
         String errorText = (String) response.get("error");
@@ -57,7 +57,7 @@ public class GetEventsControllerTest {
 
     @Test
     public void givenRequestNumberOfEvents_whenGettingEvents_returnsContextJson() {
-        Map<String, String> params0 = ServerTestHelper.buildGetEventsParams("test0-test1", "n", "2022", "11", "28");
+        Map<String, String> params0 = TestUtils.buildGetEventsParams("test0-test1", "n", "2022", "11", "28");
         Map<String, Object> response = ge.process(params0);
 
         Assertions.assertEquals(true, (boolean) response.get("contextJson"));
@@ -65,7 +65,7 @@ public class GetEventsControllerTest {
 
     @Test
     public void givenCorrectParamsToGetEvents_whenGettingEvents_returnsCorrectData() {
-        Map<String, String> params0 = ServerTestHelper.buildGetEventsParams("test0-test1", "e", "2022", "10", "27");
+        Map<String, String> params0 = TestUtils.buildGetEventsParams("test0-test1", "e", "2022", "10", "27");
         Map<String, Object> response = ge.process(params0);
 
         // These 2 lines are very weird, but they work to make sure everything is working
@@ -80,7 +80,7 @@ public class GetEventsControllerTest {
 
     @Test
     public void givenCorrectParamsToGetNOfEvents_whenGettingEvents_returnsCorrectData() {
-        Map<String, String> params0 = ServerTestHelper.buildGetEventsParams("test0-test1", "n", "2022", "10", "27");
+        Map<String, String> params0 = TestUtils.buildGetEventsParams("test0-test1", "n", "2022", "10", "27");
         Map<String, Object> response = ge.process(params0);
 
         JSONObject dataToSend = (JSONObject) response.get("dataToSend");
