@@ -4,7 +4,7 @@
 function generateHours() {
 	console.log("Generating hours");
 	let result = [];
-	let startingHour = 1;
+	let startingHour = 0;
 	addHalfAnHour = false;
 	result.push(startingHour.toString());
 
@@ -76,21 +76,24 @@ function drawEvents(div, timeBlock) {
 	owners.forEach( user => {
 		for (let i = 0; i < eventsFromServer[user]["events"].length; i++){
 			let e = eventsFromServer[user]["events"][i];
-			console.log(eventsFromServer[user]["events"][i])
-			console.log(e.time_start)
-			console.log(e.time_end)
-			if(e.time_start <= timeBlock && e.time_end > timeBlock){
-				document.getElementById(timeBlock).appendChild(div2)
-			}
-			console.log(timeBlock)
-			if("0" + timeBlock == e.time_start){
-				document.getElementById(timeBlock).appendChild(div2)
-			}
-			
 
+			let realtime = timeBlock
+
+			if(realtime.length != 5){
+				realtime = "0" + timeBlock
+			}
+
+			if(e.time_start <= realtime &&  e.time_end > realtime){
+				console.log("I was here1")
+				document.getElementById(timeBlock).appendChild(div2)
+			}
+
+			if(realtime == e.time_start){
+				document.getElementById(timeBlock).appendChild(div2)
+			}
 		}
 	})
-	console.log()
+	
 }
 
 window.onload = generateHours;
