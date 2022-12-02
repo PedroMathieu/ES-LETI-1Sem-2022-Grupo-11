@@ -64,4 +64,19 @@ body{
   cursor: pointer;
   }
 
+  .event {
+    font-size: 1.1rem;
+  margin: 0.3rem;
+  width: 100px;
+  height: 2.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5);
+  transition: background-color 0.2s;
+  background-color: rgb(255, 98, 0);
+  color: white;
+  border: none;
+  }
+
   

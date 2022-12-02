@@ -4,7 +4,7 @@
 function generateHours() {
 	console.log("Generating hours");
 	let result = [];
-	let startingHour = 0;
+	let startingHour = 1;
 	addHalfAnHour = false;
 	result.push(startingHour.toString());
 
@@ -55,20 +55,42 @@ function drawTimeBlock(timeBlock) {
 	document.getElementById("scheduleContainer").appendChild(div)
 	document.getElementById(timeBlock).appendChild(button)
 	document.getElementById(timeBlock).appendChild(input)
+	drawEvents(div, timeBlock);
 }
 
-function drawEvents() {
+function drawEvents(div, timeBlock) {
+	if(timeBlock == undefined){
+		return
+	}
+	let div2 = document.createElement("div")
 	let url = window.location.pathname;
 	let urlParts = url.split("/");
 	let owners = urlParts[3].split("-");
 
 	console.log(owners)
+	div2.id = timeBlock
+	div2.classList.add("event")
+
+	
+
 	owners.forEach( user => {
 		for (let i = 0; i < eventsFromServer[user]["events"].length; i++){
-			console.log(eventsFromServer[user]["events"][i]);
+			let e = eventsFromServer[user]["events"][i];
+			console.log(eventsFromServer[user]["events"][i])
+			console.log(e.time_start)
+			console.log(e.time_end)
+			if(e.time_start <= timeBlock && e.time_end > timeBlock){
+				document.getElementById(timeBlock).appendChild(div2)
+			}
+			console.log(timeBlock)
+			if("0" + timeBlock == e.time_start){
+				document.getElementById(timeBlock).appendChild(div2)
+			}
+			
+
 		}
 	})
-	
+	console.log()
 }
 
 window.onload = generateHours;
