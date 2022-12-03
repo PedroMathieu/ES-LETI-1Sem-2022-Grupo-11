@@ -1,0 +1,8 @@
+Scrum Meeting 3:
+
+Decisões importantes relativas ao sprint:
+
+	-Extendida a duração do sprint até 13/12;
+	-Discutida a importância de acabar a funcionalidade de mostrar os eventos corretamente no calendário diário;
+	-Adicionadas novos objetivos ao Sprint Backlog para complementar os anteriormente definidos;
+	-
