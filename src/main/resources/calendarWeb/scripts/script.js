@@ -107,6 +107,14 @@ document.querySelector(".next").addEventListener("click", () => {
 
 renderCalendar();
 
+function openCloseMeetingForm() {
+    if (document.getElementById("meeting-form").style.display == "none") {
+        document.getElementById("meeting-form").style.display = "block";
+    } else {
+        document.getElementById("meeting-form").style.display = "none";
+    }
+}
+
 function getCheckedUsers() {
     let checked = []
     let checkboxes = document.querySelectorAll('input[type=checkbox]:checked')

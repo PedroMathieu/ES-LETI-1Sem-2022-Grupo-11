@@ -2,60 +2,83 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calendar</title>
-  <link rel="stylesheet" href="/styles/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar</title>
+    <link rel="stylesheet" href="/styles/style.css" />
+    <link rel="stylesheet" href="/styles/meeting_form.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
 
 <body style="background-color: #9494ab;">
-  <div class="container">
-    <div class="event">
-    </div>
-    <div class="calendar">
-      <div class="month">
-        <i class="fas fa-angle-left prev"></i>
-        <div class="date">
-          <h1></h1>
-          <p></p>
-
-          
-            <button id="voltar" onClick="window.location.reload();" class="material-symbols-outlined">sync</button>
-          
-          
-
+    <div class="container">
+        <div class="event">
         </div>
-        <i class="fas fa-angle-right next"></i>
-      </div>
-      <div id="w" class="weekdays">
-        <div>Sun</div>
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-      </div>
-      <div id="d" class="days"></div>
+        <div class="calendar">
+            <div class="month">
+                <i style="margin-top: 80px;" class="fas fa-angle-left prev"></i>
+                <div class="date">
+                    <h1></h1>
+                    <p></p>
+                </div>
+                <i style="margin-top: 80px;" class="fas fa-angle-right next"></i>
+            </div>
+            
+            <button id="voltar" onClick="window.location.reload();" class="material-symbols-outlined">sync</button>
+            <button id="create-meeting-button" class="material-symbols-outlined" onclick="openCloseMeetingForm()">add<p>Find meeting</p></button>
+            <div class="form-popup" id="meeting-form" style="display: none;">
+                <form action="" class="form-container">
+                    <h1>Find meeting</h1>
+                    <p>
+                        Attention: Meeting participants are the ones selected
+                        on the checkbox to the right.
+                    </p>
+                    <br>
+                    
+                    <label for="startDay"><b>From day:</b></label>
+                    <input type="date" placeholder="Enter from day" name="startDay" required>
+                    
+                    <label for="endDay"><b>To day:</b></label>
+                    <input type="date" placeholder="Enter from day" name="endDay" required>
+                    
+                    <label for="duration"><b>How long will the meeting be? (30 minutes intervals)</b></label>
+                    <input type="number" placeholder="Enter duration of meeting" name="duration" min="30" max="120" step="30" value="30" required>
+                     
+                    <label for="timeOfDay"><b>Preferred time of the day:</b></label>
+                    <select id="td" name="timeOfDay" required>
+                        <option value="Morning">Morning</option>
+                        <option value="Afternoon">Afternoon</option>
+                    </select>
+                    
+                    <button type="submit" class="btn">Find timeslot!</button>
+                </form>
+            </div>
+            <div id="w" class="weekdays">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+            </div>
+            <div id="d" class="days"></div>
+        </div>
+        <div id="current-calendar-owners">
+            <p style="margin-bottom: 10px">Choose the calendars you want to see when analyzing a day</p>
+            #foreach( $owner in $owners )
+            <input type="checkbox" name="$owner" checked onclick="requestNumberOfEventsThisMonth()">
+            <label for="$owner">$owner</label><br>
+            #end
+        </div>
     </div>
-    <div id="current-calendar-owners">
-      <p style="margin-bottom: 10px">Choose the calendars you want to see when analyzing a day</p>
-      #foreach( $owner in $owners )
-          <input type="checkbox" name="$owner" checked onclick="requestNumberOfEventsThisMonth()">
-          <label for="$owner">$owner</label><br>
-      #end
+    <div id="insert-new-calendars-link">
+        <p>To insert a new calendar go <a href="/insertCalendars">here</a></p>
     </div>
-  </div>
-  <div id="insert-new-calendars-link">
-    <p>To insert a new calendar go <a href="/insertCalendars">here</a></p>
-  </div>
-  <script src="/scripts/script.js"></script>
-  <script src="/scripts/MonthlyAvailability.js"></script>
+    <script src="/scripts/script.js"></script>
+    <script src="/scripts/MonthlyAvailability.js"></script>
 </body>
 
 </html>
