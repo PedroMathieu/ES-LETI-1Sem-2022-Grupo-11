@@ -1,5 +1,6 @@
 package iscte.server;
 
+import iscte.server.controllers.FindMeetingController;
 import pt.iscte.PersonalCalendar;
 import iscte.server.controllers.CalendarUploadController;
 import iscte.server.controllers.Controller;
@@ -22,6 +23,7 @@ public class Server implements SparkApplication {
     private static Map<String, PersonalCalendar> personalCalendarObjects;
     private Controller cEvents = new GetEventsController(getPersonalCalendarObjects());
     private Controller cUpload = new CalendarUploadController();
+    private Controller cMeeting = new FindMeetingController();
 
     public Server() {
     }
@@ -79,6 +81,8 @@ public class Server implements SparkApplication {
         post("/uploadCalendarLink", (req, res) -> cUpload.handle(req, res));
 
         get("/personalCalendar/:operation/:userId/:year/:month/:day", (req, res) -> cEvents.handle(req, res));
+
+        post("/findMeeting", (req, res) -> cMeeting.handle(req, res));
     }
 
     @Override

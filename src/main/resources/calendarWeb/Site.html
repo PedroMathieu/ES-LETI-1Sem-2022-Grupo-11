@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <script src="/scripts/jquery.js"></script>
 </head>
 
 <body style="background-color: #9494ab;">
@@ -28,15 +29,15 @@
             
             <button id="voltar" onClick="window.location.reload();" class="material-symbols-outlined">sync</button>
             <button id="create-meeting-button" class="material-symbols-outlined" onclick="openCloseMeetingForm()">add<p>Find meeting</p></button>
+
+            <!--Find meeting form-->
             <div class="form-popup" id="meeting-form" style="display: none;">
-                <form action="" class="form-container">
+                <form action="/findMeeting" method="post" id="meetingForm" class="form-container">
                     <h1>Find meeting</h1>
-                    <p>
-                        Attention: Meeting participants are the ones selected
-                        on the checkbox to the right.
-                    </p>
                     <br>
-                    
+                    <p><b>Participants are selected from the checkbox to the right </b></p>
+                    <br>
+
                     <label for="startDay"><b>From day:</b></label>
                     <input type="date" placeholder="Enter from day" name="startDay" required>
                     
@@ -51,10 +52,11 @@
                         <option value="Morning">Morning</option>
                         <option value="Afternoon">Afternoon</option>
                     </select>
-                    
-                    <button type="submit" class="btn">Find timeslot!</button>
+                   
+                    <button type="submit" class="btn" id="submit-meeting">Find timeslot!</button>
                 </form>
             </div>
+
             <div id="w" class="weekdays">
                 <div>Sun</div>
                 <div>Mon</div>
@@ -79,6 +81,7 @@
     </div>
     <script src="/scripts/script.js"></script>
     <script src="/scripts/MonthlyAvailability.js"></script>
+    <script src="/scripts/FindMeeting.js"></script>
 </body>
 
 </html>
