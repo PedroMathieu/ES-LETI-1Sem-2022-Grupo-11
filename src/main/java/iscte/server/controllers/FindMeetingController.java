@@ -1,78 +1,43 @@
 package iscte.server.controllers;
 
+import iscte.server.ServerUtil;
 import spark.Request;
 import spark.Response;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class FindMeetingController extends Controller {
 
-    /**
-     * Builds parameters requested. Convert dates to each
-     * individual element (year, month and day).
-     * @param req Spark request object
-     * @return map with processed params
-     */
-    private Map<String, String> buildMeetingParams(Request req) {
-        Map<String, String> paramsToProcess = new HashMap<>();
-        System.out.println(req.queryParams());
-        for (String param : req.queryParams()) {
-
-            if (param.equals("startDay")) {
-                String[] date = req.queryParams(param).split("-");
-                paramsToProcess.put("startYear", date[0]);
-                paramsToProcess.put("startMonth", date[1]);
-                paramsToProcess.put("startDay", date[2]);
-            } else if (param.equals("endDay")) {
-                String[] date = req.queryParams(param).split("-");
-                paramsToProcess.put("endYear", date[0]);
-                paramsToProcess.put("endMonth", date[1]);
-                paramsToProcess.put("endDay", date[2]);
-            } else {
-                paramsToProcess.put(param, req.queryParams(param));
-            }
-        }
-
-        return paramsToProcess;
-    }
-
-    /**
-     * Make sure all needed params are available
-     * @param params set of params received
-     * @return true if all params exist
-     */
-    private boolean validateParams(Set<String> params) {
-        if (params.contains("duration") &&
-                params.contains("startMonth") &&
-                params.contains("startDay") &&
-                params.contains("endDay") &&
-                params.contains("startYear") &&
-                params.contains("endMonth") &&
-                params.contains("endYear") &&
-                params.contains("timeOfDay") &&
-                params.contains("users")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public Object handle(Request req, Response res) {
-        Map<String, String> processParams = buildMeetingParams(req);
+        Map<String, String> paramsToProcess = new HashMap<>();
+        paramsToProcess.put("startDate", req.queryParams("startDate"));
+        paramsToProcess.put("endDay", req.queryParams("endDay"));
+        paramsToProcess.put("duration", req.queryParams("duration"));
+        paramsToProcess.put("timeOfDay", req.queryParams("timeOfDay"));
+        paramsToProcess.put("users", req.queryParams("users"));
+        Map<String, Object> response = process(paramsToProcess);
 
-        if (validateParams(processParams.keySet())) {
-            Map<String, Object> response = process(processParams);
-            return "ok";
-        } else {
-            return "ERROR";
-        }
+        return "ok";
     }
 
     @Override
     public Map<String, Object> process(Map<String, String> params) {
+        /**
+         * TODO:
+         * - dont forget to:
+         *      validate both dates received
+         *      validate users
+         *      validate time of day (create a range that represents morning and afternoon
+         * - use of ServerUtil and ServerService validators for dates and owners
+         * - use PersonalCalendar getEventsBetweenTwoDates() to get the events of all users
+         * - then do the processing required!
+         *
+         * - this function only returns the output of the Controllers buildResponseMap!
+         */
         return null;
     }
 

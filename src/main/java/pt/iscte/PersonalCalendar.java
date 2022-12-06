@@ -115,4 +115,23 @@ public class PersonalCalendar {
                 result.add(e);
         return result;
     }
+
+    /**
+     * Gets all the events between two dates
+     *
+     * @param startDate date to start search
+     * @param endDate date to end search
+     * @return list of events between the two dates
+     */
+    public List<Event> getEventsBetweenTwoDates(LocalDate startDate, LocalDate endDate) {
+        // TODO: still have to test this function, might not work correctly!
+        List<Event> result = new ArrayList<>();
+        for (Event e : events) {
+            if (e.getEventDateStart().isAfter(startDate) && e.getEventDateEnd().isBefore(endDate))
+                result.add(e);
+            if (e.getEventDateStart().equals(startDate) || e.getEventDateEnd().equals(endDate))
+                result.add(e);
+        }
+        return result;
+    }
 }
