@@ -9,10 +9,13 @@ import spark.Request;
 import spark.Response;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 public class FindMeetingController extends Controller {
     private Map<String, PersonalCalendar> calendars = new HashMap<>();
+
+
 
     public FindMeetingController(Map<String, PersonalCalendar> calendars) {
         this.calendars = calendars;
@@ -28,9 +31,8 @@ public class FindMeetingController extends Controller {
         paramsToProcess.put("duration", req.queryParams("duration"));
         paramsToProcess.put("timeOfDay", req.queryParams("timeOfDay"));
         paramsToProcess.put("users", req.queryParams("users"));
-        Map<String, Object> response = process(paramsToProcess);
 
-        return "ok";
+        return process(paramsToProcess);
     }
 
     @Override
@@ -40,6 +42,9 @@ public class FindMeetingController extends Controller {
         String[] endDateSplit = params.get("endDate").split("-");
         String[] users = params.get("users").split(",");
         Map<String, List<Event>> eventsToFindMeeting = new HashMap<>();
+
+        if (users.length < 2)
+            return buildResponseMap(null, "Need 2 or more users to find a meeting", false, true);
 
         // Make sure that the dates provided are numbers
         try {
@@ -55,7 +60,6 @@ public class FindMeetingController extends Controller {
         }
 
         for (String user : users) {
-
             if (!ServerUtil.validateDateParams(sYear, sMonth, sDay) ||
                 !ServerService.validateOwner(user, calendars) ||
                 !ServerUtil.validateDateParams(eYear, eMonth, eDay)) {
@@ -73,11 +77,20 @@ public class FindMeetingController extends Controller {
             }
         }
 
-        return findMeeting(eventsToFindMeeting);
+        return findMeeting(eventsToFindMeeting, Integer.parseInt(params.get("duration")));
     }
 
-    private Map<String, Object> findMeeting(Map<String, List<Event>> events) {
-        System.out.println(events);
+    private Map<String, Object> findMeeting(Map<String, List<Event>> events, int duration) {
+        /**
+         * Possible algorithm:
+        Go through all the events
+        For each event, check if there's any event within eventEnd+duration.
+        If there is not any event, check the same for all the other users
+        If everyone is free in that timeblock (currEventEnd+duration), send the timeblock found
+        If one or more user is not available, increment its unavailability timer. So that
+                we can show which user is busier
+         */
+
         return null;
     }
 }

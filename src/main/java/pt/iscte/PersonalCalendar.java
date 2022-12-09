@@ -24,6 +24,11 @@ public class PersonalCalendar {
     String calendarOwner = "";
     List<Event> events = new LinkedList<>();
     JSONParser parser = new JSONParser();
+    public static LocalTime MORNING_START = LocalTime.of(5, 50);
+    public static LocalTime MORNING_END = LocalTime.of(12, 29);
+    public static LocalTime AFTERNOON_START = LocalTime.of(12, 29);
+    public static LocalTime AFTERNOON_END = LocalTime.of(20, 0);
+
 
     public PersonalCalendar(String calendarFile) {
         this.calendarFile = calendarFile;
@@ -134,13 +139,13 @@ public class PersonalCalendar {
 
                 // If there's an event starting at 12:29, it might cause a bug
                 // no need to worry atm
-                if (e.getEventTimeStart().isAfter(LocalTime.of(5,59)) &&
-                    e.getEventTimeStart().isBefore(LocalTime.of(12,29)) &&
+                if (e.getEventTimeStart().isAfter(MORNING_START) &&
+                    e.getEventTimeStart().isBefore(MORNING_END) &&
                     timeOfDay.equals("Morning")) {
                         result.add(e);
 
-                } else if (e.getEventTimeStart().isAfter(LocalTime.of(12,29)) &&
-                    e.getEventTimeStart().isBefore(LocalTime.of(20,0)) &&
+                } else if (e.getEventTimeStart().isAfter(AFTERNOON_START) &&
+                    e.getEventTimeStart().isBefore(AFTERNOON_END) &&
                     timeOfDay.equals("Afternoon")) {
                         result.add(e);
                 }
