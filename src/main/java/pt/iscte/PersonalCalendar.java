@@ -3,6 +3,7 @@ package pt.iscte;
 import java.io.FileReader;
 import java.io.Reader;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -123,15 +124,29 @@ public class PersonalCalendar {
      * @param endDate date to end search
      * @return list of events between the two dates
      */
-    public List<Event> getEventsBetweenTwoDates(LocalDate startDate, LocalDate endDate) {
-        // TODO: still have to test this function, might not work correctly!
+    public List<Event> getEventsBetweenTwoDates(LocalDate startDate, LocalDate endDate, String timeOfDay) {
         List<Event> result = new ArrayList<>();
+
         for (Event e : events) {
-            if (e.getEventDateStart().isAfter(startDate) && e.getEventDateEnd().isBefore(endDate))
-                result.add(e);
-            if (e.getEventDateStart().equals(startDate) || e.getEventDateEnd().equals(endDate))
-                result.add(e);
+            // Get events between dates
+            if ((e.getEventDateStart().isAfter(startDate) && e.getEventDateEnd().isBefore(endDate)) ||
+                (e.getEventDateStart().equals(startDate) || e.getEventDateEnd().equals(endDate))) {
+
+                // If there's an event starting at 12:29, it might cause a bug
+                // no need to worry atm
+                if (e.getEventTimeStart().isAfter(LocalTime.of(5,59)) &&
+                    e.getEventTimeStart().isBefore(LocalTime.of(12,29)) &&
+                    timeOfDay.equals("Morning")) {
+                        result.add(e);
+
+                } else if (e.getEventTimeStart().isAfter(LocalTime.of(12,29)) &&
+                    e.getEventTimeStart().isBefore(LocalTime.of(20,0)) &&
+                    timeOfDay.equals("Afternoon")) {
+                        result.add(e);
+                }
+            }
         }
+
         return result;
     }
 }

@@ -23,7 +23,7 @@ public class Server implements SparkApplication {
     private static Map<String, PersonalCalendar> personalCalendarObjects;
     private Controller cEvents = new GetEventsController(getPersonalCalendarObjects());
     private Controller cUpload = new CalendarUploadController();
-    private Controller cMeeting = new FindMeetingController();
+    private Controller cMeeting = new FindMeetingController(getPersonalCalendarObjects());
 
     public Server() {
     }
