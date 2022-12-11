@@ -15,8 +15,6 @@ import java.util.*;
 public class FindMeetingController extends Controller {
     private Map<String, PersonalCalendar> calendars = new HashMap<>();
 
-
-
     public FindMeetingController(Map<String, PersonalCalendar> calendars) {
         this.calendars = calendars;
     }
@@ -56,14 +54,14 @@ public class FindMeetingController extends Controller {
             eMonth = Integer.parseInt(endDateSplit[1]);
             eDay = Integer.parseInt(endDateSplit[2]);
         } catch (NumberFormatException e) {
-            return buildResponseMap(null,"Something wrong with provided dates",false,true);
+            return buildResponseMap(null, "Something wrong with provided dates", false, true);
         }
 
         for (String user : users) {
             if (!ServerUtil.validateDateParams(sYear, sMonth, sDay) ||
-                !ServerService.validateOwner(user, calendars) ||
-                !ServerUtil.validateDateParams(eYear, eMonth, eDay)) {
-                    return buildResponseMap(null, "Parameters contain problems", false, true);
+                    !ServerService.validateOwner(user, calendars) ||
+                    !ServerUtil.validateDateParams(eYear, eMonth, eDay)) {
+                return buildResponseMap(null, "Parameters contain problems", false, true);
 
             } else {
                 LocalDate startDate = LocalDate.of(sYear, sMonth, sDay);
@@ -72,7 +70,8 @@ public class FindMeetingController extends Controller {
                 if (startDate.isAfter(endDate)) {
                     return buildResponseMap(null, "Incorrect date interval", false, true);
                 } else {
-                    eventsToFindMeeting.put(user, calendars.get(user).getEventsBetweenTwoDates(startDate, endDate, params.get("timeOfDay")));
+                    eventsToFindMeeting.put(user,
+                            calendars.get(user).getEventsBetweenTwoDates(startDate, endDate, params.get("timeOfDay")));
                 }
             }
         }
@@ -83,13 +82,16 @@ public class FindMeetingController extends Controller {
     private Map<String, Object> findMeeting(Map<String, List<Event>> events, int duration) {
         /**
          * Possible algorithm:
-        Go through all the events
-        For each event, check if there's any event within eventEnd+duration.
-        If there is not any event, check the same for all the other users
-        If everyone is free in that timeblock (currEventEnd+duration), send the timeblock found
-        If one or more user is not available, increment its unavailability timer. So that
-                we can show which user is busier
+         * Go through all the events
+         * For each event, check if there's any event within eventEnd+duration.
+         * If there is not any event, check the same for all the other users 
+         * If everyone is free in that timeblock (currEventEnd+duration), send the
+         * timeblock found
+         * If one or more user is not available, increment its unavailability timer. 
+         * So that we can show which user is busier
          */
+
+         
 
         return null;
     }
