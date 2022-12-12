@@ -76,7 +76,7 @@ function drawEvents(div, timeBlock) {
 	owners.forEach( user => {
 		for (let i = 0; i < eventsFromServer[user]["events"].length; i++){
 			let e = eventsFromServer[user]["events"][i];
-
+			console.log(e)
 			let realtime = timeBlock
 
 			if(realtime.length != 5){
@@ -84,11 +84,12 @@ function drawEvents(div, timeBlock) {
 			}
 
 			if(e.time_start <= realtime &&  e.time_end > realtime){
-				console.log("I was here1")
+				div2.innerText = e.owner + ": " + e.summary.split("-")[1]
 				document.getElementById(timeBlock).appendChild(div2)
 			}
 
 			if(realtime == e.time_start){
+				div2.innerText = e.owner + ": " + e.summary.split("-")[1]
 				document.getElementById(timeBlock).appendChild(div2)
 			}
 		}
