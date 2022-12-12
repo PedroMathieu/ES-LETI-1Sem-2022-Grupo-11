@@ -65,9 +65,9 @@ body{
   }
 
   .event {
-    font-size: 1.1rem;
+    font-size: 0.7rem;
   margin: 0.3rem;
-  width: 100px;
+  width: 200px;
   height: 2.2rem;
   display: flex;
   justify-content: center;
