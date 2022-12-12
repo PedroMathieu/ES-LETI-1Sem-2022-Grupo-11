@@ -93,6 +93,8 @@ function drawEvents(div, timeBlock) {
 				document.getElementById(timeBlock).appendChild(div2)
 			}
 		}
+
+		nextcolunm
 	})
 	
 }
