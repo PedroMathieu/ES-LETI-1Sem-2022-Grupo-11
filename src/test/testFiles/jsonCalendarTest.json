@@ -1,0 +1,58 @@
+{
+  "vcalendar": [
+    {
+      "prodid": "-//ISCTE-IUL//fenix//EN",
+      "version": "2.0",
+      "calscale": "GREGORIAN",
+      "x-wr-calname": "testCalendar@iscte.pt_iscte-iul",
+      "vevent": [
+        {
+          "dtstamp": "20221110T142948Z",
+          "dtstart": "20220901T123000Z",
+          "dtend": "20220901T133000Z",
+          "summary": "test summary",
+          "uid": "847676220402081@fenix.iscte.pt",
+          "description": "Semestre: 2022/2023 - 1.º Semestre\\nUnidade de execução: Electrónica Programada e Processamento Digital de Sinais\\nCódigo: L2004\\nTurno: L2004TP02\\nInício: 2022-09-21 13:00\\nFim: 2022-09-21 14:30\\nDocente: Octavian Adrian Postolache\\n\\nSemester: 2022/2023 - 1.º Semestre\\nExecution course: Programmable Electronics and Digital Signal Processing\\nCode: L2004\\nShift: L2004TP02\\nBegin: 2022-09-21 13:00\\nEnd: 2022-09-21 14:30\\nTeacher: Octavian Adrian Postolache\\n\\n",
+          "location": "C4.08\\, 4\\, Edifício II (ISCTE-IUL)\\, ISCTE-IUL"
+        },
+        {
+          "dtstamp": "20221110T142948Z",
+          "dtstart": "20220921T100000Z",
+          "dtend": "20220921T133000Z",
+          "summary": "test summary",
+          "uid": "847676220402081@fenix.iscte.pt",
+          "description": "Semestre: 2022/2023 - 1.º Semestre\\nUnidade de execução: Electrónica Programada e Processamento Digital de Sinais\\nCódigo: L2004\\nTurno: L2004TP02\\nInício: 2022-09-21 13:00\\nFim: 2022-09-21 14:30\\nDocente: Octavian Adrian Postolache\\n\\nSemester: 2022/2023 - 1.º Semestre\\nExecution course: Programmable Electronics and Digital Signal Processing\\nCode: L2004\\nShift: L2004TP02\\nBegin: 2022-09-21 13:00\\nEnd: 2022-09-21 14:30\\nTeacher: Octavian Adrian Postolache\\n\\n",
+          "location": "C4.08\\, 4\\, Edifício II (ISCTE-IUL)\\, ISCTE-IUL"
+        },
+        {
+          "dtstamp": "20221110T142948Z",
+          "dtstart": "20220921T060000Z",
+          "dtend": "20220921T133000Z",
+          "summary": "test summary",
+          "uid": "847676220402081@fenix.iscte.pt",
+          "description": "Semestre: 2022/2023 - 1.º Semestre\\nUnidade de execução: Electrónica Programada e Processamento Digital de Sinais\\nCódigo: L2004\\nTurno: L2004TP02\\nInício: 2022-09-21 13:00\\nFim: 2022-09-21 14:30\\nDocente: Octavian Adrian Postolache\\n\\nSemester: 2022/2023 - 1.º Semestre\\nExecution course: Programmable Electronics and Digital Signal Processing\\nCode: L2004\\nShift: L2004TP02\\nBegin: 2022-09-21 13:00\\nEnd: 2022-09-21 14:30\\nTeacher: Octavian Adrian Postolache\\n\\n",
+          "location": "C4.08\\, 4\\, Edifício II (ISCTE-IUL)\\, ISCTE-IUL"
+        },
+        {
+          "dtstamp": "20221110T142948Z",
+          "dtstart": "20220922T130000Z",
+          "dtend": "20220922T133000Z",
+          "summary": "test summary 2",
+          "uid": "847676220402081@fenix.iscte.pt",
+          "description": "Semestre: 2022/2023 - 1.º Semestre\\nUnidade de execução: Electrónica Programada e Processamento Digital de Sinais\\nCódigo: L2004\\nTurno: L2004TP02\\nInício: 2022-09-21 13:00\\nFim: 2022-09-21 14:30\\nDocente: Octavian Adrian Postolache\\n\\nSemester: 2022/2023 - 1.º Semestre\\nExecution course: Programmable Electronics and Digital Signal Processing\\nCode: L2004\\nShift: L2004TP02\\nBegin: 2022-09-21 13:00\\nEnd: 2022-09-21 14:30\\nTeacher: Octavian Adrian Postolache\\n\\n",
+          "location": "C4.08\\, 4\\, Edifício II (ISCTE-IUL)\\, ISCTE-IUL"
+        },
+        {
+          "dtstamp": "20221110T142948Z",
+          "dtstart": "20220922T200000Z",
+          "dtend": "20220922T213000Z",
+          "summary": "test summary 2",
+          "uid": "847676220402081@fenix.iscte.pt",
+          "description": "Semestre: 2022/2023 - 1.º Semestre\\nUnidade de execução: Electrónica Programada e Processamento Digital de Sinais\\nCódigo: L2004\\nTurno: L2004TP02\\nInício: 2022-09-21 13:00\\nFim: 2022-09-21 14:30\\nDocente: Octavian Adrian Postolache\\n\\nSemester: 2022/2023 - 1.º Semestre\\nExecution course: Programmable Electronics and Digital Signal Processing\\nCode: L2004\\nShift: L2004TP02\\nBegin: 2022-09-21 13:00\\nEnd: 2022-09-21 14:30\\nTeacher: Octavian Adrian Postolache\\n\\n",
+          "location": "C4.08\\, 4\\, Edifício II (ISCTE-IUL)\\, ISCTE-IUL"
+        }
+      ]
+    }
+  ],
+  "success": true
+}
