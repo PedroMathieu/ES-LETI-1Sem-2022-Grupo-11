@@ -37,43 +37,47 @@ let prevTime
 function drawTimeBlock(timeBlock) {
 	let div = document.createElement("div")
 	let button = document.createElement("button")
-	let input = document.createElement("input")
 
-	input.id = `${timeBlock}_1`
-
-	input.classList.add("hide")
 	button.innerText = timeBlock
 	button.onclick = function () {
-		var text = document.getElementById(input.id)
-		text.classList.toggle("hide")
-		text.classList.toggle("input")
-
 	}
 
 	div.id = timeBlock
 	div.classList.add("time")
 	document.getElementById("scheduleContainer").appendChild(div)
 	document.getElementById(timeBlock).appendChild(button)
-	document.getElementById(timeBlock).appendChild(input)
+	
 	drawEvents(div, timeBlock);
 }
 
 function drawEvents(div, timeBlock) {
 	if(timeBlock == undefined){
-		return
+		return;
 	}
+
+	let table = document.createElement("table");
+	let tableRow = document.createElement("tr");
+	
 	let div2 = document.createElement("div")
 	let url = window.location.pathname;
 	let urlParts = url.split("/");
 	let owners = urlParts[3].split("-");
 
 	console.log(owners)
-	div2.id = timeBlock
+	div2.id = `${timeBlock}_2`
 	div2.classList.add("event")
-
-	
+	const colors = ["red", "green", "blue", "orange", "pink", "purple", "yellow", "gray", "brown", "black"];
+	let parentContainer = document.getElementById('parent-container');
 
 	owners.forEach( user => {
+		const index = owners.indexOf(user);
+  		const color = colors[index];
+
+		  let tableCell = document.createElement("td");
+		  tableCell.id = `${timeBlock}_${user}`
+		  tableCell.classList.add("event")
+
+
 		for (let i = 0; i < eventsFromServer[user]["events"].length; i++){
 			let e = eventsFromServer[user]["events"][i];
 			console.log(e)
@@ -85,16 +89,18 @@ function drawEvents(div, timeBlock) {
 
 			if(e.time_start <= realtime &&  e.time_end > realtime){
 				div2.innerText = e.owner + ": " + e.summary.split("-")[1]
+				div2.style.backgroundColor = color;
 				document.getElementById(timeBlock).appendChild(div2)
 			}
 
 			if(realtime == e.time_start){
 				div2.innerText = e.owner + ": " + e.summary.split("-")[1]
+				div2.style.backgroundColor = color;
 				document.getElementById(timeBlock).appendChild(div2)
 			}
 		}
 
-		nextcolunm
+	
 	})
 	
 }
