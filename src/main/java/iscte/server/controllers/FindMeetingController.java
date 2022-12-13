@@ -10,6 +10,8 @@ import spark.Response;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class FindMeetingController extends Controller {
@@ -90,9 +92,16 @@ public class FindMeetingController extends Controller {
          * If one or more user is not available, increment its unavailability timer. 
          * So that we can show which user is busier
          */
-
+        Set<String> listOfUsers = events.keySet();
+        for (String user : listOfUsers){
+            List<Event> listOfEvents = events.get(user);
+            for(Event event : listOfEvents){
+                LocalTime endOfMeeting = event.getEventTimeEnd().plus(duration, ChronoUnit.MINUTES);
+            }
+        }
          
-
         return null;
     }
+
+    private boolean 
 }
