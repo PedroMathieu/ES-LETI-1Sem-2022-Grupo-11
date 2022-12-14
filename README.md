@@ -29,7 +29,7 @@ Multiple calendars may be selected to accommodate more members that wish to part
 
 ### Server-side
 
-Using the Java baseline, it builds a local server, opening up an appropriate port, to view the page that will server as the User-Interface for all calendar management.
+Using the Java baseline, it builds a local server, opening up an appropriate port, to view the page that will serve as the User-Interface for all calendar management.
 
 When a new web calendar insertion occurs, the server parses the information obtained from it into a .json file, both for ease of use in JavaScript, and for a more visually distinguishable way of analyzing the information of a given calendar when debugging.
 
@@ -48,6 +48,8 @@ Upon a webcal link being inserted, if no errors occur, the name associated with 
 The colors for each day are updated live when the user checks more of the calendar combo boxes available (expected behaviour is for more green to be displayed when less calendars are selected, as there are less conflicting events to work with).
 
 On the top-right corner of the calendar a "Find Meeting" button can be used to find the best timeslot for a meeting to be had, given a start-date and an end-date provided by the user to search for said timeslot.
+
+When a day on the calendar is clicked (all of them are buttons), the user is redirected to a page displaying all the events for that day for each of the already selected users in the combo boxes. 
 
 
 
