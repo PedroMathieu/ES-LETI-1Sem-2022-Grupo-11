@@ -18,6 +18,7 @@ import java.util.*;
 public class FindMeetingController extends Controller {
     private List<String> usersThatCanHaveTheMeeting = new ArrayList<>();
     int biggestNumberOfUsers = 0;
+    private LocalDate dayOfMeeting;
     private LocalTime startOfMeetingTime;
     private LocalTime endOfMeetingTime;
     private Map<String, PersonalCalendar> calendars = new HashMap<>();
@@ -105,6 +106,7 @@ public class FindMeetingController extends Controller {
             List<Event> listOfEvents = events.get(user);
             // for each user checks all events and
             for (Event event : listOfEvents) {
+                dayOfMeeting = event.getDayOfEvent();
                 startOfMeetingTime = event.getEventTimeEnd();
                 endOfMeetingTime = startOfMeetingTime.plus(duration, ChronoUnit.MINUTES);
                 if (meetingFits(listOfEvents)) {
@@ -119,6 +121,7 @@ public class FindMeetingController extends Controller {
         JSONObject timeslot = new JSONObject();
         timeslot.put("timeslotStart", startOfMeetingTime);
         timeslot.put("timeslotEnd", endOfMeetingTime);
+        timeslot.put("dayOfMeeting", dayOfMeeting);
 
         return buildResponseMap(timeslot, null, true, false);
 
