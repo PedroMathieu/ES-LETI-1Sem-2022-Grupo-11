@@ -1,8 +1,7 @@
 # Web Calendar Manager
 
 - This repo contains all the necessary components used to build the executable file that runs the local Web Calendar.
-
-The webcal link must be provided by the user.
+- The webcal link must be provided by the user.
 
 
 
@@ -56,6 +55,6 @@ On the top-right corner of the calendar a "Find Meeting" button can be used to f
 
 - Planned for the project were functionalities such as being able to insert new events for each user, as well as finding a form of periodic meetings (such as weekly, bi-weekly, etc.). These functionalities, due to various circumstances, weren't able to be implemented in time for release.
 
-- Some features are also only partially complete, such as the FindMeeting feature, which ill-prepared for a potential lack of a timeslot for a meeting, as well as any kind of error server-side. 
+- Some features are also only partially complete, such as the FindMeeting feature, which is ill-prepared for a potential lack of a timeslot for a meeting, as well as any kind of error server-side. 
 
 
