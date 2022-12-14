@@ -54,55 +54,61 @@ function drawEvents(div, timeBlock) {
 	if(timeBlock == undefined){
 		return;
 	}
-
-	let table = document.createElement("table");
-	let tableRow = document.createElement("tr");
 	
-	let div2 = document.createElement("div")
 	let url = window.location.pathname;
 	let urlParts = url.split("/");
 	let owners = urlParts[3].split("-");
+	let previousUsers = [];
 
-	console.log(owners)
-	div2.id = `${timeBlock}_2`
-	div2.classList.add("event")
-	const colors = ["red", "green", "blue", "orange", "pink", "purple", "yellow", "gray", "brown", "black"];
-	let parentContainer = document.getElementById('parent-container');
+	
+	const colors = ["red", "green", "blue", "orange", "pink", "purple"];
 
 	owners.forEach( user => {
 		const index = owners.indexOf(user);
   		const color = colors[index];
-
-		  let tableCell = document.createElement("td");
-		  tableCell.id = `${timeBlock}_${user}`
-		  tableCell.classList.add("event")
-
+		let text = ""
 
 		for (let i = 0; i < eventsFromServer[user]["events"].length; i++){
 			let e = eventsFromServer[user]["events"][i];
-			console.log(e)
 			let realtime = timeBlock
-
-			if(realtime.length != 5){
+		
+			if(realtime.length != 5) {
 				realtime = "0" + timeBlock
 			}
+			
+			if (e.time_start <= realtime &&  e.time_end > realtime) {
 
-			if(e.time_start <= realtime &&  e.time_end > realtime){
-				div2.innerText = e.owner + ": " + e.summary.split("-")[1]
-				div2.style.backgroundColor = color;
-				document.getElementById(timeBlock).appendChild(div2)
+				if(document.getElementById(`${timeBlock + user}`) == null) {
+					previousUsers.forEach(u => { 
+						if (u == user) return 
+						if (document.getElementById(`${timeBlock + u}`) == null ) {
+							document.getElementById(timeBlock).appendChild(createDoc("div", "event", `${timeBlock + u}`,"", "#c9b4a5"))
+						}
+					})
+					document.getElementById(timeBlock).appendChild(createDoc("div", "event", `${timeBlock + user}`,
+					 text.concat(e.owner + ": " + e.summary.split("-")[1]), color))
+				}
+				
+				else {
+					let div = document.getElementById(`${timeBlock + user}`)
+					div.innerText = div.innerText.concat(" /// ",  e.summary.split("-")[1])
+				}
 			}
-
-			if(realtime == e.time_start){
-				div2.innerText = e.owner + ": " + e.summary.split("-")[1]
-				div2.style.backgroundColor = color;
-				document.getElementById(timeBlock).appendChild(div2)
-			}
-		}
-
-	
+		}		
+		previousUsers.push(user)
 	})
 	
+}
+
+function createDoc(tagName, event, id, innerText, color) { 
+	let div2 = document.createElement(tagName)
+
+	div2.classList.add(event)
+	div2.id = id
+	div2.innerText = innerText
+	div2.style.backgroundColor = color
+
+	return div2
 }
 
 window.onload = generateHours;

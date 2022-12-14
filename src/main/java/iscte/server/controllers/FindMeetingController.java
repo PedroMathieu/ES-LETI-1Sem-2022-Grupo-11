@@ -103,5 +103,5 @@ public class FindMeetingController extends Controller {
         return null;
     }
 
-    private boolean 
+    
 }
