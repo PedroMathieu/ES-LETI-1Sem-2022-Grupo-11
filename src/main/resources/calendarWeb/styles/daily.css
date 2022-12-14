@@ -1,3 +1,4 @@
+/* Body for the html for the daily calendar */
 body{
     font-family: Arial;
     font-size: 24px;
@@ -5,7 +6,7 @@ body{
     background: rgb(52, 103, 150);
     color:#fff;
   }
-
+  /* Separation for each hour */
   div{
     writing-mode:horizontal-lr;
     block-size:35px;
@@ -26,6 +27,7 @@ body{
     
   }
 
+  /* Add some hover effects to buttons */
   .time button {
     font-size: 1.1rem;
   margin: 0.3rem;
@@ -41,12 +43,14 @@ body{
   border: none;
   }
 
+  /* Add some hover effects to buttons */
   .time button:hover {
     background-color: #262626;
   border: 0.2rem solid #777;
   cursor: pointer;
   }
 
+  /* Box for each event */
   .event {
     font-size: 0.7rem;
   width: 200px;

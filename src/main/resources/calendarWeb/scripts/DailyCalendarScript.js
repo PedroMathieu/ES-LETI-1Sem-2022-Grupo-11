@@ -34,6 +34,9 @@ function generateHours() {
 
 let prevTime
 
+/**
+ * Generate Hours
+ */
 function drawTimeBlock(timeBlock) {
 	let div = document.createElement("div")
 	let button = document.createElement("button")
@@ -50,6 +53,10 @@ function drawTimeBlock(timeBlock) {
 	drawEvents(div, timeBlock);
 }
 
+
+/**
+ * Generate Events
+ */
 function drawEvents(div, timeBlock) {
 	if(timeBlock == undefined){
 		return;
@@ -100,6 +107,9 @@ function drawEvents(div, timeBlock) {
 	
 }
 
+/**
+ * Generate division
+ */
 function createDoc(tagName, event, id, innerText, color) { 
 	let div2 = document.createElement(tagName)
 
