@@ -1,3 +1,4 @@
+/* Body for the html for the daily calendar */
 body{
     font-family: Arial;
     font-size: 24px;
@@ -5,39 +6,20 @@ body{
     background: rgb(52, 103, 150);
     color:#fff;
   }
-
+  /* Separation for each hour */
   div{
     writing-mode:horizontal-lr;
     block-size:35px;
   }
 
 
-  
-  
-  .hide {
-    display: none;
-  }
-
-  .input {
-    size: 5px;
-    resize: none;
-    background-color: darkcyan;
-    font: bold;
-    color: black;
-    row-gap: 0.5;
-    height: 100px;
-    width: 105px;
-  }
-
 /**
  * Time
  */
  .time {
-  background-color: rgb(199, 185, 176);
+  background-color: rgb(201, 180, 165);
   display: flex;
   align-items: center;
-  column-gap: 10px;
-  column-width: 20px;
   border-top: thin dashed #ccc;
   height: 100%;
   padding: 0 0.8rem;
@@ -45,31 +27,32 @@ body{
     
   }
 
+  /* Add some hover effects to buttons */
   .time button {
     font-size: 1.1rem;
   margin: 0.3rem;
-  width: 42px;
+  width: 48px;
   height: 2.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.507);
   transition: background-color 0.2s;
-  background-color: rgb(199, 185, 176);
+  background-color: rgb(204, 187, 175);
   color: white;
   border: none;
   }
 
+  /* Add some hover effects to buttons */
   .time button:hover {
     background-color: #262626;
   border: 0.2rem solid #777;
   cursor: pointer;
   }
 
+  /* Box for each event */
   .event {
     font-size: 0.7rem;
-    grid-template-columns: repeat();
-  margin: 0.3rem;
   width: 200px;
   height: 2.2rem;
   display: flex;
@@ -77,21 +60,8 @@ body{
   align-items: center;
   text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5);
   transition: background-color 0.2s;
-  background-color: rgb(255, 98, 0);
   color: white;
   border: none;
-  }
-
-  #parent-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns with equal width */
-  }
-
-  .user {
-    /* Other styles... */
-  
-    /* Display the user in the first column */
-    grid-column: 1;
   }
 
   

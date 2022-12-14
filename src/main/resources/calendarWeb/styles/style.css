@@ -5,14 +5,17 @@
     font-family: "Quicksand", sans-serif;
 }
 
+/*Perfect size for website*/
 html {
     font-size: 79.5%;
 }
 
+/*Refresh button*/
 .button {
     opacity: 1;
 }
 
+/*Display calendar owners*/
 #current-calendar-owners {
     width: 10%;
     text-align: center;
@@ -21,6 +24,7 @@ html {
     float: right;
 }
 
+/*Text for new webpage to input new calendar links*/
 #insert-new-calendars-link {
     width: 100%;
     background-color: #9494ab;
@@ -30,6 +34,7 @@ html {
     height: 5vh;
 }
 
+/*Button "find meeting"*/
 #create-meeting-button {
     cursor: pointer;
     border: none;
@@ -45,6 +50,7 @@ html {
     padding: 5px;
 }
 
+/*Refresh button and it's texture*/
 #voltar {
     position: absolute;
     top: 0;
@@ -60,6 +66,7 @@ html {
     color: #eee;
 }
 
+/*Background*/
 .container {
     width: 100%;
     height: 95vh;
@@ -70,6 +77,7 @@ html {
     align-items: center;
 }
 
+/*body of the html page, as well as the days of each month plus the weekdays*/
 .calendar {
     width: 65rem;
     height: 52rem;
@@ -81,6 +89,7 @@ html {
     position: relative;
 }
 
+/*head part of the html*/
 .month {
     width: 100%;
     height: 12rem;
@@ -95,11 +104,13 @@ html {
     border-top-right-radius: 10px;
 }
 
+/*Buttons to switch months*/
 .month i {
     font-size: 2.5rem;
     cursor: pointer;
 }
 
+/*Month*/
 .month h1 {
     font-size: 3rem;
     font-weight: 400;
@@ -108,10 +119,12 @@ html {
     margin-bottom: 1rem;
 }
 
+/*Year*/
 .month p {
     font-size: 1.6rem;
 }
 
+/*Weekdays font and texture*/
 .weekdays {
     width: 100%;
     margin-left: 30px;
@@ -131,6 +144,7 @@ html {
     text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5);
 }
 
+/*Days font and texture, as well as buttons for each one*/
 .days {
     width: 100%;
     display: flex;
@@ -153,27 +167,23 @@ html {
     border: none;
 }
 
+/* Add some hover effects to buttons */
 .days button:hover:not(.today) {
     background-color: #262626;
     border: 0.2rem solid #777;
     cursor: pointer;
 }
 
+/*Arrows for previous and next month*/
 .prev-date,
 .next-date {
     opacity: 0.25;
 }
 
+/*Texture for the date of today*/
 .current-date {
     display: flex;
 }
-
-/* #calDate{
-    width: 200px;
-    height: 200px;
-    position: absolute;
-    visibility: visible;
-} */
 
 .today {
     font-size: 1.7rem;
@@ -191,6 +201,7 @@ html {
     cursor: pointer;
 }
 
+/* Add some hover effects to buttons for today's button */
 .days button:hover {
     background-color: #686dc5;
     border: 0.2rem solid #777;
