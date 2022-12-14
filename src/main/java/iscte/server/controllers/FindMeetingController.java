@@ -3,6 +3,7 @@ package iscte.server.controllers;
 import iscte.server.Server;
 import iscte.server.ServerService;
 import iscte.server.ServerUtil;
+import org.json.simple.JSONObject;
 import pt.iscte.Event;
 import pt.iscte.PersonalCalendar;
 import spark.Request;
@@ -15,6 +16,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class FindMeetingController extends Controller {
+    private List<String> usersThatCanHaveTheMeeting = new ArrayList<>();
+    int biggestNumberOfUsers = 0;
+    private LocalTime startOfMeetingTime;
+    private LocalTime endOfMeetingTime;
     private Map<String, PersonalCalendar> calendars = new HashMap<>();
 
     public FindMeetingController(Map<String, PersonalCalendar> calendars) {
@@ -86,22 +91,57 @@ public class FindMeetingController extends Controller {
          * Possible algorithm:
          * Go through all the events
          * For each event, check if there's any event within eventEnd+duration.
-         * If there is not any event, check the same for all the other users 
+         * If there is not any event, check the same for all the other users
          * If everyone is free in that timeblock (currEventEnd+duration), send the
          * timeblock found
-         * If one or more user is not available, increment its unavailability timer. 
+         * If one or more user is not available, increment its unavailability timer.
          * So that we can show which user is busier
          */
+        // list of all users
         Set<String> listOfUsers = events.keySet();
-        for (String user : listOfUsers){
+        // goes through the list of users and gets the list of events for each of them
+        for (String user : listOfUsers) {
+            // stores the list of events for the current user
             List<Event> listOfEvents = events.get(user);
-            for(Event event : listOfEvents){
-                LocalTime endOfMeeting = event.getEventTimeEnd().plus(duration, ChronoUnit.MINUTES);
+            // for each user checks all events and
+            for (Event event : listOfEvents) {
+                startOfMeetingTime = event.getEventTimeEnd();
+                endOfMeetingTime = startOfMeetingTime.plus(duration, ChronoUnit.MINUTES);
+                if (meetingFits(listOfEvents)) {
+                    usersThatCanHaveTheMeeting.add(user);
+                    checkOtherUsers(listOfUsers, user, events);
+                }
+                if (usersThatCanHaveTheMeeting.size() > biggestNumberOfUsers)
+                    biggestNumberOfUsers = usersThatCanHaveTheMeeting.size();
             }
         }
-         
-        return null;
+        
+        JSONObject timeslot = new JSONObject();
+        timeslot.put("timeslotStart", startOfMeetingTime);
+        timeslot.put("timeslotEnd", endOfMeetingTime);
+
+        return buildResponseMap(timeslot, null, true, false);
+
     }
 
-    private boolean 
+    private boolean meetingFits(List<Event> listOfEvents) {
+        for (Event event : listOfEvents) {
+            if ((event.getEventTimeStart().compareTo(startOfMeetingTime) > 0)
+                    && (event.getEventTimeStart().compareTo(endOfMeetingTime) < 0)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void checkOtherUsers(Set<String> listOfUsers, String currentUser, Map<String, List<Event>> events) {
+        for (String user : listOfUsers) {
+            if (!user.equals(currentUser)) {
+                List<Event> listOfEventsOfUser = events.get(user);
+                if (meetingFits(listOfEventsOfUser)) {
+                    usersThatCanHaveTheMeeting.add(user);
+                }
+            }
+        }
+    }
 }
