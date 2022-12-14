@@ -1,8 +1,23 @@
 Sprint Review:
 
-Features implementadas:
+Funcionalidades implementadas:
     
-    -
+    -UI completamente funcional;
+    -Páginas de erro personalizadas;
+    -Corrigidos vários bugs do UI;
+    -No calendário mensal cada dia tem uma cor, que representa a disponibilidade dos membros;
+    -É possível visualizar os eventos dos membros num determinado dia;
 
+Funcionalidades incompletas:
+
+    -Encontrar um timeslot para reuniões entre membros:
+        --No back-end é capaz de encontrar um timeslot para marcar uma reunião para o maior número de membros possível;
+        --No caso de não ser possível encontrar um slot para uma reunião, não é possível ver quais são os utilizadores indisponíveis;
+        --Não está bem preparado para caso de erro;
 
 Objetivos não cumpridos:
+ 
+    -Ainda não é possível alterar os eventos de um utilizador;
+    -Ainda não é possível criar reuniões periódicas.
+
+O objetivo do sprint foi considerado como cumprido, visto que era "Desenvolver uma UI funcional".
