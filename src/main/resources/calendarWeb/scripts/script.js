@@ -108,6 +108,7 @@ document.querySelector(".next").addEventListener("click", () => {
 renderCalendar();
 
 function openCloseMeetingForm() {
+    document.getElementById("meeting-info-container").style.display = "none";
     if (document.getElementById("meeting-form").style.display == "none") {
         document.getElementById("meeting-form").style.display = "block";
     } else {
@@ -155,3 +156,10 @@ function buildUrl(obj) {
     urlBuilder = "/personalCalendar/e/" + checked.join("-") + "/" + year + "/" + month + "/" + clickedDay;
     window.location.href = urlBuilder;
 }
+
+window.onload = function(){
+    document.getElementById('close').onclick = function(){
+        document.getElementById("meeting-info-container").style.display = "none";
+        return false;
+    };
+};

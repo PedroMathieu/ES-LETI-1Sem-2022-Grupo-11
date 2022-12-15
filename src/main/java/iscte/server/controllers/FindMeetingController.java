@@ -3,6 +3,7 @@ package iscte.server.controllers;
 import iscte.server.Server;
 import iscte.server.ServerService;
 import iscte.server.ServerUtil;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.json.simple.JSONObject;
 import pt.iscte.Event;
 import pt.iscte.PersonalCalendar;
@@ -11,7 +12,6 @@ import spark.Response;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAmount;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -38,7 +38,17 @@ public class FindMeetingController extends Controller {
         paramsToProcess.put("timeOfDay", req.queryParams("timeOfDay"));
         paramsToProcess.put("users", req.queryParams("users"));
 
-        return process(paramsToProcess);
+        Map<String, Object> response = process(paramsToProcess);
+
+        res.type("application/json");
+
+        if ((boolean) response.get("gotError")) {
+            JSONObject jsonToSend = new JSONObject();
+            jsonToSend.put("error", "oops");
+            return jsonToSend;
+
+        } else
+            return (JSONObject) response.get("dataToSend");
     }
 
     @Override
@@ -88,16 +98,6 @@ public class FindMeetingController extends Controller {
     }
 
     private Map<String, Object> findMeeting(Map<String, List<Event>> events, int duration) {
-        /**
-         * Possible algorithm:
-         * Go through all the events
-         * For each event, check if there's any event within eventEnd+duration.
-         * If there is not any event, check the same for all the other users
-         * If everyone is free in that timeblock (currEventEnd+duration), send the
-         * timeblock found
-         * If one or more user is not available, increment its unavailability timer.
-         * So that we can show which user is busier
-         */
         // list of all users
         Set<String> listOfUsers = events.keySet();
         // goes through the list of users and gets the list of events for each of them
@@ -119,12 +119,11 @@ public class FindMeetingController extends Controller {
         }
         
         JSONObject timeslot = new JSONObject();
-        timeslot.put("timeslotStart", startOfMeetingTime);
-        timeslot.put("timeslotEnd", endOfMeetingTime);
-        timeslot.put("dayOfMeeting", dayOfMeeting);
+        timeslot.put("timeslotStart", startOfMeetingTime.toString());
+        timeslot.put("timeslotEnd", endOfMeetingTime.toString());
+        timeslot.put("dayOfMeeting", dayOfMeeting.toString());
 
-        return buildResponseMap(timeslot, null, true, false);
-
+        return buildResponseMap(timeslot, "", true, false);
     }
 
     private boolean meetingFits(List<Event> listOfEvents) {

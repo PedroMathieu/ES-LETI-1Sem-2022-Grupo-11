@@ -7,6 +7,18 @@
 	z-index: 9;
 }
 
+.meeting-info {
+	color: #d4d4dd;
+	padding-bottom: 10px;
+}
+
+#close {
+    float:right;
+    display:inline-block;
+    padding:5px;
+    background:#ccc;
+}
+
 /* Add styles to the form container */
 .form-container {
 	max-width: 500px;

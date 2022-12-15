@@ -29,7 +29,16 @@
             
             <button id="voltar" onClick="window.location.reload();" class="material-symbols-outlined">sync</button>
             <button id="create-meeting-button" class="material-symbols-outlined" onclick="openCloseMeetingForm()">add<p>Find meeting</p></button>
-
+            <div class="form-popup" id="meeting-info-container" style="display: none;">
+                <span id="close">x</span>
+                <div id="meeting-info" class="form-container" style="text-align: center;"> 
+                    <h1>We found a meeting for you and the participants!</h1>
+                    <br>
+                    <h2>Meeting date</h2><h2 class="meeting-info" id="meetingDate"></h2>
+                    <h2>This meeting starts at: </h2><h2 class="meeting-info" id="meetingTStart"></h2>
+                    <h2>This meeting ends at: </h2><h2 class="meeting-info" id="meetingTEnd"></h2>
+                </div>
+            </div>
             <!--Find meeting form-->
             <div class="form-popup" id="meeting-form" style="display: none;">
                 <form action="/findMeeting" method="post" id="meetingForm" class="form-container">
@@ -52,12 +61,6 @@
                         <option value="Morning">Morning</option>
                         <option value="Afternoon">Afternoon</option>
                     </select>
-
-                    <label for="monthly">Monthly Reunion</label>
-                    <input type="checkbox" id="monthly">
-                    <label for="weekly">Weekly Reunion</label>
-                    <input type="checkbox" id="weekly">
-
                     <button type="submit" class="btn" id="submit-meeting">Find timeslot!</button>
                 </form>
             </div>
@@ -71,7 +74,7 @@
                 <div>Fri</div>
                 <div>Sat</div>
             </div>
-            <div id="d" class="days"></div>
+           <div id="d" class="days"></div>
         </div>
         <div id="current-calendar-owners">
             <p style="margin-bottom: 10px">Choose the calendars you want to see when analyzing a day</p>
