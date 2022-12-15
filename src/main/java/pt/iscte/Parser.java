@@ -388,4 +388,48 @@ public class Parser {
         System.out.println("EVENT DESCRIPTION = " + encodeUTF8(event_Description));
         System.out.println("EVENT LOCATION = " + encodeUTF8(event_Location));
     }
+
+    public String getCalendarName(){
+        return calendar_name;
+    }
+
+    public String getCalendarProductID(){
+        return calendar_prodID;
+    }
+
+    public String getCalendarVersion(){
+        return calendar_version;
+    }
+
+    public String getCalendarType(){
+        return calendar_type;
+    }
+
+    public String getEventCreationDate(){
+        return event_creationDate;
+    }
+
+    public String getEventStartDate(){
+        return event_startDate;
+    }
+
+    public String getEventEndDate(){
+        return event_endDate;
+    }
+
+    public String getEventSummary(){
+        return event_Summary;
+    }
+
+    public String getEventUserID(){
+        return event_uID;
+    }
+
+    public String getEventDescription(){
+        return event_Description;
+    }
+
+    public String getEventLocation(){
+        return event_Location;
+    }
 }
