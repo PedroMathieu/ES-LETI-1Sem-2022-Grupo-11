@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Controller.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">iscte.server.controllers</a> &gt; <span class="el_source">Controller.java</span></div><h1>Controller.java</h1><pre class="source lang-java linenums">package iscte.server.controllers;
+
+import org.json.simple.JSONObject;
+import iscte.server.ServerService;
+import spark.Request;
+import spark.Response;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * This class represents a controller. It's made of a handle method,
+ * which handles the req and res. A process method, that processes
+ * the request parameters and a method to build a response. All server
+ * controllers must extend this class.
+ *
+ * @author Jose Soares
+ */
+<span class="fc" id="L19">public abstract class Controller {</span>
+
+    /**
+     * Builds a response map to be handled by handle(Request req, Response res).
+     * To decide what and how to respond.
+     *
+     * @param jsonToSend json data to be sent, if any
+     * @param error error data to be sent, if any
+     * @param contextJson true if we have to set context to json
+     * @param hasError true if we have to send an error (disregards json data to be sent)
+     * @return response map made of all the parameters and their value
+     */
+    protected Map&lt;String, Object&gt; buildResponseMap(JSONObject jsonToSend, String error, boolean contextJson, boolean hasError) {
+<span class="fc" id="L32">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+
+        // No need to call server service if there was no error
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (hasError) {</span>
+<span class="fc" id="L36">            response.put(&quot;gotError&quot;, hasError);</span>
+<span class="fc" id="L37">            response.put(&quot;error&quot;, ServerService.sendErrorToUser(error));</span>
+<span class="fc" id="L38">        } else {</span>
+<span class="fc" id="L39">            response.put(&quot;gotError&quot;, hasError);</span>
+<span class="fc" id="L40">            response.put(&quot;error&quot;, &quot;&quot;);</span>
+        }
+
+<span class="fc" id="L43">        response.put(&quot;contextJson&quot;, contextJson);</span>
+<span class="fc" id="L44">        response.put(&quot;dataToSend&quot;, jsonToSend);</span>
+<span class="fc" id="L45">        return response;</span>
+    }
+
+    /**
+     * Process parameter data and do the logic for each controller.
+     * This part of the controller is only used by the server, which
+     * makes it possible to test the logic of each controller without
+     * having to deal with server connections.
+     *
+     * @param params parameters from front-end
+     * @return response map with the parameters to be handled by the handler
+     */
+    public abstract Map&lt;String, Object&gt; process(Map&lt;String, String&gt; params);
+
+    /**
+     * Handles a request, processes it using process() and sends a response.
+     *
+     * @param req Spark request containing all request data
+     * @param res Spark response, used to respond to a request
+     * @return http response
+     */
+    public abstract Object handle(Request req, Response res);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

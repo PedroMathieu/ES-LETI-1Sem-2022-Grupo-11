@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ServerServiceTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">iscte.server</a> &gt; <span class="el_source">ServerServiceTest.java</span></div><h1>ServerServiceTest.java</h1><pre class="source lang-java linenums">package iscte.server;
+
+import iscte.server.ServerService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import pt.iscte.PersonalCalendar;
+import pt.iscte.TestUtils;
+
+import java.io.File;
+import java.time.LocalDate;
+import java.util.Map;
+
+
+/**
+ * Server service tests. This class does not contain
+ * tests that rely on the server being alive. Since
+ * the goal of these unit tests are to test logic and
+ * basic functionality, some functions will not be tested.
+ *
+ * This test class needs some json calendars uploaded to
+ * work. We might work on a script to develop a json
+ * test calendar only when this test class runs.
+ *
+ * @author Jose Soares
+ */
+<span class="fc" id="L28">public class ServerServiceTest {</span>
+<span class="fc" id="L29">    private final Map&lt;String, PersonalCalendar&gt; testCalendars = TestUtils.buildTestCalendars();</span>
+<span class="fc" id="L30">    private final LocalDate TEST_DATE = LocalDate.of(2022, 10, 27);</span>
+<span class="fc" id="L31">    private final String TEST_OWNER0 = &quot;test0&quot;;</span>
+<span class="fc" id="L32">    private final String TEST_OWNER1 = &quot;test1&quot;;</span>
+
+
+    @Test
+    // This test works by checking if the owner name of an event is correct.
+    public void givenCorrectOwnerAndDate_whenBuildingEvents_returnsCorrectJson() {
+<span class="fc" id="L38">        JSONObject jsonEventsOwner0 = ServerService.buildEventsInJson(TEST_OWNER0, TEST_DATE, testCalendars);</span>
+<span class="fc" id="L39">        JSONObject jsonEventsOwner1 = ServerService.buildEventsInJson(TEST_OWNER1, TEST_DATE, testCalendars);</span>
+
+        // First event of each owner (gets in events array and gets first event)
+<span class="fc" id="L42">        JSONObject eventsOfOwner0 = (JSONObject) ((JSONArray) jsonEventsOwner0.get(&quot;events&quot;)).get(0);</span>
+<span class="fc" id="L43">        JSONObject eventsOfOwner1 = (JSONObject) ((JSONArray) jsonEventsOwner1.get(&quot;events&quot;)).get(0);</span>
+
+        // Names in processed json
+<span class="fc" id="L46">        String actualNameOfOwner0 = eventsOfOwner0.get(&quot;owner&quot;).toString();</span>
+<span class="fc" id="L47">        String actualNameOfOwner1 = eventsOfOwner1.get(&quot;owner&quot;).toString();</span>
+
+<span class="fc" id="L49">        Assertions.assertEquals(TEST_OWNER0, actualNameOfOwner0);</span>
+<span class="fc" id="L50">        Assertions.assertEquals(TEST_OWNER1, actualNameOfOwner1);</span>
+<span class="fc" id="L51">    }</span>
+
+    @Test
+    public void whenDeletingTempIcsFiles_allFilesAreDeleted() {
+<span class="fc" id="L55">        File icsFolder = new File(System.getProperty(&quot;user.dir&quot;) + &quot;/calendars/icsFiles/&quot;);</span>
+<span class="fc" id="L56">        TestUtils.createDummyTempIcsFiles(icsFolder);</span>
+
+        // Makes sure dummy files were created
+<span class="fc" id="L59">        Assertions.assertEquals(11, icsFolder.listFiles().length);</span>
+
+        // Make sure the dummy files were deleted
+<span class="fc" id="L62">        ServerService.deleteTempIcsFiles();</span>
+<span class="fc" id="L63">        Assertions.assertEquals(0, icsFolder.listFiles().length);</span>
+<span class="fc" id="L64">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

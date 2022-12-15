@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GetEventsController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">iscte.server.controllers</a> &gt; <span class="el_source">GetEventsController.java</span></div><h1>GetEventsController.java</h1><pre class="source lang-java linenums">package iscte.server.controllers;
+
+import iscte.server.Server;
+import iscte.server.ServerService;
+import iscte.server.ServerUtil;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import pt.iscte.PersonalCalendar;
+import spark.ModelAndView;
+import spark.Request;
+import spark.Response;
+import spark.template.velocity.VelocityTemplateEngine;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Get events controller. This controller is responsible for
+ * getting events data. Either the events themselves or the
+ * number of events.
+ *
+ * @author Jose Soares
+ */
+public class GetEventsController extends Controller {
+<span class="fc" id="L27">    private Map&lt;String, PersonalCalendar&gt; calendars = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L29">    public GetEventsController(Map&lt;String, PersonalCalendar&gt; calendars) {</span>
+<span class="fc" id="L30">        this.calendars = calendars;</span>
+<span class="fc" id="L31">    }</span>
+
+    @Override
+    public Object handle(Request req, Response res) {
+<span class="nc" id="L35">        Map&lt;String, JSONObject&gt; data = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L36">        this.calendars = Server.getPersonalCalendarObjects(); // Use in memory loaded calendars, updated everytime</span>
+
+<span class="nc" id="L38">        Map&lt;String, Object&gt; response = process(req.params());</span>
+
+         // If the operation was numbers, return json. Else return template with events
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if ((boolean) response.get(&quot;gotError&quot;))</span>
+<span class="nc" id="L42">            return response.get(&quot;error&quot;);</span>
+
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if ((boolean) response.get(&quot;contextJson&quot;)) {</span>
+<span class="nc" id="L45">            res.header(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+<span class="nc" id="L46">            return (JSONObject) response.get(&quot;dataToSend&quot;);</span>
+
+        } else {
+<span class="nc" id="L49">            data.put(&quot;events&quot;, (JSONObject) response.get(&quot;dataToSend&quot;));</span>
+<span class="nc" id="L50">            return new VelocityTemplateEngine().render(</span>
+<span class="nc" id="L51">                    new ModelAndView(data, &quot;calendarWeb/CalendarDaily.html&quot;));</span>
+        }
+    }
+
+    @Override
+    public Map&lt;String, Object&gt; process(Map&lt;String, String&gt; params) {
+<span class="fc" id="L57">        int rYear = -1, rMonth = -1, rDay = -1;</span>
+<span class="fc" id="L58">        List&lt;String&gt; requestedOwners = List.of(params.get(&quot;:userid&quot;).split(&quot;-&quot;));</span>
+<span class="fc" id="L59">        JSONObject jsonEvents = new JSONObject();</span>
+<span class="fc" id="L60">        String operation = params.get(&quot;:operation&quot;);</span>
+<span class="fc" id="L61">        boolean contextJson = false;</span>
+
+        // Make sure that the date provided are numbers
+        try {
+<span class="fc" id="L65">            rYear = Integer.parseInt(params.get(&quot;:year&quot;));</span>
+<span class="fc" id="L66">            rMonth = Integer.parseInt(params.get(&quot;:month&quot;));</span>
+<span class="fc" id="L67">            rDay = Integer.parseInt(params.get(&quot;:day&quot;));</span>
+<span class="fc" id="L68">        } catch (NumberFormatException e) {</span>
+<span class="fc" id="L69">            return buildResponseMap(null,&quot;Year, month or day is not a number&quot;,false,true);</span>
+        }
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for (String rOwner : requestedOwners) {</span>
+
+            // Validate date params and calendar owner
+<span class="pc bpc" id="L75" title="1 of 4 branches missed.">            if (!ServerUtil.validateDateParams(rYear, rMonth, rDay) || !ServerService.validateOwner(rOwner, calendars)) {</span>
+<span class="fc" id="L76">                return buildResponseMap(null, &quot;Parameters contain problems&quot;, false, true);</span>
+            }
+
+<span class="fc" id="L79">            LocalDate dateRequested = LocalDate.of(rYear, rMonth, rDay);</span>
+<span class="fc" id="L80">            JSONObject requestedEvents = ServerService.buildEventsInJson(rOwner, dateRequested, calendars);</span>
+<span class="fc" id="L81">            JSONArray arrayOfEvents = (JSONArray) requestedEvents.get(&quot;events&quot;);</span>
+
+            // n is to get number of events, e is to get events
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            if (operation.equals(&quot;e&quot;)) {</span>
+<span class="fc" id="L85">                jsonEvents.put(rOwner, requestedEvents);</span>
+
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            } else if (operation.equals(&quot;n&quot;)) {</span>
+<span class="fc" id="L88">                jsonEvents.put(rOwner, arrayOfEvents.size());</span>
+<span class="fc" id="L89">                contextJson = true;</span>
+
+<span class="fc" id="L91">            } else {</span>
+<span class="fc" id="L92">                return buildResponseMap(null, &quot;Selected operation does not exist&quot;, false, true);</span>
+            }
+        }
+
+<span class="fc" id="L96">        return buildResponseMap(jsonEvents, &quot;&quot;, contextJson, false);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

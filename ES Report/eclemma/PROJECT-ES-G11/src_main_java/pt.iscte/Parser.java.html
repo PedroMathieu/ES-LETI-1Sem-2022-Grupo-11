@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Parser.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">pt.iscte</a> &gt; <span class="el_source">Parser.java</span></div><h1>Parser.java</h1><pre class="source lang-java linenums">package pt.iscte;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+import static java.lang.System.exit;
+
+/**
+ * This class' job will be to take the information stored in a .ics file stored
+ * in /calendar/icsCalendars and convert its information to a .json file where
+ * the other functions developed in other classes can be applied.
+ * 
+ * @author Joao Marques
+ */
+<span class="fc" id="L19">public class Parser {</span>
+
+    // Directory
+<span class="fc" id="L22">    public final String DIR_MAIN = System.getProperty(&quot;user.dir&quot;) + &quot;/calendars/&quot;;</span>
+<span class="fc" id="L23">    public final String DIR_ICS = DIR_MAIN + &quot;icsFiles/&quot;;</span>
+<span class="fc" id="L24">    public final String DIR_JSON = DIR_MAIN + &quot;jsonFiles/&quot;;</span>
+<span class="fc" id="L25">    public final String DIR_TEMPLATES = DIR_MAIN + &quot;templates/&quot;;</span>
+
+    // Paths for the .ics file and where the .json will be stored
+    private Path path_write;
+
+    // Calendar information
+    private String calendar_prodID;
+    private String calendar_version;
+    private String calendar_type;
+    private String calendar_name;
+
+    // Event information
+    private String event_creationDate;
+    private String event_startDate;
+    private String event_endDate;
+    private String event_Summary;
+    private String event_uID;
+    private String event_Description;
+    private String event_Location;
+<span class="fc" id="L44">    private int event_no = 2;</span>
+
+    // Flags
+<span class="fc" id="L47">    private boolean flag_CanReadFile = false;</span>
+<span class="fc" id="L48">    private boolean flag_TakenCalendarInfo = false;</span>
+<span class="fc" id="L49">    private boolean flag_ReadingSummary = false;</span>
+<span class="fc" id="L50">    private boolean flag_ReadingDescription = false;</span>
+<span class="fc" id="L51">    private boolean flag_FirstEvent = true;</span>
+
+    /**
+     * The starting function that takes the name of the file to be scanned and
+     * starts reading parts of it, redirecting to other functions to store the
+     * necessary information for the output of the .json file.
+     * 
+     * @param filename - the name of the .ics file to be scanned
+     */
+    public void initiateCalendar(String filename) throws IOException {
+<span class="fc" id="L61">        File file = new File(DIR_ICS + filename);</span>
+
+        try {
+
+            // starts scanning the file
+<span class="fc" id="L66">            Scanner s = new Scanner(file);</span>
+            String line;
+
+            // scans the file once and continues if it found the BEGIN tag
+            do {
+
+                // stores the information of the current line in a String
+<span class="fc" id="L73">                line = s.nextLine();</span>
+<span class="fc" id="L74">                line = line.replace(&quot;\\&quot;, &quot;\\\\&quot;);</span>
+
+                // depending on the tag of the line taken, it might trigger different flags
+<span class="pc bpc" id="L77" title="4 of 5 branches missed.">                switch (line) {</span>
+
+                    // if it managed o find the BEGIN tag, it will be allowed to keep
+                    // reading the file
+                    case (&quot;BEGIN:VCALENDAR&quot;):
+<span class="nc" id="L82">                        flag_CanReadFile = true;</span>
+<span class="nc" id="L83">                        break;</span>
+
+                    // if it found the END tag its job is done and won't keep reading the file
+                    case (&quot;END:VCALENDAR&quot;):
+<span class="nc" id="L87">                        flag_CanReadFile = false;</span>
+<span class="nc" id="L88">                        Files.writeString(path_write, Files.readString(path_write) + &quot;\n&quot; + generateEndTemplate());</span>
+<span class="nc" id="L89">                        break;</span>
+
+                    // having found a BEGINEVENT tag it means it has already previously taken in the
+                    // calendar info and can now move on to reading event information
+                    case (&quot;BEGIN:VEVENT&quot;):
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                        if (!flag_TakenCalendarInfo) {</span>
+<span class="nc" id="L95">                            flag_TakenCalendarInfo = true;</span>
+<span class="nc" id="L96">                            writeMainCalendarInfo();</span>
+                        }
+<span class="nc" id="L98">                        break;</span>
+
+                    // having found the ENDEVENT tag it has finished reading the current event, and
+                    // it changes the flag that refers to being currently reading the description to
+                    // false, as well as cleaning the local variables and writing the taken info
+                    // into the .json file
+                    case (&quot;END:VEVENT&quot;):
+<span class="nc" id="L105">                        writeCurrentEventCalendarInfo();</span>
+<span class="nc" id="L106">                        cleanEventVariables();</span>
+<span class="nc" id="L107">                        cleanMainCalendarInfo();</span>
+<span class="nc" id="L108">                        break;</span>
+
+                    // not having found any of the special tags, it will read the file as normal
+                    default:
+
+                        // if it hasn't taken in the calendar info yet, it'll do so
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">                        if (!flag_TakenCalendarInfo) {</span>
+<span class="fc" id="L115">                            takeTheCalendarInfo(line);</span>
+<span class="fc" id="L116">                        }</span>
+
+                        // continues taking in the summary in case it occupies another line
+<span class="nc bnc" id="L119" title="All 4 branches missed.">                        else if (flag_ReadingSummary &amp;&amp; !line.startsWith(&quot;UID:&quot;)) {</span>
+                            // same as ReadingDescription below
+<span class="nc" id="L121">                            event_Summary = event_Summary + line.substring(1);</span>
+<span class="nc" id="L122">                        }</span>
+
+                        // continues taking in the description until it reaches the next parameter
+<span class="nc bnc" id="L125" title="All 4 branches missed.">                        else if (flag_ReadingDescription &amp;&amp; !line.startsWith(&quot;LOCATION:&quot;)) {</span>
+                            // erases the first character since it's a space that's not needed
+<span class="nc" id="L127">                            event_Description = event_Description + line.substring(1);</span>
+<span class="nc" id="L128">                        }</span>
+
+                        // taking in the events of the calendar
+                        else {
+<span class="nc" id="L132">                            takeEventInfo(line);</span>
+                        }
+                }
+
+<span class="pc bpc" id="L136" title="2 of 4 branches missed.">            } while (s.hasNextLine() &amp;&amp; flag_CanReadFile);</span>
+
+            // in case it prematurely closes because it didn't find the beginning
+<span class="pc bpc" id="L139" title="2 of 4 branches missed.">            if (!line.equals(&quot;BEGIN:VCALENDAR&quot;) &amp;&amp; !line.equals(&quot;END:VCALENDAR&quot;)) {</span>
+<span class="fc" id="L140">                System.err.println(&quot;ERROR IN LINE: \&quot;&quot; + line + &quot;\&quot;&quot;);</span>
+<span class="fc" id="L141">                s.close();</span>
+<span class="fc" id="L142">                throw new IOException();</span>
+            }
+<span class="nc" id="L144">            s.close();</span>
+
+<span class="nc" id="L146">        } catch (FileNotFoundException e) { // in case something happens when it tries to read the file</span>
+<span class="nc" id="L147">            System.err.println(&quot;ERROR: The file &quot; + file + &quot; was not found/couldn't be opened properly!&quot;);</span>
+<span class="nc" id="L148">            exit(0);</span>
+        }
+<span class="nc" id="L150">    }</span>
+
+    /**
+     * Takes the main calendar information and stores it in local variables so that
+     * they can be output into the .json file.
+     * 
+     * @param line - the information of the line sent from initiateCalendar()
+     */
+    public void takeTheCalendarInfo(String line) {
+
+        // takes in the calendar prodID
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if (line.startsWith(&quot;PRODID:&quot;)) {</span>
+<span class="fc" id="L162">            calendar_prodID = line.replace(&quot;PRODID:&quot;, &quot;&quot;);</span>
+<span class="fc" id="L163">        }</span>
+
+        // takes in the calendar version
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        else if (line.startsWith(&quot;VERSION:&quot;)) {</span>
+<span class="fc" id="L167">            calendar_version = line.replace(&quot;VERSION:&quot;, &quot;&quot;);</span>
+<span class="fc" id="L168">        }</span>
+
+        // takes in the calendar type (usually Gregorian)
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        else if (line.startsWith(&quot;CALSCALE:&quot;)) {</span>
+<span class="fc" id="L172">            calendar_type = line.replace(&quot;CALSCALE:&quot;, &quot;&quot;);</span>
+<span class="fc" id="L173">        }</span>
+
+        // takes in the name of the calendar
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        else if (line.startsWith(&quot;X-WR-CALNAME:&quot;)) {</span>
+<span class="fc" id="L177">            calendar_name = line.replace(&quot;X-WR-CALNAME:&quot;, &quot;&quot;);</span>
+<span class="fc" id="L178">            path_write = Path.of(DIR_JSON + calendar_name + &quot;.json&quot;);</span>
+        }
+
+<span class="fc" id="L181">    }</span>
+
+    /**
+     * Takes the information of the event currently being read and stores it in the
+     * local variables so that it can be written to the .json file.
+     * 
+     * This process will be done by event so that only 1 event has to be stored
+     * locally. As the event is processed it'll be output into the .json file and
+     * the local variables will be cleansed.
+     * 
+     * 
+     * @param line - the content of the line taken from the Scanner in
+     *             initiateCalendar()
+     */
+    public void takeEventInfo(String line) {
+
+        // takes in the date of the creation of the .ics file
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (line.startsWith(&quot;DTSTAMP:&quot;)) {</span>
+<span class="fc" id="L199">            event_creationDate = line.replace(&quot;DTSTAMP:&quot;, &quot;&quot;);</span>
+<span class="fc" id="L200">        }</span>
+
+        // takes in the starting date of the event
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        else if (line.startsWith(&quot;DTSTART:&quot;)) {</span>
+<span class="fc" id="L204">            event_startDate = line.replace(&quot;DTSTART:&quot;, &quot;&quot;);</span>
+<span class="fc" id="L205">        }</span>
+
+        // takes in the ending date of the event
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        else if (line.startsWith(&quot;DTEND:&quot;)) {</span>
+<span class="fc" id="L209">            event_endDate = line.replace(&quot;DTEND:&quot;, &quot;&quot;);</span>
+<span class="fc" id="L210">        }</span>
+
+        // takes in the summary of the event
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        else if (line.startsWith(&quot;SUMMARY:&quot;)) {</span>
+<span class="fc" id="L214">            event_Summary = line.replace(&quot;SUMMARY:&quot;, &quot;&quot;);</span>
+<span class="fc" id="L215">            flag_ReadingSummary = true;</span>
+<span class="fc" id="L216">        }</span>
+
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        else if (line.startsWith(&quot;UID:&quot;)) {</span>
+<span class="nc" id="L219">            flag_ReadingSummary = false;</span>
+<span class="nc" id="L220">            event_uID = line.replace(&quot;UID:&quot;, &quot;&quot;);</span>
+<span class="nc" id="L221">        }</span>
+
+        // takes in the first line of the description
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        else if (line.startsWith(&quot;DESCRIPTION:&quot;)) {</span>
+<span class="nc" id="L225">            event_Description = line.replace(&quot;DESCRIPTION:&quot;, &quot;&quot;);</span>
+<span class="nc" id="L226">            flag_ReadingDescription = true;</span>
+<span class="nc" id="L227">        }</span>
+
+        // takes in the location of the event
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        else if (line.startsWith(&quot;LOCATION:&quot;)) {</span>
+<span class="nc" id="L231">            flag_ReadingDescription = false;</span>
+<span class="nc" id="L232">            event_Location = line.replace(&quot;LOCATION:&quot;, &quot;&quot;);</span>
+        }
+
+<span class="fc" id="L235">    }</span>
+
+    /**
+     * Used to encode the strings (which are originally encoded with UTF-16) taken
+     * from the .ics file to UTF-8, their original enconding standard, to cleanly
+     * print them later.
+     * 
+     * @param s - input string
+     * @return same string encoded with UTF-8
+     */
+    public String encodeUTF8(String s) {
+<span class="nc" id="L246">        return s = new String(s.getBytes(), StandardCharsets.UTF_8);</span>
+    }
+
+    /**
+     * Takes the info stored locally and the template stored in the templates folder
+     * and inserts in a new .json file, with the same name as the .ics, the main
+     * calendar information obtained from said .ics in the correct fields.
+     */
+    public void writeMainCalendarInfo() throws IOException {
+<span class="nc" id="L255">        String template = generateMainTemplate(); // takes the template file for reference</span>
+
+        // replaces in the template the right fields with the corresponding information
+        // taken in beforehand
+<span class="nc" id="L259">        template = template.replace(&quot;CAL_PRODID&quot;, calendar_prodID);</span>
+<span class="nc" id="L260">        template = template.replace(&quot;CAL_VERSION&quot;, calendar_version);</span>
+<span class="nc" id="L261">        template = template.replace(&quot;CAL_CALSCALE&quot;, calendar_type);</span>
+<span class="nc" id="L262">        template = template.replace(&quot;CAL_CALNAME&quot;, calendar_name);</span>
+
+<span class="nc" id="L264">        Files.writeString(path_write, encodeUTF8(template) + &quot;\n&quot;);</span>
+<span class="nc" id="L265">    }</span>
+
+    /**
+     * 
+     */
+    public void writeCurrentEventCalendarInfo() throws IOException {
+<span class="nc bnc" id="L271" title="All 2 branches missed.">        if (!flag_FirstEvent) {</span>
+<span class="nc" id="L272">            Files.writeString(path_write, Files.readString(path_write) + &quot;,\n&quot;);</span>
+<span class="nc" id="L273">            System.out.println(&quot;[PARSER]: Managed to write event no.1&quot; + &quot;to file &quot; + path_write);</span>
+<span class="nc" id="L274">        } else {</span>
+<span class="nc" id="L275">            flag_FirstEvent = false;</span>
+<span class="nc" id="L276">            System.out.println(&quot;[PARSER]: Managed to write event no.&quot; + event_no++ + &quot;to file &quot; + path_write);</span>
+        }
+
+<span class="nc" id="L279">        String template = generateEventTemplate();</span>
+
+<span class="nc" id="L281">        template = template.replace(&quot;CAL_DTSTAMP&quot;, event_creationDate);</span>
+<span class="nc" id="L282">        template = template.replace(&quot;CAL_DTSTART&quot;, event_startDate);</span>
+<span class="nc" id="L283">        template = template.replace(&quot;CAL_DTEND&quot;, event_endDate);</span>
+<span class="nc" id="L284">        template = template.replace(&quot;CAL_SUMMARY&quot;, event_Summary);</span>
+<span class="nc" id="L285">        template = template.replace(&quot;CAL_UID&quot;, event_uID);</span>
+<span class="nc" id="L286">        template = template.replace(&quot;CAL_DESCRIPTION&quot;, event_Description);</span>
+<span class="nc" id="L287">        template = template.replace(&quot;CAL_LOCATION&quot;, event_Location);</span>
+
+<span class="nc" id="L289">        Files.writeString(path_write, Files.readString(path_write) + encodeUTF8(template));</span>
+<span class="nc" id="L290">    }</span>
+
+    /**
+     * Just takes the template from the template file mainInfoTemplate.txt for it to
+     * later have specific fields replaced with the correct information obtained
+     * from the .ics file.
+     * 
+     * @return - a string with the template stored in mainInfoTemplate.txt
+     * @throws IOException
+     */
+    public String generateMainTemplate() throws IOException {
+<span class="nc" id="L301">        return Files.readString(Path.of(DIR_TEMPLATES + &quot;mainInfoTemplate.txt&quot;));</span>
+    }
+
+    /**
+     * Similar to generateMainTemplate() but with the template for the insertion of
+     * events.
+     * 
+     * @see generateMainTemplate()
+     * @return - a string with the template stored in eventInfoTemplate.txt
+     * @throws IOException
+     */
+    public String generateEventTemplate() throws IOException {
+<span class="nc" id="L313">        return Files.readString(Path.of(DIR_TEMPLATES + &quot;eventInfoTemplate.txt&quot;));</span>
+    }
+
+    /**
+     * @see generateMainTemplate() and @see generateEventTemplate()
+     * @return - a string with the template stored in endingFileTemplate.txt
+     * @throws IOException
+     */
+    public String generateEndTemplate() throws IOException {
+<span class="nc" id="L322">        return Files.readString(Path.of(DIR_TEMPLATES + &quot;endingFileTemplate.txt&quot;));</span>
+    }
+
+    /**
+     * Cleans the variables relative to event info for the next event that might be
+     * read from the .ics file
+     */
+    public void cleanEventVariables() {
+<span class="nc" id="L330">        event_Description = &quot;&quot;;</span>
+<span class="nc" id="L331">        event_Location = &quot;&quot;;</span>
+<span class="nc" id="L332">        event_Summary = &quot;&quot;;</span>
+<span class="nc" id="L333">        event_creationDate = &quot;&quot;;</span>
+<span class="nc" id="L334">        event_endDate = &quot;&quot;;</span>
+<span class="nc" id="L335">        event_startDate = &quot;&quot;;</span>
+<span class="nc" id="L336">        event_uID = &quot;&quot;;</span>
+<span class="nc" id="L337">    }</span>
+
+    public void cleanMainCalendarInfo(){
+<span class="nc" id="L340">        calendar_name = &quot;&quot;;</span>
+<span class="nc" id="L341">        calendar_prodID = &quot;&quot;;</span>
+<span class="nc" id="L342">        calendar_type = &quot;&quot;;</span>
+<span class="nc" id="L343">        calendar_version = &quot;&quot;;</span>
+<span class="nc" id="L344">    }</span>
+
+    // ------------------------------- TEST FUNCTIONS ------------------------------------------
+
+    public void readFiles() throws IOException {
+<span class="nc" id="L349">        File folder = new File(DIR_ICS);</span>
+        try {
+<span class="nc bnc" id="L351" title="All 2 branches missed.">            for (File curFile : folder.listFiles()) {</span>
+<span class="nc" id="L352">                System.out.println(&quot;FILE: &quot; + curFile);</span>
+<span class="nc" id="L353">                initiateCalendar(curFile.getName());</span>
+            }
+<span class="nc" id="L355">        } catch (NullPointerException e) {</span>
+<span class="nc" id="L356">            System.err.println(&quot;Couldn't find any files in the folder!&quot;);</span>
+        }
+<span class="nc" id="L358">    }</span>
+
+    public static void main(String[] args) throws IOException {
+<span class="nc" id="L361">        Parser p = new Parser();</span>
+<span class="nc" id="L362">        System.out.print(&quot;Enter your file's name: &quot;);</span>
+<span class="nc" id="L363">        Scanner scan = new Scanner(System.in);</span>
+<span class="nc" id="L364">        String filename = scan.nextLine();</span>
+<span class="nc" id="L365">        scan.close();</span>
+
+<span class="nc" id="L367">        p.initiateCalendar(filename);</span>
+<span class="nc" id="L368">    }</span>
+
+    public void printCalendarInfo() {
+<span class="nc" id="L371">        printCalendarMainInfo();</span>
+<span class="nc" id="L372">        printCalendarEventInfo();</span>
+<span class="nc" id="L373">    }</span>
+
+    public void printCalendarMainInfo() {
+<span class="nc" id="L376">        System.out.println(&quot;\n\nCALENDAR NAME = &quot; + encodeUTF8(calendar_name));</span>
+<span class="nc" id="L377">        System.out.println(&quot;CALENDAR PRODUCT ID = &quot; + encodeUTF8(calendar_prodID));</span>
+<span class="nc" id="L378">        System.out.println(&quot;CALENDAR VERSION = &quot; + encodeUTF8(calendar_version));</span>
+<span class="nc" id="L379">        System.out.println(&quot;CALENDAR TYPE = &quot; + encodeUTF8(calendar_type));</span>
+<span class="nc" id="L380">    }</span>
+
+    public void printCalendarEventInfo() {
+<span class="nc" id="L383">        System.out.println(&quot;\n\nEVENT STAMP = &quot; + encodeUTF8(event_creationDate));</span>
+<span class="nc" id="L384">        System.out.println(&quot;EVENT START DATE = &quot; + encodeUTF8(event_startDate));</span>
+<span class="nc" id="L385">        System.out.println(&quot;EVENT END DATE = &quot; + encodeUTF8(event_endDate));</span>
+<span class="nc" id="L386">        System.out.println(&quot;EVENT SUMMARY = &quot; + encodeUTF8(event_Summary));</span>
+<span class="nc" id="L387">        System.out.println(&quot;EVENT UID = &quot; + encodeUTF8(event_uID));</span>
+<span class="nc" id="L388">        System.out.println(&quot;EVENT DESCRIPTION = &quot; + encodeUTF8(event_Description));</span>
+<span class="nc" id="L389">        System.out.println(&quot;EVENT LOCATION = &quot; + encodeUTF8(event_Location));</span>
+<span class="nc" id="L390">    }</span>
+
+    public String getCalendarName(){
+<span class="fc" id="L393">        return calendar_name;</span>
+    }
+
+    public String getCalendarProductID(){
+<span class="fc" id="L397">        return calendar_prodID;</span>
+    }
+
+    public String getCalendarVersion(){
+<span class="fc" id="L401">        return calendar_version;</span>
+    }
+
+    public String getCalendarType(){
+<span class="fc" id="L405">        return calendar_type;</span>
+    }
+
+    public String getEventCreationDate(){
+<span class="fc" id="L409">        return event_creationDate;</span>
+    }
+
+    public String getEventStartDate(){
+<span class="fc" id="L413">        return event_startDate;</span>
+    }
+
+    public String getEventEndDate(){
+<span class="fc" id="L417">        return event_endDate;</span>
+    }
+
+    public String getEventSummary(){
+<span class="fc" id="L421">        return event_Summary;</span>
+    }
+
+    public String getEventUserID(){
+<span class="nc" id="L425">        return event_uID;</span>
+    }
+
+    public String getEventDescription(){
+<span class="nc" id="L429">        return event_Description;</span>
+    }
+
+    public String getEventLocation(){
+<span class="nc" id="L433">        return event_Location;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

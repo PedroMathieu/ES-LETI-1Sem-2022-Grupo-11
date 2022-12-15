@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>FindMeetingController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">iscte.server.controllers</a> &gt; <span class="el_source">FindMeetingController.java</span></div><h1>FindMeetingController.java</h1><pre class="source lang-java linenums">package iscte.server.controllers;
+
+import iscte.server.Server;
+import iscte.server.ServerService;
+import iscte.server.ServerUtil;
+import org.eclipse.jetty.util.ajax.JSON;
+import org.json.simple.JSONObject;
+import pt.iscte.Event;
+import pt.iscte.PersonalCalendar;
+import spark.Request;
+import spark.Response;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+public class FindMeetingController extends Controller {
+<span class="nc" id="L19">    private List&lt;String&gt; usersThatCanHaveTheMeeting = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L20">    int biggestNumberOfUsers = 0;</span>
+    private LocalDate dayOfMeeting;
+    private LocalTime startOfMeetingTime;
+    private LocalTime endOfMeetingTime;
+<span class="nc" id="L24">    private Map&lt;String, PersonalCalendar&gt; calendars = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L26">    public FindMeetingController(Map&lt;String, PersonalCalendar&gt; calendars) {</span>
+<span class="nc" id="L27">        this.calendars = calendars;</span>
+<span class="nc" id="L28">    }</span>
+
+    @Override
+    public Object handle(Request req, Response res) {
+<span class="nc" id="L32">        Map&lt;String, String&gt; paramsToProcess = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L33">        this.calendars = Server.getPersonalCalendarObjects(); // if in handle, server is running</span>
+
+<span class="nc" id="L35">        paramsToProcess.put(&quot;startDate&quot;, req.queryParams(&quot;startDate&quot;));</span>
+<span class="nc" id="L36">        paramsToProcess.put(&quot;endDate&quot;, req.queryParams(&quot;endDate&quot;));</span>
+<span class="nc" id="L37">        paramsToProcess.put(&quot;duration&quot;, req.queryParams(&quot;duration&quot;));</span>
+<span class="nc" id="L38">        paramsToProcess.put(&quot;timeOfDay&quot;, req.queryParams(&quot;timeOfDay&quot;));</span>
+<span class="nc" id="L39">        paramsToProcess.put(&quot;users&quot;, req.queryParams(&quot;users&quot;));</span>
+
+<span class="nc" id="L41">        Map&lt;String, Object&gt; response = process(paramsToProcess);</span>
+
+<span class="nc" id="L43">        res.type(&quot;application/json&quot;);</span>
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if ((boolean) response.get(&quot;gotError&quot;)) {</span>
+<span class="nc" id="L46">            JSONObject jsonToSend = new JSONObject();</span>
+<span class="nc" id="L47">            jsonToSend.put(&quot;error&quot;, &quot;oops&quot;);</span>
+<span class="nc" id="L48">            return jsonToSend;</span>
+
+        } else
+<span class="nc" id="L51">            return (JSONObject) response.get(&quot;dataToSend&quot;);</span>
+    }
+
+    @Override
+    public Map&lt;String, Object&gt; process(Map&lt;String, String&gt; params) {
+        int sYear, sMonth, sDay, eYear, eMonth, eDay;
+<span class="nc" id="L57">        String[] startDateSplit = params.get(&quot;startDate&quot;).split(&quot;-&quot;);</span>
+<span class="nc" id="L58">        String[] endDateSplit = params.get(&quot;endDate&quot;).split(&quot;-&quot;);</span>
+<span class="nc" id="L59">        String[] users = params.get(&quot;users&quot;).split(&quot;,&quot;);</span>
+<span class="nc" id="L60">        Map&lt;String, List&lt;Event&gt;&gt; eventsToFindMeeting = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (users.length &lt; 2)</span>
+<span class="nc" id="L63">            return buildResponseMap(null, &quot;Need 2 or more users to find a meeting&quot;, false, true);</span>
+
+        // Make sure that the dates provided are numbers
+        try {
+<span class="nc" id="L67">            sYear = Integer.parseInt(startDateSplit[0]);</span>
+<span class="nc" id="L68">            sMonth = Integer.parseInt(startDateSplit[1]);</span>
+<span class="nc" id="L69">            sDay = Integer.parseInt(startDateSplit[2]);</span>
+
+<span class="nc" id="L71">            eYear = Integer.parseInt(endDateSplit[0]);</span>
+<span class="nc" id="L72">            eMonth = Integer.parseInt(endDateSplit[1]);</span>
+<span class="nc" id="L73">            eDay = Integer.parseInt(endDateSplit[2]);</span>
+<span class="nc" id="L74">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L75">            return buildResponseMap(null, &quot;Something wrong with provided dates&quot;, false, true);</span>
+        }
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for (String user : users) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">            if (!ServerUtil.validateDateParams(sYear, sMonth, sDay) ||</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                    !ServerService.validateOwner(user, calendars) ||</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">                    !ServerUtil.validateDateParams(eYear, eMonth, eDay)) {</span>
+<span class="nc" id="L82">                return buildResponseMap(null, &quot;Parameters contain problems&quot;, false, true);</span>
+
+            } else {
+<span class="nc" id="L85">                LocalDate startDate = LocalDate.of(sYear, sMonth, sDay);</span>
+<span class="nc" id="L86">                LocalDate endDate = LocalDate.of(eYear, eMonth, eDay);</span>
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                if (startDate.isAfter(endDate)) {</span>
+<span class="nc" id="L89">                    return buildResponseMap(null, &quot;Incorrect date interval&quot;, false, true);</span>
+                } else {
+<span class="nc" id="L91">                    eventsToFindMeeting.put(user,</span>
+<span class="nc" id="L92">                            calendars.get(user).getEventsBetweenTwoDates(startDate, endDate, params.get(&quot;timeOfDay&quot;)));</span>
+                }
+            }
+        }
+
+<span class="nc" id="L97">        return findMeeting(eventsToFindMeeting, Integer.parseInt(params.get(&quot;duration&quot;)));</span>
+    }
+
+    /**
+     * Finds a timeslot for a meeting with the provided events and meeting duration
+     *
+     * @param events map of events to every selected user
+     * @param duration duration of the meeting
+     * @return response map
+     */
+    private Map&lt;String, Object&gt; findMeeting(Map&lt;String, List&lt;Event&gt;&gt; events, int duration) {
+        // list of all users
+<span class="nc" id="L109">        Set&lt;String&gt; listOfUsers = events.keySet();</span>
+        // goes through the list of users and gets the list of events for each of them
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        for (String user : listOfUsers) {</span>
+            // stores the list of events for the current user
+<span class="nc" id="L113">            List&lt;Event&gt; listOfEvents = events.get(user);</span>
+            // for each user checks all events and
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            for (Event event : listOfEvents) {</span>
+<span class="nc" id="L116">                dayOfMeeting = event.getDayOfEvent();</span>
+<span class="nc" id="L117">                startOfMeetingTime = event.getEventTimeEnd();</span>
+<span class="nc" id="L118">                endOfMeetingTime = startOfMeetingTime.plus(duration, ChronoUnit.MINUTES);</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                if (meetingFits(listOfEvents)) {</span>
+<span class="nc" id="L120">                    usersThatCanHaveTheMeeting.add(user);</span>
+<span class="nc" id="L121">                    checkOtherUsers(listOfUsers, user, events);</span>
+                }
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                if (usersThatCanHaveTheMeeting.size() &gt; biggestNumberOfUsers)</span>
+<span class="nc" id="L124">                    biggestNumberOfUsers = usersThatCanHaveTheMeeting.size();</span>
+            }
+        }
+        
+<span class="nc" id="L128">        JSONObject timeslot = new JSONObject();</span>
+<span class="nc" id="L129">        timeslot.put(&quot;timeslotStart&quot;, startOfMeetingTime.toString());</span>
+<span class="nc" id="L130">        timeslot.put(&quot;timeslotEnd&quot;, endOfMeetingTime.toString());</span>
+<span class="nc" id="L131">        timeslot.put(&quot;dayOfMeeting&quot;, dayOfMeeting.toString());</span>
+
+<span class="nc" id="L133">        return buildResponseMap(timeslot, &quot;&quot;, true, false);</span>
+    }
+
+    /**
+     * Checks if the timeslot found for a meeting works with all events
+     *
+     * @param listOfEvents list with events to compare with found timeslot
+     * @return true if the meeting fits in all events, false otherwise
+     */
+    private boolean meetingFits(List&lt;Event&gt; listOfEvents) {
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        for (Event event : listOfEvents) {</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            if ((event.getEventTimeStart().compareTo(startOfMeetingTime) &gt; 0)</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">                    &amp;&amp; (event.getEventTimeStart().compareTo(endOfMeetingTime) &lt; 0)) {</span>
+<span class="nc" id="L146">                return false;</span>
+            }
+        }
+<span class="nc" id="L149">        return true;</span>
+    }
+
+    /**
+     * Checks that a meeting fits for users
+     *
+     * @param listOfUsers structure containing all users
+     * @param currentUser current user
+     * @param events events mapped to users
+     */
+    private void checkOtherUsers(Set&lt;String&gt; listOfUsers, String currentUser, Map&lt;String, List&lt;Event&gt;&gt; events) {
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        for (String user : listOfUsers) {</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (!user.equals(currentUser)) {</span>
+<span class="nc" id="L162">                List&lt;Event&gt; listOfEventsOfUser = events.get(user);</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">                if (meetingFits(listOfEventsOfUser)) {</span>
+<span class="nc" id="L164">                    usersThatCanHaveTheMeeting.add(user);</span>
+                }
+            }
+        }
+<span class="nc" id="L168">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

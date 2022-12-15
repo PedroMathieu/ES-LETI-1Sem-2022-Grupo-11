@@ -1,0 +1,9 @@
+pt.iscte.Parser	public void writeCurrentEventCalendarInfo() throws java.io.IOException	template	B4	0/8
+pt.iscte.Parser	public static void main(java.lang.String[]) throws java.io.IOException	p	B1	0/5
+pt.iscte.Parser	public void writeMainCalendarInfo() throws java.io.IOException	template	B1	0/5
+iscte.server.controllers.CalendarUploadController	public sealed Map<java.lang.String,java.lang.Object> process(Map<java.lang.String,java.lang.String>) 	bis	B3	0/4
+iscte.server.ServerService	public static org.json.simple.JSONObject buildEventsInJson(java.lang.String, java.time.LocalDate, Map<java.lang.String,pt.iscte.PersonalCalendar>) 	jsonArray	B1	0/4
+iscte.server.ServerService	public static org.json.simple.JSONObject buildEventsInJson(java.lang.String, java.time.LocalDate, Map<java.lang.String,pt.iscte.PersonalCalendar>) 	jsonArray	B2	0/2
+iscte.server.controllers.CalendarUploadController	public sealed Map<java.lang.String,java.lang.Object> process(Map<java.lang.String,java.lang.String>) 	fis	B3	2/6
+iscte.server.controllers.CalendarUploadController	public sealed Map<java.lang.String,java.lang.Object> process(Map<java.lang.String,java.lang.String>) 	fis	B3	2/5
+pt.iscte.Parser	public void readFiles() throws java.io.IOException	folder	B1	2/3

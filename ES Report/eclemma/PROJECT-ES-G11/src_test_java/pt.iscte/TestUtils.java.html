@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestUtils.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">pt.iscte</a> &gt; <span class="el_source">TestUtils.java</span></div><h1>TestUtils.java</h1><pre class="source lang-java linenums">package pt.iscte;
+
+import pt.iscte.Event;
+import pt.iscte.PersonalCalendar;
+import iscte.server.ServerUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+<span class="nc" id="L14">public class TestUtils {</span>
+     /**
+     * Builds dummy events to use for building test calendars
+     *
+     * @param calendarNumber number of calendar, from iteration in buildTestCalednars
+     * @return list of events
+     */
+    public static List&lt;Event&gt; buildTestEvents(int calendarNumber) {
+<span class="fc" id="L22">        List&lt;Event&gt; events = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L23">        events.add(new Event(&quot;test&quot; + calendarNumber, &quot;summary&quot; + calendarNumber, &quot;20221027T150000Z&quot;, &quot;20221027T163000Z&quot;));</span>
+<span class="fc" id="L24">        events.add(new Event(&quot;test&quot; + calendarNumber, &quot;summary&quot; + calendarNumber, &quot;20221027T150000Z&quot;, &quot;20221027T163000Z&quot;));</span>
+<span class="fc" id="L25">        return events;</span>
+    }
+
+    /**
+     * Builds dummy calendars to use for tests
+     *
+     * @return test calendars
+     */
+    public static Map&lt;String, PersonalCalendar&gt; buildTestCalendars() {
+<span class="fc" id="L34">        Map&lt;String, PersonalCalendar&gt; testCalendar = new HashMap&lt;&gt;();</span>
+
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        for (int i = 0; i &lt; 2; i++) {</span>
+<span class="fc" id="L37">            PersonalCalendar calendar = new PersonalCalendar();</span>
+<span class="fc" id="L38">            calendar.setEvents(buildTestEvents(i));</span>
+<span class="fc" id="L39">            testCalendar.put(&quot;test&quot; + i, calendar);</span>
+        }
+
+<span class="fc" id="L42">        return testCalendar;</span>
+    }
+
+    /**
+     * Creates dummy ics temp files
+     */
+    public static void createDummyTempIcsFiles(File icsFolder) {
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (int i = 0; i &lt;= 10; i++) {</span>
+<span class="fc" id="L50">            String tempFileName = ServerUtil.generateRandomTempName() + &quot;_tempTest.ics&quot;;</span>
+<span class="fc" id="L51">            String pathOftemp = icsFolder.getAbsolutePath() + &quot;/&quot; + tempFileName;</span>
+<span class="fc" id="L52">            File f = new File(pathOftemp);</span>
+
+            try {
+<span class="fc" id="L55">                f.createNewFile();</span>
+<span class="pc" id="L56">            } catch (IOException e) {</span>
+<span class="nc" id="L57">                throw new RuntimeException(e);</span>
+            }
+        }
+<span class="fc" id="L60">    }</span>
+
+    public static List&lt;String&gt; getRandomNames() {
+<span class="fc" id="L63">        List&lt;String&gt; randomNames = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (int i = 0; i &lt; 100; i++)</span>
+<span class="fc" id="L66">            randomNames.add(ServerUtil.generateRandomTempName());</span>
+
+<span class="fc" id="L68">        return randomNames;</span>
+    }
+
+    public static Map&lt;String, String&gt; buildGetEventsParams(String owners, String operation, String year, String month, String day) {
+<span class="fc" id="L72">        Map&lt;String, String&gt; params = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L73">        params.put(&quot;:userid&quot;, owners);</span>
+<span class="fc" id="L74">        params.put(&quot;:operation&quot;, operation);</span>
+<span class="fc" id="L75">        params.put(&quot;:year&quot;, year);</span>
+<span class="fc" id="L76">        params.put(&quot;:month&quot;, month);</span>
+<span class="fc" id="L77">        params.put(&quot;:day&quot;, day);</span>
+<span class="fc" id="L78">        return params;</span>
+    }
+
+    public static Map&lt;String, String&gt; buildUploadCalendarParams(String calendarUrl) {
+<span class="fc" id="L82">        Map&lt;String, String&gt; params = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L83">        params.put(&quot;calendarLink&quot;, calendarUrl);</span>
+<span class="fc" id="L84">        return params;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

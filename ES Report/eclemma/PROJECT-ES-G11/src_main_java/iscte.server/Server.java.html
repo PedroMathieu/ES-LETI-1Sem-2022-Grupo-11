@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Server.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">iscte.server</a> &gt; <span class="el_source">Server.java</span></div><h1>Server.java</h1><pre class="source lang-java linenums">package iscte.server;
+
+import iscte.server.controllers.FindMeetingController;
+import pt.iscte.PersonalCalendar;
+import iscte.server.controllers.CalendarUploadController;
+import iscte.server.controllers.Controller;
+import iscte.server.controllers.GetEventsController;
+import spark.ModelAndView;
+import spark.servlet.SparkApplication;
+import spark.template.velocity.VelocityTemplateEngine;
+
+import java.util.*;
+
+import static spark.Spark.*;
+
+/**
+ * Server class responsible for setting up the server and
+ * its endpoints.
+ *
+ * @author Jose Soares
+ */
+public class Server implements SparkApplication {
+    private static Map&lt;String, PersonalCalendar&gt; personalCalendarObjects;
+<span class="nc" id="L24">    private Controller cEvents = new GetEventsController(getPersonalCalendarObjects());</span>
+<span class="nc" id="L25">    private Controller cUpload = new CalendarUploadController();</span>
+<span class="nc" id="L26">    private Controller cMeeting = new FindMeetingController(getPersonalCalendarObjects());</span>
+
+<span class="nc" id="L28">    public Server() {</span>
+<span class="nc" id="L29">    }</span>
+
+    /**
+     * Updates currently loaded personalCalendars.
+     *
+     * @param newPCalendars updated personalCalendars
+     */
+    public static void updatePersonalCalendarObjects(Map&lt;String, PersonalCalendar&gt; newPCalendars) {
+<span class="nc" id="L37">        personalCalendarObjects = newPCalendars;</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * Get personal calendar objects
+     *
+     * @return map with personal calendar objects and owners
+     */
+    public static Map&lt;String, PersonalCalendar&gt; getPersonalCalendarObjects() {
+<span class="nc" id="L46">        return personalCalendarObjects;</span>
+    }
+
+    /**
+     * Sets up all the routes to all endpoints.
+     */
+    private void setupEndpoints() {
+<span class="nc" id="L53">        System.out.println(&quot;[SERVER] setting up routes&quot;);</span>
+
+<span class="nc" id="L55">        notFound((req, res) -&gt; {</span>
+<span class="nc" id="L56">            Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L58">            data.put(&quot;message&quot;, &quot;What you're looking for can't be found!&quot;);</span>
+<span class="nc" id="L59">            data.put(&quot;messageSrc&quot;, &quot;404 Not found&quot;);</span>
+<span class="nc" id="L60">            data.put(&quot;hasMessage&quot;, true);</span>
+
+<span class="nc" id="L62">            return new VelocityTemplateEngine().render(</span>
+<span class="nc" id="L63">                    new ModelAndView(data, &quot;calendarWeb/ErrorPage.vm&quot;));</span>
+        });
+
+<span class="nc" id="L66">        get(&quot;/&quot;, (req, res) -&gt; {</span>
+<span class="nc" id="L67">            Map&lt;String, List&lt;String&gt;&gt; data = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L68">            List&lt;String&gt; ownerList = new ArrayList&lt;&gt;(getPersonalCalendarObjects().keySet());</span>
+
+<span class="nc" id="L70">            data.put(&quot;owners&quot;, ownerList);</span>
+
+<span class="nc" id="L72">            return new VelocityTemplateEngine().render(</span>
+<span class="nc" id="L73">                    new ModelAndView(data, &quot;calendarWeb/Site.html&quot;));</span>
+        });
+
+<span class="nc" id="L76">        get(&quot;/insertCalendars&quot;, (req, res) -&gt; {</span>
+<span class="nc" id="L77">            res.redirect(&quot;/CalendarInput.html&quot;);</span>
+<span class="nc" id="L78">            return null;</span>
+        });
+
+<span class="nc" id="L81">        post(&quot;/uploadCalendarLink&quot;, (req, res) -&gt; cUpload.handle(req, res));</span>
+
+<span class="nc" id="L83">        get(&quot;/personalCalendar/:operation/:userId/:year/:month/:day&quot;, (req, res) -&gt; cEvents.handle(req, res));</span>
+
+<span class="nc" id="L85">        post(&quot;/findMeeting&quot;, (req, res) -&gt; cMeeting.handle(req, res));</span>
+<span class="nc" id="L86">    }</span>
+
+    @Override
+    public void init() {
+<span class="nc" id="L90">        ServerService.deleteTempIcsFiles();</span>
+<span class="nc" id="L91">        ServerService.loadCalendars();</span>
+<span class="nc" id="L92">        port(4444);</span>
+<span class="nc" id="L93">        staticFiles.location(&quot;/calendarWeb&quot;);</span>
+<span class="nc" id="L94">        setupEndpoints();</span>
+<span class="nc" id="L95">        System.out.println(&quot;[SERVER] alive at: http://localhost:4444&quot;);</span>
+<span class="nc" id="L96">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

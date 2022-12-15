@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ServerUtilTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">iscte.server</a> &gt; <span class="el_source">ServerUtilTest.java</span></div><h1>ServerUtilTest.java</h1><pre class="source lang-java linenums">package iscte.server;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import pt.iscte.TestUtils;
+
+import java.util.Random;
+
+/**
+ * Server util test class
+ *
+ * @author Jose Soares
+ */
+<span class="fc" id="L14">public class ServerUtilTest {</span>
+<span class="fc" id="L15">    private final Random r = new Random();</span>
+
+    @Test
+    public void givenWrongMonthRanges_whenValidatingDate_returnsFalse() {
+<span class="fc" id="L19">        boolean monthZero = ServerUtil.validateDateParams(2023,0 ,1);</span>
+<span class="fc" id="L20">        boolean lessThanMonthRange = ServerUtil.validateDateParams(2023, -1, 1);</span>
+<span class="fc" id="L21">        boolean greaterThanMonthRange = ServerUtil.validateDateParams(2023, r.nextInt(Integer.MAX_VALUE - 12) + 12, 1);</span>
+<span class="fc" id="L22">        Assertions.assertFalse(monthZero);</span>
+<span class="fc" id="L23">        Assertions.assertFalse(lessThanMonthRange);</span>
+<span class="fc" id="L24">        Assertions.assertFalse(greaterThanMonthRange);</span>
+<span class="fc" id="L25">    }</span>
+
+    @Test
+    public void givenWrongYearRange_whenValidatingDate_returnsFalse() {
+<span class="fc" id="L29">        boolean lessThanYearRange = ServerUtil.validateDateParams(r.nextInt(1000), 1, 1);</span>
+<span class="fc" id="L30">        boolean greaterThanYearRange = ServerUtil.validateDateParams(r.nextInt(Integer.MAX_VALUE - 3000) + 3000, 13, 1);</span>
+<span class="fc" id="L31">        Assertions.assertFalse(lessThanYearRange);</span>
+<span class="fc" id="L32">        Assertions.assertFalse(greaterThanYearRange);</span>
+<span class="fc" id="L33">    }</span>
+
+    @Test
+    public void givenWrongDayNumberForSpecifiedMonth_whenValidating_returnsFalse() {
+<span class="fc" id="L37">        int randomlyObtainedMonth = r.nextInt(13-1) + 1;</span>
+<span class="fc" id="L38">        int greaterThanRangeForMonth = ServerUtil.monthLength[randomlyObtainedMonth-1] + 1;</span>
+<span class="fc" id="L39">        int lessThanRangeForMonth = 0;</span>
+<span class="fc" id="L40">        Assertions.assertFalse(ServerUtil.validateDateParams(2022, randomlyObtainedMonth, greaterThanRangeForMonth));</span>
+<span class="fc" id="L41">        Assertions.assertFalse(ServerUtil.validateDateParams(2022, randomlyObtainedMonth, lessThanRangeForMonth));</span>
+<span class="fc" id="L42">    }</span>
+
+    @Test
+    public void given29FebruaryOnALeapYear_whenValidatingDate_returnsTrue() {
+<span class="fc" id="L46">        boolean leapYearActualValue = ServerUtil.validateDateParams(2024, 2, 29);</span>
+<span class="fc" id="L47">        Assertions.assertTrue(leapYearActualValue);</span>
+<span class="fc" id="L48">    }</span>
+
+    @Test
+    public void whenGeneratingRandomName_returnsCorrectLength() {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for (String rName : TestUtils.getRandomNames()) {</span>
+<span class="pc bpc" id="L53" title="2 of 4 branches missed.">            boolean correctLength = rName.length() &gt;= 5 &amp;&amp; rName.length() &lt; 21;</span>
+<span class="fc" id="L54">            Assertions.assertTrue(correctLength);</span>
+        }
+<span class="fc" id="L56">    }</span>
+
+    @Test
+    public void whenGeneratingRandomName_allCharsAreLetters() {
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        for (String rName : TestUtils.getRandomNames()) {</span>
+<span class="fc" id="L61">            char[] charsOfName = rName.toCharArray();</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            for (char c : charsOfName) Assertions.assertTrue(Character.isLetter(c));</span>
+        }
+<span class="fc" id="L64">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

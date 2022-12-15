@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GetEventsControllerTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">iscte.server.controllers</a> &gt; <span class="el_source">GetEventsControllerTest.java</span></div><h1>GetEventsControllerTest.java</h1><pre class="source lang-java linenums">package iscte.server.controllers;
+
+import iscte.server.controllers.Controller;
+import iscte.server.controllers.GetEventsController;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import pt.iscte.TestUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+<span class="fc" id="L15">public class GetEventsControllerTest {</span>
+<span class="fc" id="L16">    Controller ge = new GetEventsController(TestUtils.buildTestCalendars());</span>
+
+    @Test
+    public void givenDatesThatAreNaN_whenGettingEvents_returnsError() {
+<span class="fc" id="L20">        Map&lt;String, String&gt; params0 = TestUtils.buildGetEventsParams(&quot;test0-test1&quot;, &quot;e&quot;, &quot;a&quot;, &quot;12&quot;, &quot;1&quot;);</span>
+<span class="fc" id="L21">        Map&lt;String, String&gt; params1 = TestUtils.buildGetEventsParams(&quot;test0-test1&quot;, &quot;e&quot;, &quot;2022&quot;, &quot;3.12&quot;, &quot;1&quot;);</span>
+<span class="fc" id="L22">        List&lt;Map&lt;String, Object&gt;&gt; responses = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L23">        responses.add(ge.process(params0));</span>
+<span class="fc" id="L24">        responses.add(ge.process(params1));</span>
+
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        for (Map&lt;String, Object&gt; r : responses) {</span>
+<span class="fc" id="L27">            String errorText = (String) r.get(&quot;error&quot;);</span>
+<span class="fc" id="L28">            Assertions.assertEquals(true, (boolean) r.get(&quot;gotError&quot;));</span>
+<span class="fc" id="L29">            Assertions.assertTrue(errorText.contains(&quot;not a number&quot;));</span>
+        }
+<span class="fc" id="L31">    }</span>
+
+    @Test
+    public void givenWrongOwners_whenGettingEvents_returnsError() {
+<span class="fc" id="L35">        Map&lt;String, String&gt; params0 = TestUtils.buildGetEventsParams(&quot;foo-bar&quot;, &quot;e&quot;, &quot;2022&quot;, &quot;11&quot;, &quot;28&quot;);</span>
+<span class="fc" id="L36">        Map&lt;String, String&gt; params1 = TestUtils.buildGetEventsParams(&quot;foo&quot;, &quot;e&quot;, &quot;2022&quot;, &quot;11&quot;, &quot;28&quot;);</span>
+<span class="fc" id="L37">        List&lt;Map&lt;String, Object&gt;&gt; responses = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L38">        responses.add(ge.process(params0));</span>
+<span class="fc" id="L39">        responses.add(ge.process(params1));</span>
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        for (Map&lt;String, Object&gt; r : responses) {</span>
+<span class="fc" id="L42">            String errorText = (String) r.get(&quot;error&quot;);</span>
+<span class="fc" id="L43">            Assertions.assertEquals(true, (boolean) r.get(&quot;gotError&quot;));</span>
+<span class="fc" id="L44">            Assertions.assertTrue(errorText.contains(&quot;Parameters contain problems&quot;));</span>
+        }
+<span class="fc" id="L46">    }</span>
+
+    @Test
+    public void givenNonExistentOperation_whenGettingEvents_returnsError() {
+<span class="fc" id="L50">        Map&lt;String, String&gt; params0 = TestUtils.buildGetEventsParams(&quot;test0-test1&quot;, &quot;x&quot;, &quot;2022&quot;, &quot;11&quot;, &quot;28&quot;);</span>
+<span class="fc" id="L51">        Map&lt;String, Object&gt; response = ge.process(params0);</span>
+
+<span class="fc" id="L53">        String errorText = (String) response.get(&quot;error&quot;);</span>
+<span class="fc" id="L54">        Assertions.assertTrue(errorText.contains(&quot;Selected operation does not exist&quot;));</span>
+<span class="fc" id="L55">        Assertions.assertEquals(true, (boolean) response.get(&quot;gotError&quot;));</span>
+<span class="fc" id="L56">    }</span>
+
+    @Test
+    public void givenRequestNumberOfEvents_whenGettingEvents_returnsContextJson() {
+<span class="fc" id="L60">        Map&lt;String, String&gt; params0 = TestUtils.buildGetEventsParams(&quot;test0-test1&quot;, &quot;n&quot;, &quot;2022&quot;, &quot;11&quot;, &quot;28&quot;);</span>
+<span class="fc" id="L61">        Map&lt;String, Object&gt; response = ge.process(params0);</span>
+
+<span class="fc" id="L63">        Assertions.assertEquals(true, (boolean) response.get(&quot;contextJson&quot;));</span>
+<span class="fc" id="L64">    }</span>
+
+    @Test
+    public void givenCorrectParamsToGetEvents_whenGettingEvents_returnsCorrectData() {
+<span class="fc" id="L68">        Map&lt;String, String&gt; params0 = TestUtils.buildGetEventsParams(&quot;test0-test1&quot;, &quot;e&quot;, &quot;2022&quot;, &quot;10&quot;, &quot;27&quot;);</span>
+<span class="fc" id="L69">        Map&lt;String, Object&gt; response = ge.process(params0);</span>
+
+        // These 2 lines are very weird, but they work to make sure everything is working
+<span class="fc" id="L72">        JSONObject dataToSend = (JSONObject) response.get(&quot;dataToSend&quot;);</span>
+<span class="fc" id="L73">        int actualNumberOfEvents = ((JSONArray)((JSONObject) dataToSend.get(&quot;test0&quot;)).get(&quot;events&quot;)).size();</span>
+
+<span class="fc" id="L75">        Assertions.assertEquals(2, actualNumberOfEvents);</span>
+<span class="fc" id="L76">        Assertions.assertEquals(false, (boolean) response.get(&quot;gotError&quot;));</span>
+<span class="fc" id="L77">        Assertions.assertEquals(false, (boolean) response.get(&quot;contextJson&quot;));</span>
+<span class="fc" id="L78">        Assertions.assertEquals(&quot;&quot;, (String) response.get(&quot;error&quot;));</span>
+<span class="fc" id="L79">    }</span>
+
+    @Test
+    public void givenCorrectParamsToGetNOfEvents_whenGettingEvents_returnsCorrectData() {
+<span class="fc" id="L83">        Map&lt;String, String&gt; params0 = TestUtils.buildGetEventsParams(&quot;test0-test1&quot;, &quot;n&quot;, &quot;2022&quot;, &quot;10&quot;, &quot;27&quot;);</span>
+<span class="fc" id="L84">        Map&lt;String, Object&gt; response = ge.process(params0);</span>
+
+<span class="fc" id="L86">        JSONObject dataToSend = (JSONObject) response.get(&quot;dataToSend&quot;);</span>
+
+<span class="fc" id="L88">        Assertions.assertEquals(2, (Integer) dataToSend.get(&quot;test0&quot;));</span>
+<span class="fc" id="L89">        Assertions.assertEquals(2, (Integer) dataToSend.get(&quot;test1&quot;));</span>
+<span class="fc" id="L90">        Assertions.assertEquals(false, (boolean) response.get(&quot;gotError&quot;));</span>
+<span class="fc" id="L91">        Assertions.assertEquals(true, (boolean) response.get(&quot;contextJson&quot;));</span>
+<span class="fc" id="L92">        Assertions.assertEquals(&quot;&quot;, (String) response.get(&quot;error&quot;));</span>
+<span class="fc" id="L93">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

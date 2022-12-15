@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>PersonalCalendar.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">pt.iscte</a> &gt; <span class="el_source">PersonalCalendar.java</span></div><h1>PersonalCalendar.java</h1><pre class="source lang-java linenums">package pt.iscte;
+
+import java.io.FileReader;
+import java.io.Reader;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+/**
+ * This class represents a &quot;virtual&quot; personal calendar. It links
+ * all the events from a parsed calendar to an owner.
+ *
+ * @author Jose Soares
+ */
+public class PersonalCalendar {
+<span class="fc" id="L23">    String calendarFile = &quot;&quot;;</span>
+<span class="fc" id="L24">    String calendarOwner = &quot;&quot;;</span>
+<span class="fc" id="L25">    List&lt;Event&gt; events = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L26">    JSONParser parser = new JSONParser();</span>
+<span class="fc" id="L27">    public static LocalTime MORNING_START = LocalTime.of(5, 50);</span>
+<span class="fc" id="L28">    public static LocalTime MORNING_END = LocalTime.of(12, 29);</span>
+<span class="fc" id="L29">    public static LocalTime AFTERNOON_START = LocalTime.of(12, 29);</span>
+<span class="fc" id="L30">    public static LocalTime AFTERNOON_END = LocalTime.of(20, 0);</span>
+
+
+<span class="fc" id="L33">    public PersonalCalendar(String calendarFile) {</span>
+<span class="fc" id="L34">        this.calendarFile = calendarFile;</span>
+<span class="fc" id="L35">        parseJsonCalendar();</span>
+<span class="fc" id="L36">    }</span>
+
+<span class="fc" id="L38">    public PersonalCalendar() {}</span>
+
+    /**
+     * Gets the calendar owner
+     *
+     * @return username of email of calendar owner (its unique)
+     */
+    public String getCalendarOwner() {
+<span class="fc" id="L46">        return calendarOwner;</span>
+    }
+
+    public void setEvents(List&lt;Event&gt; events) {
+<span class="fc" id="L50">        this.events = events;</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Gets data from JSON calendar file and processes it
+     * by getting all the events in a list for easier
+     * data manipulation and the calendar owner
+     */
+    private void parseJsonCalendar() {
+<span class="fc" id="L59">        try (Reader reader = new FileReader(calendarFile)) {</span>
+<span class="fc" id="L60">            List&lt;JSONObject&gt; eventListJson = new LinkedList&lt;&gt;();</span>
+
+            // Parse vcalendar JSON array
+<span class="fc" id="L63">            JSONObject jsonObject = (JSONObject) parser.parse(reader);</span>
+<span class="fc" id="L64">            JSONArray vcalendar = (JSONArray) jsonObject.get(&quot;vcalendar&quot;);</span>
+<span class="fc" id="L65">            List&lt;JSONObject&gt; vCalendarObjects = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L66">            Iterator&lt;JSONObject&gt; vCalendarIterator = vcalendar.iterator();</span>
+
+            // Add all vcalendar attributes to a list
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            while (vCalendarIterator.hasNext())</span>
+<span class="fc" id="L70">                vCalendarObjects.add(vCalendarIterator.next());</span>
+
+            // From vcalendar, get the calendar owner (email) and the events
+<span class="fc" id="L73">            calendarOwner = ((String) vCalendarObjects.get(0).get(&quot;x-wr-calname&quot;)).split(&quot;@&quot;)[0];</span>
+<span class="fc" id="L74">            JSONArray vEvents = (JSONArray) vCalendarObjects.get(0).get(&quot;vevent&quot;);</span>
+<span class="fc" id="L75">            Iterator&lt;JSONObject&gt; vEventsIterator = vEvents.iterator();</span>
+
+            // Add all the events to a JSONObject arraylist
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            while (vEventsIterator.hasNext())</span>
+<span class="fc" id="L79">                eventListJson.add(vEventsIterator.next());</span>
+
+            // Convert all events from JSON to Event
+<span class="fc" id="L82">            setEvents(convertEventListFromJSON(eventListJson));</span>
+
+<span class="nc" id="L84">        } catch (Exception e) {</span>
+<span class="nc" id="L85">            System.err.println(&quot;Couldn't read file &quot; + calendarFile);</span>
+        }
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Converts all the events in JSON to Event objects
+     * Makes it easier for searching
+     * 
+     * @param eventListJson list of events as JSON objects
+     * @return a List of all the events as Event objects
+     */
+    private List&lt;Event&gt; convertEventListFromJSON(List&lt;JSONObject&gt; eventListJson) {
+<span class="fc" id="L97">        List&lt;Event&gt; eventsToReturn = new LinkedList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        for (JSONObject j : eventListJson) {</span>
+<span class="fc" id="L100">            eventsToReturn.add(new Event(</span>
+<span class="fc" id="L101">                    calendarOwner,</span>
+<span class="fc" id="L102">                    (String) j.get(&quot;summary&quot;),</span>
+<span class="fc" id="L103">                    (String) j.get(&quot;dtstart&quot;),</span>
+<span class="fc" id="L104">                    (String) j.get(&quot;dtend&quot;)));</span>
+        }
+
+<span class="fc" id="L107">        return eventsToReturn;</span>
+    }
+
+    /**
+     * Gets all the events happening in a day. This will be
+     * useful when drawing the calendar on the screen.
+     * 
+     * @param d targeted day
+     * @return list of events for the current calendar in that day
+     */
+    public List&lt;Event&gt; getEventsInADay(LocalDate d) {
+<span class="fc" id="L118">        List&lt;Event&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        for (Event e : events)</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">            if (e.getDayOfEvent().equals(d))</span>
+<span class="fc" id="L121">                result.add(e);</span>
+<span class="fc" id="L122">        return result;</span>
+    }
+
+    /**
+     * Gets all the events between two dates
+     *
+     * @param startDate date to start search
+     * @param endDate date to end search
+     * @return list of events between the two dates
+     */
+    public List&lt;Event&gt; getEventsBetweenTwoDates(LocalDate startDate, LocalDate endDate, String timeOfDay) {
+<span class="fc" id="L133">        List&lt;Event&gt; result = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        for (Event e : events) {</span>
+            // Get events between dates
+<span class="pc bpc" id="L137" title="1 of 4 branches missed.">            if ((e.getEventDateStart().isAfter(startDate) &amp;&amp; e.getEventDateEnd().isBefore(endDate)) ||</span>
+<span class="pc bpc" id="L138" title="1 of 4 branches missed.">                (e.getEventDateStart().equals(startDate) || e.getEventDateEnd().equals(endDate))) {</span>
+
+                // If there's an event starting at 12:29, it might cause a bug
+                // no need to worry atm
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">                if (e.getEventTimeStart().isAfter(MORNING_START) &amp;&amp;</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                    e.getEventTimeStart().isBefore(MORNING_END) &amp;&amp;</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">                    timeOfDay.equals(&quot;Morning&quot;)) {</span>
+<span class="fc" id="L145">                        result.add(e);</span>
+
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">                } else if (e.getEventTimeStart().isAfter(AFTERNOON_START) &amp;&amp;</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                    e.getEventTimeStart().isBefore(AFTERNOON_END) &amp;&amp;</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">                    timeOfDay.equals(&quot;Afternoon&quot;)) {</span>
+<span class="fc" id="L150">                        result.add(e);</span>
+                }
+            }
+        }
+
+<span class="fc" id="L155">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

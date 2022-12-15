@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Event.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">pt.iscte</a> &gt; <span class="el_source">Event.java</span></div><h1>Event.java</h1><pre class="source lang-java linenums">package pt.iscte;
+
+import org.json.simple.JSONObject;
+
+import java.time.LocalTime;
+import java.time.LocalDate;
+
+/**
+ * Represents an event. It contains an owner, summary and start / end dates
+ * 
+ * @author Jose Soares, Joao Marques
+ */
+public class Event {
+    private final String eventOwner;
+    private final String eventSummary;
+    private final LocalDate eventDateStart;
+    private final LocalTime eventTimeStart;
+    private final LocalDate eventDateEnd;
+    private final LocalTime eventTimeEnd;
+
+<span class="fc" id="L21">    public Event(String eventOwner, String eventSummary, String eventDateStart, String eventDateEnd) {</span>
+<span class="fc" id="L22">        this.eventOwner = eventOwner;</span>
+<span class="fc" id="L23">        this.eventSummary = eventSummary;</span>
+
+        // Sets the start date from the string obtained in the JSON file
+<span class="fc" id="L26">        this.eventDateStart = LocalDate.of(</span>
+<span class="fc" id="L27">                getLocalYear(eventDateStart),</span>
+<span class="fc" id="L28">                getLocalMonth(eventDateStart),</span>
+<span class="fc" id="L29">                getLocalDay(eventDateStart));</span>
+
+        // Sets the start time of the event obtained from the JSON file
+<span class="fc" id="L32">        this.eventTimeStart = LocalTime.of(getLocalHour(eventDateStart),</span>
+<span class="fc" id="L33">                getLocalMinutes(eventDateStart));</span>
+
+        // Sets the end date of the event obtained from the JSON file
+<span class="fc" id="L36">        this.eventDateEnd = LocalDate.of(</span>
+<span class="fc" id="L37">                getLocalYear(eventDateEnd), </span>
+<span class="fc" id="L38">                getLocalMonth(eventDateEnd),</span>
+<span class="fc" id="L39">                getLocalDay(eventDateEnd));</span>
+
+        // Sets the end time of the event obtained from the JSON file
+<span class="fc" id="L42">        this.eventTimeEnd = LocalTime.of(getLocalHour(eventDateEnd),</span>
+<span class="fc" id="L43">                getLocalMinutes(eventDateEnd));</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * 
+     * @param s String that an int will be parsed from
+     * @param x First index of the string from which the int will be parsed
+     * @param y Index after end of said string
+     * @return parsed int from s
+     */
+    public static int parse(String s, int x, int y) {
+<span class="fc" id="L54">        return Integer.parseInt(s.substring(x, y));</span>
+    }
+
+    /**
+     * The following functions serve to streamline the code.
+     * Each of them obtains components of the date/hour from
+     * a string inserted into the functions.
+     * 
+     * The constants used in the substrings are the expected
+     * values of the indexes for the start and end of each 
+     * component.
+     */
+
+    public static int getLocalYear(String s) {
+<span class="fc" id="L68">        return parse(s, 0, 4);</span>
+    }
+
+    public static int getLocalMonth(String s) {
+<span class="fc" id="L72">        return parse(s, 4, 6);</span>
+    }
+
+    public static int getLocalDay(String s) {
+<span class="fc" id="L76">        return parse(s, 6, 8);</span>
+    }
+
+    public static int getLocalHour(String s) {
+<span class="fc" id="L80">        return parse(s, 9, 11);</span>
+    }
+
+    public static int getLocalMinutes(String s) {
+<span class="fc" id="L84">        return parse(s, 11, 13);</span>
+    }
+
+    /**
+     * Get day of event. Only works if event starts and ends in
+     * the same day.
+     * 
+     * @return date of the event, null if event happens in more than one day
+     */
+    public LocalDate getDayOfEvent() {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (eventDateStart.equals(eventDateEnd))</span>
+<span class="fc" id="L95">            return eventDateStart;</span>
+<span class="fc" id="L96">        return null;</span>
+    }
+
+    /**
+     * Get date when event starts
+     * 
+     * @return date of event start
+     */
+    public LocalDate getEventDateStart() {
+<span class="fc" id="L105">        return eventDateStart;</span>
+    }
+
+    /**
+     * Get date when event starts
+     * 
+     * @return date of event end
+     */
+    public LocalDate getEventDateEnd() {
+<span class="fc" id="L114">        return eventDateEnd;</span>
+    }
+
+    /**
+     * Get time when event starts
+     * 
+     * @return time the event starts
+     */
+    public LocalTime getEventTimeStart() {
+<span class="fc" id="L123">        return eventTimeStart;</span>
+    }
+
+    /**
+     * Get time when event ends
+     * 
+     * @return time the event ends
+     */
+    public LocalTime getEventTimeEnd() {
+<span class="fc" id="L132">        return eventTimeEnd;</span>
+    }
+
+    /**
+     * Builds the JSON object of the current event
+     *
+     * @return json object of current event
+     */
+    public JSONObject convertEventToJson() {
+<span class="fc" id="L141">        JSONObject json = new JSONObject();</span>
+<span class="fc" id="L142">        json.put(&quot;owner&quot;, eventOwner);</span>
+<span class="fc" id="L143">        json.put(&quot;summary&quot;, eventSummary);</span>
+<span class="fc" id="L144">        json.put(&quot;date_start&quot;, eventDateStart.toString());</span>
+<span class="fc" id="L145">        json.put(&quot;time_start&quot;, eventTimeStart.toString());</span>
+<span class="fc" id="L146">        json.put(&quot;date_end&quot;, eventDateEnd.toString());</span>
+<span class="fc" id="L147">        json.put(&quot;time_end&quot;, eventTimeEnd.toString());</span>
+<span class="fc" id="L148">        return json;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

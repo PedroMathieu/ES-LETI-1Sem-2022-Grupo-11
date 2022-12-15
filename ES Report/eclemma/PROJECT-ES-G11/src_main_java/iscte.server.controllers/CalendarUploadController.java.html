@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>CalendarUploadController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">iscte.server.controllers</a> &gt; <span class="el_source">CalendarUploadController.java</span></div><h1>CalendarUploadController.java</h1><pre class="source lang-java linenums">package iscte.server.controllers;
+
+import pt.iscte.Parser;
+import iscte.server.ServerService;
+import iscte.server.ServerUtil;
+import spark.Request;
+import spark.Response;
+
+import java.io.*;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Upload calendar controller. This controller is responsible for
+ * uploading a given calendar link to the server and store it in
+ * a folder.
+ *
+ * @author Jose Soares
+ */
+public class CalendarUploadController extends Controller {
+<span class="fc" id="L22">    public CalendarUploadController() {}</span>
+
+    @Override
+    public Object handle(Request req, Response res) {
+        // Parse params to process from req.queryParams
+<span class="nc" id="L27">        Map&lt;String, String&gt; paramsToProcess = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L28">        paramsToProcess.put(&quot;calendarLink&quot;, req.queryParams(&quot;calendar-link-input&quot;));</span>
+
+<span class="nc" id="L30">        Map&lt;String, Object&gt; processingReturns = process(paramsToProcess);</span>
+
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if ((boolean) processingReturns.get(&quot;gotError&quot;)) {</span>
+<span class="nc" id="L33">            ServerService.deleteTempIcsFiles();</span>
+<span class="nc" id="L34">            return processingReturns.get(&quot;error&quot;);</span>
+        }
+
+        else {
+<span class="nc" id="L38">            ServerService.deleteTempIcsFiles();</span>
+<span class="nc" id="L39">            ServerService.loadCalendars();</span>
+<span class="nc" id="L40">            res.redirect(&quot;/&quot;);</span>
+        }
+
+<span class="nc" id="L43">        return &quot;what happened?&quot;;</span>
+    }
+
+    @Override
+    public Map&lt;String, Object&gt; process(Map&lt;String, String&gt; params) {
+<span class="fc" id="L48">        String calendarUrl = params.get(&quot;calendarLink&quot;).trim();</span>
+
+        // Checks if the link protocol is webcal and then it changes it to https for download
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (!(calendarUrl.startsWith(&quot;webcal://&quot;))) {</span>
+<span class="fc" id="L52">            return buildResponseMap(null, &quot;Please make sure the url is webcal://&quot;, false, true);</span>
+        }
+
+<span class="fc" id="L55">        calendarUrl = calendarUrl.replace(&quot;webcal://&quot;, &quot;https://&quot;);</span>
+
+<span class="fc" id="L57">        String tempFileName = ServerUtil.generateRandomTempName() + &quot;_temp.ics&quot;;</span>
+<span class="fc" id="L58">        String tempFilePath = System.getProperty(&quot;user.dir&quot;) + &quot;/calendars/icsFiles/&quot; + tempFileName;</span>
+
+        // Reading calendar data into temp file
+<span class="fc" id="L61">        BufferedInputStream bis = null;</span>
+        try {
+<span class="fc" id="L63">            bis = new BufferedInputStream(new URL(calendarUrl).openStream());</span>
+<span class="fc" id="L64">        } catch (IOException e) {</span>
+<span class="fc" id="L65">            return buildResponseMap(null, &quot;Couldn't get calendar data&quot;, false, true);</span>
+        }
+
+<span class="fc" id="L68">        FileOutputStream fis = null;</span>
+        try {
+<span class="fc" id="L70">            fis = new FileOutputStream(tempFilePath);</span>
+<span class="fc" id="L71">            byte[] buffer = new byte[1024];</span>
+<span class="fc" id="L72">            int count = 0;</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            while ((count = bis.read(buffer, 0, 1024)) != -1)</span>
+<span class="fc" id="L75">                fis.write(buffer, 0, count);</span>
+
+<span class="fc" id="L77">            fis.close();</span>
+<span class="fc" id="L78">            bis.close();</span>
+<span class="pc" id="L79">        } catch (IOException e) {</span>
+<span class="nc" id="L80">            System.err.println(&quot;File not found!&quot;);</span>
+        }
+
+        // Parse the .ics calendar
+        try {
+<span class="nc" id="L85">            new Parser().initiateCalendar(tempFileName);</span>
+<span class="pc" id="L86">        } catch (IOException e) {</span>
+<span class="fc" id="L87">            return buildResponseMap(null, &quot;Parser got an error&quot;, false, true);</span>
+        }
+
+<span class="nc" id="L90">        return buildResponseMap(null, &quot;&quot;, false, false);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>

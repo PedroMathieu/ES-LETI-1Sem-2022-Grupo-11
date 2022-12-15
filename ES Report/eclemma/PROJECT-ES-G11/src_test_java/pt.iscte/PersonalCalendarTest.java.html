@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>PersonalCalendarTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (Dec 15, 2022 11:16:21 AM)</a> &gt; <a href="../../index.html" class="el_group">PROJECT-ES-G11</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">pt.iscte</a> &gt; <span class="el_source">PersonalCalendarTest.java</span></div><h1>PersonalCalendarTest.java</h1><pre class="source lang-java linenums">package pt.iscte;
+
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
+<span class="fc" id="L9">public class PersonalCalendarTest {</span>
+<span class="fc" id="L10">    private PersonalCalendar pc = new PersonalCalendar(System.getProperty(&quot;user.dir&quot;) + &quot;/src/test/testFiles/jsonCalendarTest.json&quot;);</span>
+
+    @Test
+    public void givenCorrectJsonCalendarPath_returnsCorrectOwner() {
+<span class="fc" id="L14">        Assertions.assertEquals(&quot;testCalendar&quot;, pc.getCalendarOwner());</span>
+<span class="fc" id="L15">    }</span>
+
+    @Test
+    public void givenCorrectJsonCalendarPath_returnsCorrectEventsInADay() {
+<span class="fc" id="L19">        Assertions.assertEquals(2, pc.getEventsInADay(LocalDate.of(2022, 9, 21)).size());</span>
+<span class="fc" id="L20">    }</span>
+
+    @Test
+    public void givenListOfEvents_whenSettingEvents_thenCorrectlySetsNewEvents() {
+<span class="fc" id="L24">        pc.setEvents(TestUtils.buildTestEvents(1));</span>
+<span class="fc" id="L25">        Assertions.assertEquals(2, pc.getEventsInADay(LocalDate.of(2022,10,27)).size());</span>
+<span class="fc" id="L26">    }</span>
+
+    @Test
+    public void givenMorningFilter_whenGettingEvents_returnsCorrectEvents() {
+<span class="fc" id="L30">        Assertions.assertEquals(2,</span>
+<span class="fc" id="L31">                pc.getEventsBetweenTwoDates(LocalDate.of(2022,9,21),</span>
+<span class="fc" id="L32">                        LocalDate.of(2022,9,21), &quot;Morning&quot;).size());</span>
+<span class="fc" id="L33">    }</span>
+
+    @Test
+    public void givenAfternoonFilter_whenGettingEvents_returnsCorrectEvents() {
+<span class="fc" id="L37">         Assertions.assertEquals(1,</span>
+<span class="fc" id="L38">                pc.getEventsBetweenTwoDates(LocalDate.of(2022,9,22),</span>
+<span class="fc" id="L39">                        LocalDate.of(2022,9,22), &quot;Afternoon&quot;).size());</span>
+<span class="fc" id="L40">    }</span>
+
+    @Test
+    public void givenDateInterval_whenGettingEvents_returnsCorrectEvents() {
+<span class="fc" id="L44">        pc.setEvents(TestUtils.buildTestEvents(1));</span>
+<span class="fc" id="L45">        Assertions.assertEquals(2,</span>
+<span class="fc" id="L46">                pc.getEventsBetweenTwoDates(LocalDate.of(2022,10,27),</span>
+<span class="fc" id="L47">                        LocalDate.of(2022,10,27), &quot;Afternoon&quot;).size());</span>
+<span class="fc" id="L48">    }</span>
+
+    @Test
+    public void givenEventStartingInFirstMorningHour_whenGettingEventsInSameHour_returnsEvents() {
+<span class="fc" id="L52">        Assertions.assertEquals(2,</span>
+<span class="fc" id="L53">            pc.getEventsBetweenTwoDates(LocalDate.of(2022,9,21),</span>
+<span class="fc" id="L54">            LocalDate.of(2022,9,21), &quot;Morning&quot;).size());</span>
+<span class="fc" id="L55">    }</span>
+
+    @Test
+    public void givenEventStartingInConflictHour_whenGettingEvents_eventBelongsToAfternoon() {
+<span class="fc" id="L59">        Assertions.assertEquals(1,</span>
+<span class="fc" id="L60">            pc.getEventsBetweenTwoDates(LocalDate.of(2022,9,1),</span>
+<span class="fc" id="L61">                LocalDate.of(2022,9,1), &quot;Afternoon&quot;).size());</span>
+<span class="fc" id="L62">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>java (Dec 15, 2022 11:16:21 AM)</div></body></html>
