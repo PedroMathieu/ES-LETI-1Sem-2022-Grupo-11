@@ -12,6 +12,9 @@ public class App  {
         server.init();
         Parser p = new Parser();
         p.readFiles();
+
+
+        
     }
 
 }
