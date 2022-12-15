@@ -97,6 +97,13 @@ public class FindMeetingController extends Controller {
         return findMeeting(eventsToFindMeeting, Integer.parseInt(params.get("duration")));
     }
 
+    /**
+     * Finds a timeslot for a meeting with the provided events and meeting duration
+     *
+     * @param events map of events to every selected user
+     * @param duration duration of the meeting
+     * @return response map
+     */
     private Map<String, Object> findMeeting(Map<String, List<Event>> events, int duration) {
         // list of all users
         Set<String> listOfUsers = events.keySet();
@@ -126,6 +133,12 @@ public class FindMeetingController extends Controller {
         return buildResponseMap(timeslot, "", true, false);
     }
 
+    /**
+     * Checks if the timeslot found for a meeting works with all events
+     *
+     * @param listOfEvents list with events to compare with found timeslot
+     * @return true if the meeting fits in all events, false otherwise
+     */
     private boolean meetingFits(List<Event> listOfEvents) {
         for (Event event : listOfEvents) {
             if ((event.getEventTimeStart().compareTo(startOfMeetingTime) > 0)
@@ -136,6 +149,13 @@ public class FindMeetingController extends Controller {
         return true;
     }
 
+    /**
+     * Checks that a meeting fits for users
+     *
+     * @param listOfUsers structure containing all users
+     * @param currentUser current user
+     * @param events events mapped to users
+     */
     private void checkOtherUsers(Set<String> listOfUsers, String currentUser, Map<String, List<Event>> events) {
         for (String user : listOfUsers) {
             if (!user.equals(currentUser)) {
